@@ -3,3 +3,8 @@
 ################################################################################
 
 /.vs
+/src/Localization/.vs/Localization/v16
+/src/Localization/Localization/obj
+/src/Localization/obj
+/src/Localization/bin/Debug
+/src/.vs/Localization/v16

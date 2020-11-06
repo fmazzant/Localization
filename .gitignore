@@ -9,3 +9,5 @@
 /src/Localization/bin/Debug
 /src/.vs/Localization/v16
 /src/.vs/Localization/DesignTimeBuild/.dtbcache.v2
+/src/Localization.Xamarin/bin/Debug
+/src/Localization.Xamarin/obj

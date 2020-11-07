@@ -1,0 +1,94 @@
+﻿// <summary>
+/// 
+/// The MIT License (MIT)
+/// 
+/// Copyright (c) 2020 Federico Mazzanti
+/// 
+/// Permission is hereby granted, free of charge, to any person
+/// obtaining a copy of this software and associated documentation
+/// files (the "Software"), to deal in the Software without
+/// restriction, including without limitation the rights to use,
+/// copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the
+/// Software is furnished to do so, subject to the following
+/// conditions:
+/// 
+/// The above copyright notice and this permission notice shall be
+/// included in all copies or substantial portions of the Software.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+/// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+/// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+/// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+/// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+/// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+/// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+/// OTHER DEALINGS IN THE SOFTWARE.
+/// 
+/// </summary>
+
+namespace Localization
+{
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Threading.Tasks;
+
+    public interface IVocabolaryServiceProvider
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cultureInfo"></param>
+        /// <returns></returns>
+        Task<Vocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        Task<Vocabolaries> LoadVocabolariesAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vocabolary"></param>
+        Task SaveAsync(Vocabolary vocabolary);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vocabolaries"></param>
+        Task SaveAsync(Vocabolaries vocabolaries);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vocabolaries"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        Task AddOrUpdateTermAsync(Vocabolaries vocabolaries, string key, string defaultValue = null);
+    }
+
+    public class MockVocabolaryProvider : IVocabolaryServiceProvider
+    {
+        Vocabolaries all = new Vocabolaries
+        {
+            {"it-IT", new Vocabolary{
+                { "StartDevelopingNow","Parti ora con lo sviluppo!" },
+                { "MyLabelText","La mia label di test" } }},
+            {"en-US", new Vocabolary{
+                { "Welcome","Welcome to Xamarin.Forms!" },
+                { "StartDevelopingNow","Start developing now" },
+                { "MyLabelText","My label test" } }}
+        };
+        public Task AddOrUpdateTermAsync(Vocabolaries vocabolaries, string key, string defaultValue = null) => Task.Delay(1);
+
+        public Task<Vocabolaries> LoadVocabolariesAsync() => Task.FromResult<Vocabolaries>(all);
+
+        public Task<Vocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo) => Task.FromResult(all[cultureInfo.ToString()]);
+
+        public Task SaveAsync(Vocabolary vocabolary) => Task.Delay(1);
+
+        public Task SaveAsync(Vocabolaries vocabolaries) => Task.Delay(1);
+    }
+}

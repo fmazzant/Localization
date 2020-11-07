@@ -1,15 +1,32 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0;</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>localization, c-sharp, dotnet-standard, dotnet-core, dotnet-framework, xamarin</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Version>1.0.0-alpha1</Version>
+    <PackageId>Mafe.Localization.Xamarin</PackageId>
+    <Authors>Federico Mazzanti</Authors>
+    <Company>Federico Mazzanti</Company>
+    <Description>A Xamarin library for .net that can help you to manage the localization in your application with a simple method. The library uses Mafe.Localization</Description>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mafe.Localization" Version="1.0.0-alpha1" />
     <PackageReference Include="Xamarin.Forms" Version="4.0.0.709238" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Localization\Localization.csproj" />
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

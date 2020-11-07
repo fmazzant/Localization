@@ -29,6 +29,7 @@
 
 namespace Localization
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
@@ -66,7 +67,7 @@ namespace Localization
         /// <summary>
         /// 
         /// </summary>
-        private Vocabolary CurrentCulture = null;
+        private Vocabolary CurrentCulture { get; set; } = null;
 
         /// <summary>
         /// 
@@ -75,8 +76,6 @@ namespace Localization
         protected LocalizationManager(IVocabolaryServiceProvider provider)
         {
             ServiceProvider = provider;
-            AllCultures = null;
-            CurrentCulture = null;
         }
 
         /// <summary>
@@ -109,18 +108,14 @@ namespace Localization
         /// 
         /// </summary>
         /// <param name="provider"></param>
-        /// <param name="cultureInfo"></param>
-        /// <param name="load"></param>
-        public static void Init(IVocabolaryServiceProvider provider, CultureInfo cultureInfo, bool load = true)
+        public static void Init(IVocabolaryServiceProvider provider)
         {
             Instance = new LocalizationManager(provider);
-            if (load)
+
+            Instance.LoadOrUpdateAllCultureAsync().ContinueWith((r) =>
             {
-                Instance.LoadOrUpdateCultureAsync(cultureInfo).ContinueWith((r) =>
-                {
-                    Instance.SetCulture(cultureInfo);
-                });
-            }
+                Instance.SetCulture(null);
+            });
         }
 
         /// <summary>
@@ -133,6 +128,9 @@ namespace Localization
             var culture = await ServiceProvider.LoadVocabolaryAsync(cultureInfo);
             if (!(culture is null))
             {
+                if (AllCultures == null)
+                    AllCultures = new Vocabolaries { };
+
                 if (AllCultures.ContainsKey(cultureInfo.ToString()))
                 {
                     lock (AllCultures[cultureInfo.ToString()])
@@ -209,20 +207,41 @@ namespace Localization
         /// <param name="culture"></param>
         public void SetCulture(CultureInfo culture)
         {
-            Culture = culture;
-
-            if (AllCultures != null)
+            if (AllCultures != null && AllCultures.Keys.Count > 0)
             {
-                if (AllCultures.ContainsKey(culture.ToString()))
+                if (culture != null && AllCultures.ContainsKey(culture.ToString()))
                 {
+                    Culture = culture;
                     CurrentCulture = AllCultures[culture.ToString()];
                 }
                 else
                 {
-                    CurrentCulture = AllCultures.Values.Where(x => x.IsDefault).FirstOrDefault()
-                        ?? AllCultures.Values.FirstOrDefault()
-                        ?? AllCultures[Culture.ToString()];
+                    if (AllCultures.Values.Any(x => x.IsDefault))
+                    {
+                        foreach (var k in AllCultures.Keys)
+                        {
+                            if (AllCultures[k].IsDefault)
+                            {
+                                Culture = new CultureInfo(k);
+                                CurrentCulture = AllCultures[Culture.ToString()];
+                            }
+                        }
+                    }
+                    else if (AllCultures.ContainsKey(Thread.CurrentThread.CurrentUICulture.ToString()))
+                    {
+                        Culture = Thread.CurrentThread.CurrentUICulture;
+                        CurrentCulture = AllCultures[Culture.ToString()];
+                    }
+                    else
+                    {
+                        Culture = new CultureInfo(AllCultures.Keys.FirstOrDefault());
+                        CurrentCulture = AllCultures[Culture.ToString()];
+                    }
                 }
+            }
+            else
+            {
+                throw new NullReferenceException("No culture available");
             }
             OnCultureChanged();
         }

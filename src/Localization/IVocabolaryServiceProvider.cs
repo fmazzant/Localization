@@ -68,27 +68,4 @@ namespace Localization
         /// <param name="defaultValue"></param>
         Task AddOrUpdateTermAsync(Vocabolaries vocabolaries, string key, string defaultValue = null);
     }
-
-    public class MockVocabolaryProvider : IVocabolaryServiceProvider
-    {
-        Vocabolaries all = new Vocabolaries
-        {
-            {"it-IT", new Vocabolary{
-                { "StartDevelopingNow","Parti ora con lo sviluppo!" },
-                { "MyLabelText","La mia label di test" } }},
-            {"en-US", new Vocabolary{
-                { "Welcome","Welcome to Xamarin.Forms!" },
-                { "StartDevelopingNow","Start developing now" },
-                { "MyLabelText","My label test" } }}
-        };
-        public Task AddOrUpdateTermAsync(Vocabolaries vocabolaries, string key, string defaultValue = null) => Task.Delay(1);
-
-        public Task<Vocabolaries> LoadVocabolariesAsync() => Task.FromResult<Vocabolaries>(all);
-
-        public Task<Vocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo) => Task.FromResult(all[cultureInfo.ToString()]);
-
-        public Task SaveAsync(Vocabolary vocabolary) => Task.Delay(1);
-
-        public Task SaveAsync(Vocabolaries vocabolaries) => Task.Delay(1);
-    }
 }

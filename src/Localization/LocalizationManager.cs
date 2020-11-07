@@ -110,10 +110,17 @@ namespace Localization
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="cultureInfo"></param>
-        public static void Init(IVocabolaryServiceProvider provider, CultureInfo cultureInfo)
+        /// <param name="load"></param>
+        public static void Init(IVocabolaryServiceProvider provider, CultureInfo cultureInfo, bool load = true)
         {
             Instance = new LocalizationManager(provider);
-            Instance.SetCulture(cultureInfo);
+            if (load)
+            {
+                Instance.LoadOrUpdateCultureAsync(cultureInfo).ContinueWith((r) =>
+                {
+                    Instance.SetCulture(cultureInfo);
+                });
+            }
         }
 
         /// <summary>
@@ -204,17 +211,19 @@ namespace Localization
         {
             Culture = culture;
 
-            if (AllCultures.ContainsKey(culture.ToString()))
+            if (AllCultures != null)
             {
-                CurrentCulture = AllCultures[culture.ToString()];
+                if (AllCultures.ContainsKey(culture.ToString()))
+                {
+                    CurrentCulture = AllCultures[culture.ToString()];
+                }
+                else
+                {
+                    CurrentCulture = AllCultures.Values.Where(x => x.IsDefault).FirstOrDefault()
+                        ?? AllCultures.Values.FirstOrDefault()
+                        ?? AllCultures[Culture.ToString()];
+                }
             }
-            else
-            {
-                CurrentCulture = AllCultures.Values.Where(x => x.IsDefault).FirstOrDefault()
-                    ?? AllCultures.Values.FirstOrDefault()
-                    ?? AllCultures[Culture.ToString()];
-            }
-
             OnCultureChanged();
         }
 

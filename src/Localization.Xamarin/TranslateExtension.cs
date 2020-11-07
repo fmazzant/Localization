@@ -27,13 +27,13 @@
 /// 
 /// </summary>
 
-namespace Xamarin.Localization
+namespace Localization.Xamarin
 {
-    using global::Localization;
-    using global::Localization.Xamarin.Converts;
+    using Localization;
+    using Localization.Xamarin.Converts;
+    using global::Xamarin.Forms;
+    using global::Xamarin.Forms.Xaml;
     using System;
-    using Xamarin.Forms;
-    using Xamarin.Forms.Xaml;
 
     [ContentProperty("Text")]
     public class TranslateExtension : IMarkupExtension<BindingBase>

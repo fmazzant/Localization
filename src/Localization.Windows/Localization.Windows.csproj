@@ -3,10 +3,26 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netcoreapp3.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Version>1.0.0-alpha3</Version>
+    <PackageId>Mafe.Localization.Windows</PackageId>
+    <Authors>Federico Mazzanti</Authors>
+    <Company>Federico Mazzanti</Company>
+    <Description>A Window WPF library for .net that can help you to manage the localization in your application with a simple method. The library uses Mafe.Localization</Description>
+    <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
+    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>localization, c-sharp, dotnet-core, windows, wpf</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\LICENSE.md" Link="LICENSE.md" />
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

@@ -12,3 +12,5 @@
 /src/Localization.Xamarin/bin/Debug
 /src/Localization.Xamarin/obj
 /src/Localization/.vs/Localization/DesignTimeBuild
+/src/Localization.Windows/bin
+/src/Localization.Windows/obj

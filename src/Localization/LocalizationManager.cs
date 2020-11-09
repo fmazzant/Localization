@@ -37,12 +37,15 @@ namespace Localization
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class LocalizationManager : INotifyPropertyChanged
     {
         /// <summary>
         /// 
         /// </summary>
-        public static CultureInfo Culture { get; private set; } = Thread.CurrentThread.CurrentUICulture;
+        public static CultureInfo CurrentCulture { get; private set; } = Thread.CurrentThread.CurrentUICulture;
 
         /// <summary>
         /// 
@@ -62,12 +65,12 @@ namespace Localization
         /// <summary>
         /// 
         /// </summary>
-        private Vocabolaries AllCultures { get; set; } = new Vocabolaries { };
+        private Vocabolaries AllVocabolaries { get; set; } = new Vocabolaries { };
 
         /// <summary>
         /// 
         /// </summary>
-        private Vocabolary CurrentCulture { get; set; } = null;
+        private Vocabolary CurrentVocabolary { get; set; } = null;
 
         /// <summary>
         /// 
@@ -87,11 +90,11 @@ namespace Localization
         {
             get
             {
-                if (CurrentCulture != null && CurrentCulture.ContainsKey(resourceKey) && !string.IsNullOrEmpty(CurrentCulture[resourceKey]))
+                if (CurrentVocabolary != null && CurrentVocabolary.ContainsKey(resourceKey) && !string.IsNullOrEmpty(CurrentVocabolary[resourceKey]))
                 {
-                    return CurrentCulture[resourceKey];
+                    return CurrentVocabolary[resourceKey];
                 }
-                ServiceProvider.AddOrUpdateTermAsync(AllCultures, resourceKey);
+                ServiceProvider.AddOrUpdateTermAsync(AllVocabolaries, resourceKey);
                 return null;
             }
         }
@@ -110,11 +113,26 @@ namespace Localization
         /// <param name="provider"></param>
         public static void Init(IVocabolaryServiceProvider provider)
         {
+            provider.Initialize().Wait();
             Instance = new LocalizationManager(provider);
-
             Instance.LoadOrUpdateAllCultureAsync().ContinueWith((r) =>
             {
                 Instance.SetCulture(null);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="culture"></param>
+        public static void Init(IVocabolaryServiceProvider provider, CultureInfo culture)
+        {
+            provider.Initialize().Wait();
+            Instance = new LocalizationManager(provider);
+            Instance.LoadOrUpdateCultureAsync(culture).ContinueWith((r) =>
+            {
+                Instance.SetCulture(culture);
             });
         }
 
@@ -128,19 +146,18 @@ namespace Localization
             var culture = await ServiceProvider.LoadVocabolaryAsync(cultureInfo);
             if (!(culture is null))
             {
-                if (AllCultures == null)
-                    AllCultures = new Vocabolaries { };
+                AllVocabolaries = AllVocabolaries ?? new Vocabolaries { };
 
-                if (AllCultures.ContainsKey(cultureInfo.ToString()))
+                if (AllVocabolaries.ContainsKey(cultureInfo.ToString()))
                 {
-                    lock (AllCultures[cultureInfo.ToString()])
+                    lock (AllVocabolaries[cultureInfo.ToString()])
                     {
-                        AllCultures[cultureInfo.ToString()] = culture;
+                        AllVocabolaries[cultureInfo.ToString()] = culture;
                     }
                 }
                 else
                 {
-                    AllCultures.Add(cultureInfo.ToString(), culture);
+                    AllVocabolaries.Add(cultureInfo.ToString(), culture);
                 }
             }
         }
@@ -155,25 +172,30 @@ namespace Localization
             var cultures = await ServiceProvider.LoadVocabolariesAsync();
             if (cultures != null)
             {
+                AllVocabolaries = AllVocabolaries ?? new Vocabolaries { };
+
                 if (cleanUpAll)
                 {
-                    lock (AllCultures)
+                    lock (AllVocabolaries)
                     {
-                        AllCultures.Clear();
-                        AllCultures = cultures;
+                        AllVocabolaries.Clear();
+                        AllVocabolaries = cultures;
                     }
                 }
                 else
                 {
                     foreach (var key in cultures.Keys)
                     {
-                        if (AllCultures.ContainsKey(key))
+                        if (AllVocabolaries.ContainsKey(key))
                         {
-                            lock (AllCultures[key]) AllCultures[key] = cultures[key];
+                            lock (AllVocabolaries[key])
+                            {
+                                AllVocabolaries[key] = cultures[key];
+                            }
                         }
                         else
                         {
-                            AllCultures.Add(key, cultures[key]);
+                            AllVocabolaries.Add(key, cultures[key]);
                         }
                     }
                 }
@@ -190,52 +212,57 @@ namespace Localization
             CultureInfo cultureToSave = cultureInfo;
             if (cultureInfo is null)
             {
-                cultureToSave = Culture;
+                cultureToSave = CurrentCulture;
             }
-            await ServiceProvider.SaveAsync(AllCultures[cultureToSave.ToString()]);
+            await ServiceProvider.SaveAsync(AllVocabolaries[cultureToSave.ToString()]);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task SaveAllCultureAsync() => await ServiceProvider.SaveAsync(AllCultures);
+        public async Task SaveAllCultureAsync() => await ServiceProvider.SaveAsync(AllVocabolaries);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="culture"></param>
-        public void SetCulture(CultureInfo culture)
+        public void SetCulture(CultureInfo culture, bool loadCultureIfNecessary = false)
         {
-            if (AllCultures != null && AllCultures.Keys.Count > 0)
+            if (loadCultureIfNecessary)
             {
-                if (culture != null && AllCultures.ContainsKey(culture.ToString()))
+                this.LoadOrUpdateCultureAsync(culture).Wait();
+            }
+
+            if (AllVocabolaries != null && AllVocabolaries.Keys.Count > 0)
+            {
+                if (culture != null && AllVocabolaries.ContainsKey(culture.ToString()))
                 {
-                    Culture = culture;
-                    CurrentCulture = AllCultures[culture.ToString()];
+                    CurrentCulture = culture;
+                    CurrentVocabolary = AllVocabolaries[culture.ToString()];
                 }
                 else
                 {
-                    if (AllCultures.Values.Any(x => x.IsDefault))
+                    if (AllVocabolaries.Values.Any(x => x.IsDefault))
                     {
-                        foreach (var k in AllCultures.Keys)
+                        foreach (var k in AllVocabolaries.Keys)
                         {
-                            if (AllCultures[k].IsDefault)
+                            if (AllVocabolaries[k].IsDefault)
                             {
-                                Culture = new CultureInfo(k);
-                                CurrentCulture = AllCultures[Culture.ToString()];
+                                CurrentCulture = new CultureInfo(k);
+                                CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];
                             }
                         }
                     }
-                    else if (AllCultures.ContainsKey(Thread.CurrentThread.CurrentUICulture.ToString()))
+                    else if (AllVocabolaries.ContainsKey(Thread.CurrentThread.CurrentUICulture.ToString()))
                     {
-                        Culture = Thread.CurrentThread.CurrentUICulture;
-                        CurrentCulture = AllCultures[Culture.ToString()];
+                        CurrentCulture = Thread.CurrentThread.CurrentUICulture;
+                        CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];
                     }
                     else
                     {
-                        Culture = new CultureInfo(AllCultures.Keys.FirstOrDefault());
-                        CurrentCulture = AllCultures[Culture.ToString()];
+                        CurrentCulture = new CultureInfo(AllVocabolaries.Keys.FirstOrDefault());
+                        CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];
                     }
                 }
             }
@@ -243,6 +270,7 @@ namespace Localization
             {
                 throw new NullReferenceException("No culture available");
             }
+
             OnCultureChanged();
         }
 

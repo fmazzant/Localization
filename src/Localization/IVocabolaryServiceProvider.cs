@@ -34,6 +34,8 @@ namespace Localization
 
     public interface IVocabolaryServiceProvider
     {
+        Task Initialize();
+
         /// <summary>
         /// 
         /// </summary>

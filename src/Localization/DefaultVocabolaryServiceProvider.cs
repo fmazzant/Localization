@@ -37,31 +37,61 @@ namespace Localization
     /// </summary>
     public class DefaultVocabolaryServiceProvider : IVocabolaryServiceProvider
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vocabolaries"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
         public Task AddOrUpdateTermAsync(Vocabolaries vocabolaries, string key, string defaultValue = null)
         {
             return Task.FromResult(0);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Task Initialize()
         {
             return Task.FromResult(0);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Task<Vocabolaries> LoadVocabolariesAsync()
         {
             return Task.FromResult(new Vocabolaries { });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cultureInfo"></param>
+        /// <returns></returns>
         public Task<Vocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo)
         {
             return Task.FromResult(new Vocabolary { });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vocabolary"></param>
+        /// <returns></returns>
         public Task SaveAsync(Vocabolary vocabolary)
         {
             return Task.FromResult(0);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vocabolaries"></param>
+        /// <returns></returns>
         public Task SaveAsync(Vocabolaries vocabolaries)
         {
             return Task.FromResult(0);

@@ -114,7 +114,8 @@ namespace Localization
         public static void Init(IVocabolaryServiceProvider provider)
         {
             provider.Initialize().Wait();
-            Instance = new LocalizationManager(provider);
+            //Instance = new LocalizationManager(provider);
+            Instance.ServiceProvider = provider;
             Instance.LoadOrUpdateAllCultureAsync().ContinueWith((r) =>
             {
                 Instance.SetCulture(null);
@@ -129,7 +130,8 @@ namespace Localization
         public static void Init(IVocabolaryServiceProvider provider, CultureInfo culture)
         {
             provider.Initialize().Wait();
-            Instance = new LocalizationManager(provider);
+            //Instance = new LocalizationManager(provider);
+            Instance.ServiceProvider = provider;
             Instance.LoadOrUpdateCultureAsync(culture).ContinueWith((r) =>
             {
                 Instance.SetCulture(culture);

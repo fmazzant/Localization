@@ -268,10 +268,6 @@ namespace Localization
                     }
                 }
             }
-            else
-            {
-                throw new NullReferenceException("No culture available");
-            }
 
             OnCultureChanged();
         }

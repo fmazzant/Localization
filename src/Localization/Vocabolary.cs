@@ -34,7 +34,15 @@ namespace Localization
     /// <summary>
     /// 
     /// </summary>
-    public class Vocabolary : Dictionary<string, string>
+    public interface IVocabolary: IDictionary<string, string>
+    {
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Vocabolary : Dictionary<string, string>, IVocabolary
     {
         public bool IsDefault { get; set; }
     }

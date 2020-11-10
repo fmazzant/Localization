@@ -41,7 +41,7 @@ namespace Localization
         /// </summary>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
-        Task<Vocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo);
+        Task<IVocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo);
 
         /// <summary>
         /// 
@@ -53,13 +53,13 @@ namespace Localization
         /// 
         /// </summary>
         /// <param name="vocabolary"></param>
-        Task SaveAsync(Vocabolary vocabolary);
+        Task SaveAsync(IVocabolary vocabolary);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="vocabolaries"></param>
-        Task SaveAsync(Vocabolaries vocabolaries);
+        Task SaveAsync(IVocabolaries vocabolaries);
 
         /// <summary>
         /// 
@@ -67,6 +67,6 @@ namespace Localization
         /// <param name="vocabolaries"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        Task AddOrUpdateTermAsync(Vocabolaries vocabolaries, string key, string defaultValue = null);
+        Task AddOrUpdateTermAsync(IVocabolaries vocabolaries, string key, string defaultValue = null);
     }
 }

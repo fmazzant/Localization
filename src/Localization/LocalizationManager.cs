@@ -30,7 +30,7 @@
 namespace Localization
 {
     using Localization.Providers;
-    using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
@@ -70,7 +70,7 @@ namespace Localization
         /// <summary>
         /// 
         /// </summary>
-        private Vocabolary CurrentVocabolary { get; set; } = null;
+        private IVocabolary CurrentVocabolary { get; set; } = null;
 
         /// <summary>
         /// 
@@ -114,7 +114,6 @@ namespace Localization
         public static void Init(IVocabolaryServiceProvider provider)
         {
             provider.Initialize().Wait();
-            //Instance = new LocalizationManager(provider);
             Instance.ServiceProvider = provider;
             Instance.LoadOrUpdateAllCultureAsync().ContinueWith((r) =>
             {
@@ -130,7 +129,6 @@ namespace Localization
         public static void Init(IVocabolaryServiceProvider provider, CultureInfo culture)
         {
             provider.Initialize().Wait();
-            //Instance = new LocalizationManager(provider);
             Instance.ServiceProvider = provider;
             Instance.LoadOrUpdateCultureAsync(culture).ContinueWith((r) =>
             {
@@ -245,18 +243,19 @@ namespace Localization
                 }
                 else
                 {
-                    if (AllVocabolaries.Values.Any(x => x.IsDefault))
-                    {
-                        foreach (var k in AllVocabolaries.Keys)
-                        {
-                            if (AllVocabolaries[k].IsDefault)
-                            {
-                                CurrentCulture = new CultureInfo(k);
-                                CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];
-                            }
-                        }
-                    }
-                    else if (AllVocabolaries.ContainsKey(Thread.CurrentThread.CurrentUICulture.ToString()))
+                    //if (AllVocabolaries.Values.Any(x => x.IsDefault))
+                    //{
+                    //    foreach (var k in AllVocabolaries.Keys)
+                    //    {
+                    //        if (AllVocabolaries[k].IsDefault)
+                    //        {
+                    //            CurrentCulture = new CultureInfo(k);
+                    //            CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];
+                    //        }
+                    //    }
+                    //}
+                    //else 
+                    if (AllVocabolaries.ContainsKey(Thread.CurrentThread.CurrentUICulture.ToString()))
                     {
                         CurrentCulture = Thread.CurrentThread.CurrentUICulture;
                         CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];

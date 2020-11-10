@@ -29,6 +29,7 @@
 
 namespace Localization.Providers
 {
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Threading.Tasks;
 
@@ -44,7 +45,7 @@ namespace Localization.Providers
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public Task AddOrUpdateTermAsync(Vocabolaries vocabolaries, string key, string defaultValue = null)
+        public Task AddOrUpdateTermAsync(IVocabolaries vocabolaries, string key, string defaultValue = null)
         {
             return Task.FromResult(0);
         }
@@ -64,7 +65,7 @@ namespace Localization.Providers
         /// <returns></returns>
         public Task<Vocabolaries> LoadVocabolariesAsync()
         {
-            return Task.FromResult(new Vocabolaries { });
+            return Task.FromResult<Vocabolaries>(new Vocabolaries { });
         }
 
         /// <summary>
@@ -72,9 +73,11 @@ namespace Localization.Providers
         /// </summary>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
-        public Task<Vocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo)
+        public Task<IVocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo)
         {
-            return Task.FromResult(new Vocabolary { });
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+
+            return Task.FromResult<IVocabolary>(dict as IVocabolary);
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace Localization.Providers
         /// </summary>
         /// <param name="vocabolary"></param>
         /// <returns></returns>
-        public Task SaveAsync(Vocabolary vocabolary)
+        public Task SaveAsync(IVocabolary vocabolary)
         {
             return Task.FromResult(0);
         }
@@ -92,7 +95,7 @@ namespace Localization.Providers
         /// </summary>
         /// <param name="vocabolaries"></param>
         /// <returns></returns>
-        public Task SaveAsync(Vocabolaries vocabolaries)
+        public Task SaveAsync(IVocabolaries vocabolaries)
         {
             return Task.FromResult(0);
         }

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization", "Localizatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Xamarin", "..\Localization.Xamarin\Localization.Xamarin.csproj", "{AB65AD5D-B459-4521-AD63-646E426F251C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Windows", "..\Localization.Windows\Localization.Windows.csproj", "{F03746AF-9A6B-4615-BC5E-4DFD8EF6378A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Windows", "..\Localization.Windows\Localization.Windows.csproj", "{F03746AF-9A6B-4615-BC5E-4DFD8EF6378A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

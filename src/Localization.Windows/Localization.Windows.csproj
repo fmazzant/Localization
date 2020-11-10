@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Version>1.0.0-alpha6</Version>
+    <Version>1.0.0-beta1</Version>
     <PackageId>Mafe.Localization.Windows</PackageId>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
@@ -18,15 +18,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE.md" Link="LICENSE.md" />
+    <PackageReference Include="Mafe.Localization" Version="1.0.0-beta2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\LICENSE.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Mafe.Localization" Version="1.0.0-beta1" />
   </ItemGroup>
 
 </Project>

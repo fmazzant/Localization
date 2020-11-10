@@ -47,7 +47,7 @@ namespace Localization
         /// 
         /// </summary>
         /// <returns></returns>
-        Task<Vocabolaries> LoadVocabolariesAsync();
+        Task<IVocabolaries> LoadVocabolariesAsync();
 
         /// <summary>
         /// 

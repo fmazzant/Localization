@@ -65,7 +65,7 @@ namespace Localization
         /// <summary>
         /// 
         /// </summary>
-        private Vocabolaries AllVocabolaries { get; set; } = new Vocabolaries { };
+        private IVocabolaries AllVocabolaries { get; set; } = new Vocabolaries { };
 
         /// <summary>
         /// 

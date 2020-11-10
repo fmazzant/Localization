@@ -63,9 +63,9 @@ namespace Localization.Providers
         /// 
         /// </summary>
         /// <returns></returns>
-        public Task<Vocabolaries> LoadVocabolariesAsync()
+        public Task<IVocabolaries> LoadVocabolariesAsync()
         {
-            return Task.FromResult<Vocabolaries>(new Vocabolaries { });
+            return Task.FromResult<IVocabolaries>(new Vocabolaries { });
         }
 
         /// <summary>

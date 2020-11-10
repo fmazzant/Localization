@@ -50,7 +50,7 @@ namespace Localization
         /// <summary>
         /// 
         /// </summary>
-        public static LocalizationManager Instance { get; private set; } = null;
+        public static LocalizationManager Instance { get; private set; } = new LocalizationManager(new DefaultVocabolaryServiceProvider { });
 
         /// <summary>
         /// 
@@ -280,6 +280,43 @@ namespace Localization
         public void OnCultureChanged()
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+        }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DefaultVocabolaryServiceProvider : IVocabolaryServiceProvider
+    {
+        public Task AddOrUpdateTermAsync(Vocabolaries vocabolaries, string key, string defaultValue = null)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task Initialize()
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task<Vocabolaries> LoadVocabolariesAsync()
+        {
+            return Task.FromResult(new Vocabolaries { });
+        }
+
+        public Task<Vocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo)
+        {
+            return Task.FromResult(new Vocabolary { });
+        }
+
+        public Task SaveAsync(Vocabolary vocabolary)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task SaveAsync(Vocabolaries vocabolaries)
+        {
+            return Task.FromResult(0);
         }
     }
 }

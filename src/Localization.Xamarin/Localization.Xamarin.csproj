@@ -8,7 +8,7 @@
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>localization, c-sharp, dotnet-standard, dotnet-core, dotnet-framework, xamarin</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.0.0-alpha4</Version>
+    <Version>1.0.0-alpha5</Version>
     <PackageId>Mafe.Localization.Xamarin</PackageId>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization" Version="1.0.0-alpha4" />
+    <PackageReference Include="Mafe.Localization" Version="1.0.0-alpha5" />
     <PackageReference Include="Xamarin.Forms" Version="4.0.0.709238" />
   </ItemGroup>
 

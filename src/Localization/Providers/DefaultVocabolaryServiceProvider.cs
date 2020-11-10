@@ -27,7 +27,7 @@
 /// 
 /// </summary>
 
-namespace Localization
+namespace Localization.Providers
 {
     using System.Globalization;
     using System.Threading.Tasks;
@@ -35,7 +35,7 @@ namespace Localization
     /// <summary>
     /// 
     /// </summary>
-    public class DefaultVocabolaryServiceProvider : IVocabolaryServiceProvider
+    internal class DefaultVocabolaryServiceProvider : IVocabolaryServiceProvider
     {
         /// <summary>
         /// 

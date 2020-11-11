@@ -41,11 +41,11 @@ public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
         all = new Dictionary<string, Vocabolary>
         {
             {"it-IT", new Vocabolary {
-                    { "MainWindow","Main Window in italian language}
+                    { "MainWindow","Main Window in italian language" }
                 }
             },
             {"en-US", new Vocabolary {
-                    { "MainWindow","Main Window in english language"} 
+                    { "MainWindow","Main Window in english language" } 
                 } 
             }
         };

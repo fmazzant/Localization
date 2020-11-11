@@ -23,7 +23,7 @@ var label = LocalizationManager.Instance["resourceKey"];
 ```
 
 ```c#
-var label = LocalizationManager.Translate("resourceKey","#Default value");
+var label = LocalizationManager.Instance.Translate("resourceKey","#Default value");
 ```
 
 # Vocabolary Service Provider

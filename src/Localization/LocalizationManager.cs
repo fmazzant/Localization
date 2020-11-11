@@ -123,7 +123,7 @@ namespace Localization
         {
             provider.Initialize().Wait();
             Instance.ServiceProvider = provider;
-            Instance.SetCulture(CurrentCulture = culture);
+            Instance.SetCulture(culture);
         }
 
         /// <summary>
@@ -148,6 +148,7 @@ namespace Localization
             if (CurrentVocabolary is null)
             {
                 var vocabolary = this.LoadOrUpdateCultureAsync(culture).Result;
+                CurrentCulture = culture;
                 CurrentVocabolary = vocabolary;
             }
             else
@@ -155,6 +156,7 @@ namespace Localization
                 lock (CurrentVocabolary)
                 {
                     var vocabolary = this.LoadOrUpdateCultureAsync(culture).Result;
+                    CurrentCulture = culture;
                     CurrentVocabolary = vocabolary;
                 }
             }

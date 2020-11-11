@@ -32,29 +32,36 @@ namespace Localization
     using System.Globalization;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Provides the interface to a providers to the loading the vocabolaries
+    /// </summary>
     public interface IVocabolaryServiceProvider
     {
+        /// <summary>
+        /// Initilize the provider.
+        /// </summary>
+        /// <returns></returns>
         Task Initialize();
 
         /// <summary>
-        /// 
+        /// Loads and returns the vocabolary for the cultureinfo
         /// </summary>
-        /// <param name="cultureInfo"></param>
+        /// <param name="cultureInfo">culture to load</param>
         /// <returns></returns>
         Task<IVocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo);
 
         /// <summary>
-        /// 
+        /// Saves the vocabolary
         /// </summary>
-        /// <param name="vocabolary"></param>
+        /// <param name="vocabolary">Vocabolary to save</param>
         Task SaveAsync(IVocabolary vocabolary);
 
         /// <summary>
-        /// 
+        /// When a term uses inside your application not exists inside your vocabolary, this methods is run.
         /// </summary>
-        /// <param name="vocabolaries"></param>
-        /// <param name="key"></param>
-        /// <param name="defaultValue"></param>
+        /// <param name="vocabolaries">Current vocabolary</param>
+        /// <param name="key">ResourceKey</param>
+        /// <param name="defaultValue">ResourceKey's default value</param>
         Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null);
     }
 }

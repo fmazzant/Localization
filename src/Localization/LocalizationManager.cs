@@ -36,37 +36,37 @@ namespace Localization
     using System.Threading.Tasks;
 
     /// <summary>
-    /// 
+    /// Provides a Location base manager. The manager uses a provider and a binding Exetionion to associate the culture to a Element
     /// </summary>
     public class LocalizationManager : INotifyPropertyChanged
     {
         /// <summary>
-        /// 
+        /// Handler to notificate when a property value is changed.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// 
+        /// Current Culture selected.
         /// </summary>
         public static CultureInfo CurrentCulture { get; private set; } = Thread.CurrentThread.CurrentUICulture;
 
         /// <summary>
-        /// 
+        /// Localization Manager instance. The manager has a Default Vocabulary during initializing the Localization Manger
         /// </summary>
         public static LocalizationManager Instance { get; } = new LocalizationManager(new DefaultVocabolaryServiceProvider { });
 
         /// <summary>
-        /// 
+        /// Vocabolary service provider
         /// </summary>
         public IVocabolaryServiceProvider ServiceProvider { get; private set; } = null;
 
         /// <summary>
-        /// 
+        /// Current Vocabolary
         /// </summary>
         private IVocabolary CurrentVocabolary { get; set; } = null;
 
         /// <summary>
-        /// 
+        /// Create a LocalizationManager with a service provider.
         /// </summary>
         /// <param name="provider"></param>
         protected LocalizationManager(IVocabolaryServiceProvider provider)
@@ -75,7 +75,7 @@ namespace Localization
         }
 
         /// <summary>
-        /// 
+        /// Returns the value associated to resourceKey inside to the current vocabolary.
         /// </summary>
         /// <param name="resourceKey"></param>
         /// <returns></returns>
@@ -96,7 +96,7 @@ namespace Localization
         }
 
         /// <summary>
-        /// 
+        /// Returns the value associated the key. The default value is shows when the key not inside into Vocabolary.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -104,9 +104,9 @@ namespace Localization
         public static string Translate(string key, string defaultValue) => Instance[key] ?? $"#{defaultValue}";
 
         /// <summary>
-        /// 
+        /// Initilizes the LocalizationManger with the default culture.
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="provider">Service provider</param>
         public static void Init(IVocabolaryServiceProvider provider)
         {
             provider.Initialize().Wait();
@@ -115,10 +115,10 @@ namespace Localization
         }
 
         /// <summary>
-        /// 
+        /// Initilizes the LocalizationManger with the culture.
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="culture"></param>
+        /// <param name="provider">Service provider</param>
+        /// <param name="culture">Culture to set</param>
         public static void Init(IVocabolaryServiceProvider provider, CultureInfo culture)
         {
             provider.Initialize().Wait();
@@ -127,20 +127,20 @@ namespace Localization
         }
 
         /// <summary>
-        /// 
+        /// Loads and Returns the vocabolary associated to cultureInfo
         /// </summary>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
         public async Task<IVocabolary> LoadOrUpdateCultureAsync(CultureInfo cultureInfo) => await ServiceProvider.LoadVocabolaryAsync(cultureInfo);
 
         /// <summary>
-        /// 
+        /// Saves the culture associated to current vocabolary.
         /// </summary>
         /// <returns></returns>
         public async Task SaveCultureAsync() => await ServiceProvider.SaveAsync(CurrentVocabolary);
 
         /// <summary>
-        /// 
+        /// Set the new culture and invalidate the old values.
         /// </summary>
         /// <param name="culture"></param>
         public void SetCulture(CultureInfo culture)
@@ -164,9 +164,9 @@ namespace Localization
         }
 
         /// <summary>
-        /// 
+        /// Raise the Property Changed when invoked.
         /// </summary>
-        public void OnCultureChanged()
+        protected void OnCultureChanged()
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
         }

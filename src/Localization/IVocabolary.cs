@@ -32,7 +32,7 @@ namespace Localization
     using System.Collections.Generic;
 
     /// <summary>
-    /// 
+    /// Provides the interface to a generic vocabulary
     /// </summary>
     public interface IVocabolary : IDictionary<string, string> { }
 }

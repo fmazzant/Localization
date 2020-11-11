@@ -34,31 +34,31 @@ namespace Localization.Xamarin.Converts
     using System.Globalization;
 
     /// <summary>
-    /// 
+    /// Provides a way to convert the null value with the default value passing as paramenter.
     /// </summary>
     public class NullToDefaultConverter : IValueConverter
     {
         /// <summary>
-        /// 
+        /// Converts a value.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
+        /// <param name="value">The value produced by the binding source.</param>
+        /// <param name="targetType">The type of the binding target property.</param>
+        /// <param name="parameter">The converter parameter to use. In this case is DefaultValue</param>
+        /// <param name="culture">The culture to use in the converter.</param>
+        /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value ?? $"#{parameter}";
         }
 
         /// <summary>
-        /// 
+        /// Converts a value.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
+        /// <param name="value">The value that is produced by the binding target.</param>
+        /// <param name="targetType">The type to convert to.</param>
+        /// <param name="parameter">The converter parameter to use.</param>
+        /// <param name="culture">The culture to use in the converter.</param>
+        /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;

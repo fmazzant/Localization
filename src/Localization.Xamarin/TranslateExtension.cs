@@ -36,41 +36,41 @@ namespace Localization.Xamarin
     using System;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of a class derived from IMarkupExtension<BindingBase>.
     /// </summary>
-    [ContentProperty("ResourceKey")]
+    [ContentProperty(nameof(ResourceKey))]
     public class TranslateExtension : IMarkupExtension<BindingBase>
     {
         /// <summary>
-        /// 
+        /// Gets and Sets the ResourceKey, it is a key of resource.
         /// </summary>
         public string ResourceKey { get; set; }
-        
+
         /// <summary>
-        /// 
+        /// Gets or sets a string that specifies how to format the binding if it displays the bound value as a string.
         /// </summary>
         public string StringFormat { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a default value string that specifies when the value is null.
         /// </summary>
         public string DefaultValue { get; set; }
 
         /// <summary>
-        /// 
+        /// When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
+        /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+        /// <returns>The object value to set on the property where the extension is applied.</returns>
         object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
         {
             return ProvideValue(serviceProvider);
         }
 
         /// <summary>
-        /// 
+        /// When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
+        /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+        /// <returns>The object value to set on the property where the extension is applied.</returns>
         public BindingBase ProvideValue(IServiceProvider serviceProvider)
         {
             var binding = new Binding

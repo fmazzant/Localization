@@ -34,5 +34,5 @@ namespace Localization
     /// <summary>
     /// 
     /// </summary>
-    public interface IVocabolaries : IDictionary<string, IVocabolary> { }
+   // public interface IVocabolaries : IDictionary<string, IVocabolary> { }
 }

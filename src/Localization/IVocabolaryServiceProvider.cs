@@ -46,12 +46,6 @@ namespace Localization
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        Task<IVocabolaries> LoadVocabolariesAsync();
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="vocabolary"></param>
         Task SaveAsync(IVocabolary vocabolary);
 
@@ -59,14 +53,8 @@ namespace Localization
         /// 
         /// </summary>
         /// <param name="vocabolaries"></param>
-        Task SaveAsync(IVocabolaries vocabolaries);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vocabolaries"></param>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        Task AddOrUpdateTermAsync(IVocabolaries vocabolaries, string key, string defaultValue = null);
+        Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null);
     }
 }

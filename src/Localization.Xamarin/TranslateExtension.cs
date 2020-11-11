@@ -35,18 +35,42 @@ namespace Localization.Xamarin
     using global::Xamarin.Forms.Xaml;
     using System;
 
+    /// <summary>
+    /// 
+    /// </summary>
     [ContentProperty("Text")]
     public class TranslateExtension : IMarkupExtension<BindingBase>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string Text { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public string StringFormat { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string DefaultValue { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
         object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
         {
             return ProvideValue(serviceProvider);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
         public BindingBase ProvideValue(IServiceProvider serviceProvider)
         {
             var binding = new Binding

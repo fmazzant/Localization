@@ -45,7 +45,7 @@ namespace Localization.Providers
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public Task AddOrUpdateTermAsync(IVocabolaries vocabolaries, string key, string defaultValue = null)
+        public Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null)
         {
             return Task.FromResult(0);
         }
@@ -57,15 +57,6 @@ namespace Localization.Providers
         public Task Initialize()
         {
             return Task.FromResult(0);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Task<IVocabolaries> LoadVocabolariesAsync()
-        {
-            return Task.FromResult<IVocabolaries>(new Vocabolaries { });
         }
 
         /// <summary>
@@ -86,16 +77,6 @@ namespace Localization.Providers
         /// <param name="vocabolary"></param>
         /// <returns></returns>
         public Task SaveAsync(IVocabolary vocabolary)
-        {
-            return Task.FromResult(0);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vocabolaries"></param>
-        /// <returns></returns>
-        public Task SaveAsync(IVocabolaries vocabolaries)
         {
             return Task.FromResult(0);
         }

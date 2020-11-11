@@ -30,10 +30,8 @@
 namespace Localization
 {
     using Localization.Providers;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -45,27 +43,22 @@ namespace Localization
         /// <summary>
         /// 
         /// </summary>
-        public static CultureInfo CurrentCulture { get; private set; } = Thread.CurrentThread.CurrentUICulture;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static LocalizationManager Instance { get; private set; } = new LocalizationManager(new DefaultVocabolaryServiceProvider { });
-
-        /// <summary>
-        /// 
-        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// 
         /// </summary>
-        public IVocabolaryServiceProvider ServiceProvider { get; private set; } = null;
+        public static CultureInfo CurrentCulture { get; private set; } = Thread.CurrentThread.CurrentUICulture;
 
         /// <summary>
         /// 
         /// </summary>
-        private IVocabolaries AllVocabolaries { get; set; } = new Vocabolaries { };
+        public static LocalizationManager Instance { get; } = new LocalizationManager(new DefaultVocabolaryServiceProvider { });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IVocabolaryServiceProvider ServiceProvider { get; private set; } = null;
 
         /// <summary>
         /// 
@@ -90,11 +83,14 @@ namespace Localization
         {
             get
             {
-                if (CurrentVocabolary != null && CurrentVocabolary.ContainsKey(resourceKey) && !string.IsNullOrEmpty(CurrentVocabolary[resourceKey]))
+                if (CurrentVocabolary != null)
                 {
-                    return CurrentVocabolary[resourceKey];
+                    if (CurrentVocabolary.ContainsKey(resourceKey) && !string.IsNullOrEmpty(CurrentVocabolary[resourceKey]))
+                    {
+                        return CurrentVocabolary[resourceKey];
+                    }
+                    ServiceProvider.AddOrUpdateTermAsync(CurrentVocabolary, resourceKey);
                 }
-                ServiceProvider.AddOrUpdateTermAsync(AllVocabolaries, resourceKey);
                 return null;
             }
         }
@@ -115,10 +111,7 @@ namespace Localization
         {
             provider.Initialize().Wait();
             Instance.ServiceProvider = provider;
-            Instance.LoadOrUpdateAllCultureAsync().ContinueWith((r) =>
-            {
-                Instance.SetCulture(null);
-            });
+            Instance.SetCulture(CurrentCulture);
         }
 
         /// <summary>
@@ -130,10 +123,7 @@ namespace Localization
         {
             provider.Initialize().Wait();
             Instance.ServiceProvider = provider;
-            Instance.LoadOrUpdateCultureAsync(culture).ContinueWith((r) =>
-            {
-                Instance.SetCulture(culture);
-            });
+            Instance.SetCulture(CurrentCulture = culture);
         }
 
         /// <summary>
@@ -141,133 +131,33 @@ namespace Localization
         /// </summary>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
-        public async Task LoadOrUpdateCultureAsync(CultureInfo cultureInfo)
-        {
-            var culture = await ServiceProvider.LoadVocabolaryAsync(cultureInfo);
-            if (!(culture is null))
-            {
-                AllVocabolaries = AllVocabolaries ?? new Vocabolaries { };
-
-                if (AllVocabolaries.ContainsKey(cultureInfo.ToString()))
-                {
-                    lock (AllVocabolaries[cultureInfo.ToString()])
-                    {
-                        AllVocabolaries[cultureInfo.ToString()] = culture;
-                    }
-                }
-                else
-                {
-                    AllVocabolaries.Add(cultureInfo.ToString(), culture);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cleanUpAll"></param>
-        /// <returns></returns>
-        public async Task LoadOrUpdateAllCultureAsync(bool cleanUpAll = false)
-        {
-            var cultures = await ServiceProvider.LoadVocabolariesAsync();
-            if (cultures != null)
-            {
-                AllVocabolaries = AllVocabolaries ?? new Vocabolaries { };
-
-                if (cleanUpAll)
-                {
-                    lock (AllVocabolaries)
-                    {
-                        AllVocabolaries.Clear();
-                        AllVocabolaries = cultures;
-                    }
-                }
-                else
-                {
-                    foreach (var key in cultures.Keys)
-                    {
-                        if (AllVocabolaries.ContainsKey(key))
-                        {
-                            lock (AllVocabolaries[key])
-                            {
-                                AllVocabolaries[key] = cultures[key];
-                            }
-                        }
-                        else
-                        {
-                            AllVocabolaries.Add(key, cultures[key]);
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cultureInfo"></param>
-        /// <returns></returns>
-        public async Task SaveCultureAsync(CultureInfo cultureInfo = null)
-        {
-            CultureInfo cultureToSave = cultureInfo;
-            if (cultureInfo is null)
-            {
-                cultureToSave = CurrentCulture;
-            }
-            await ServiceProvider.SaveAsync(AllVocabolaries[cultureToSave.ToString()]);
-        }
+        public async Task<IVocabolary> LoadOrUpdateCultureAsync(CultureInfo cultureInfo) => await ServiceProvider.LoadVocabolaryAsync(cultureInfo);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task SaveAllCultureAsync() => await ServiceProvider.SaveAsync(AllVocabolaries);
+        public async Task SaveCultureAsync() => await ServiceProvider.SaveAsync(CurrentVocabolary);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="culture"></param>
-        public void SetCulture(CultureInfo culture, bool loadCultureIfNecessary = false)
+        public void SetCulture(CultureInfo culture)
         {
-            if (loadCultureIfNecessary)
+            if (CurrentVocabolary is null)
             {
-                this.LoadOrUpdateCultureAsync(culture).Wait();
+                var vocabolary = this.LoadOrUpdateCultureAsync(culture).Result;
+                CurrentVocabolary = vocabolary;
             }
-
-            if (AllVocabolaries != null && AllVocabolaries.Keys.Count > 0)
+            else
             {
-                if (culture != null && AllVocabolaries.ContainsKey(culture.ToString()))
+                lock (CurrentVocabolary)
                 {
-                    CurrentCulture = culture;
-                    CurrentVocabolary = AllVocabolaries[culture.ToString()];
-                }
-                else
-                {
-                    //if (AllVocabolaries.Values.Any(x => x.IsDefault))
-                    //{
-                    //    foreach (var k in AllVocabolaries.Keys)
-                    //    {
-                    //        if (AllVocabolaries[k].IsDefault)
-                    //        {
-                    //            CurrentCulture = new CultureInfo(k);
-                    //            CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];
-                    //        }
-                    //    }
-                    //}
-                    //else 
-                    if (AllVocabolaries.ContainsKey(Thread.CurrentThread.CurrentUICulture.ToString()))
-                    {
-                        CurrentCulture = Thread.CurrentThread.CurrentUICulture;
-                        CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];
-                    }
-                    else
-                    {
-                        CurrentCulture = new CultureInfo(AllVocabolaries.Keys.FirstOrDefault());
-                        CurrentVocabolary = AllVocabolaries[CurrentCulture.ToString()];
-                    }
+                    var vocabolary = this.LoadOrUpdateCultureAsync(culture).Result;
+                    CurrentVocabolary = vocabolary;
                 }
             }
-
             OnCultureChanged();
         }
 

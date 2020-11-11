@@ -41,18 +41,40 @@ namespace Localization.Windows
     [ContentProperty(nameof(Text))]
     public class TranslateExtension : MarkupExtension
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public TranslateExtension() { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
         public TranslateExtension(string text)
         {
             Text = text;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Text { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string StringFormat { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string DefaultValue { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             var binding = new Binding()

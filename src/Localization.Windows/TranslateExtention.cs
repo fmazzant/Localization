@@ -38,7 +38,7 @@ namespace Localization.Windows
     /// <summary>
     /// 
     /// </summary>
-    [ContentProperty(nameof(Text))]
+    [ContentProperty(nameof(ResourceKey))]
     public class TranslateExtension : MarkupExtension
     {
         /// <summary>
@@ -50,15 +50,15 @@ namespace Localization.Windows
         /// 
         /// </summary>
         /// <param name="text"></param>
-        public TranslateExtension(string text)
+        public TranslateExtension(string resourceKey)
         {
-            Text = text;
+            ResourceKey = resourceKey;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public string Text { get; set; }
+        public string ResourceKey { get; set; }
 
         /// <summary>
         /// 
@@ -80,7 +80,7 @@ namespace Localization.Windows
             var binding = new Binding()
             {
                 Source = LocalizationManager.Instance,
-                Path = new PropertyPath($"[{Text}]"),
+                Path = new PropertyPath($"[{ResourceKey}]"),
                 Converter = new NullToDefaultConverter(),
                 ConverterParameter = DefaultValue,
                 StringFormat = StringFormat

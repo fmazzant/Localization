@@ -38,13 +38,13 @@ namespace Localization.Xamarin
     /// <summary>
     /// 
     /// </summary>
-    [ContentProperty("Text")]
+    [ContentProperty("ResourceKey")]
     public class TranslateExtension : IMarkupExtension<BindingBase>
     {
         /// <summary>
         /// 
         /// </summary>
-        public string Text { get; set; }
+        public string ResourceKey { get; set; }
         
         /// <summary>
         /// 
@@ -76,7 +76,7 @@ namespace Localization.Xamarin
             var binding = new Binding
             {
                 Mode = BindingMode.OneWay,
-                Path = $"[{Text}]",
+                Path = $"[{ResourceKey}]",
                 Source = LocalizationManager.Instance,
                 StringFormat = StringFormat,
                 Converter = new NullToDefaultConverter(),

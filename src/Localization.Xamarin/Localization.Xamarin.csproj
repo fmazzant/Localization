@@ -12,7 +12,7 @@
     <PackageId>Mafe.Localization.Xamarin</PackageId>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
-    <Description>A Xamarin library for .net that can help you to manage the localization in your application with a simple method. The library uses Mafe.Localization</Description>
+    <Description>A Xamarin library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
   </PropertyGroup>

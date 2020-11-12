@@ -11,7 +11,7 @@
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>localization, c-sharp, dotnet-standard, dotnet-core, dotnet-framework</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <Description>A library for .net that can help you to manage the localization in your application with a simple method.</Description>
+    <Description>A library for .net that can help you to manage the localization in your application.</Description>
     <Authors>Federico Mazzanti</Authors>
     <AssemblyName>Mafe.Localization</AssemblyName>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

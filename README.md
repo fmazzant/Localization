@@ -1,5 +1,18 @@
 # Localization
+
 A library for .net that can help you to manage the localization in your application with a simple method.
+
+To use it in your project, add the Mafe.Localization NuGet package to your project.
+
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization)
+
+and Mafe.Localization.Windows 
+
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Windows?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Windows)
+
+and Mafe.Localization.Xamarin
+
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Xamarin?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
 
 # Architecture
 The following image represets a localization manager diagram:
@@ -18,7 +31,7 @@ the current culture and it provides to load a vocabolary in culture.
 ### Init
 
 The Init provides to initilize the LocalizationManager. There two kind: Initializing
-without culture (take the thread cultire) and with a specific culture.
+without culture (takes the culture from main thread) and with a specific culture.
 
 The initilizing without culture like this:
 
@@ -32,9 +45,11 @@ The inizializing with the culture like this:
 LocalizationManager.Init(new MockVocabolaryServiceProvider { }, new CultureInfo("en-US"));
 ```
 
-The inizializing of library is very important to load the vocabolary.
+The inizializing library is necessary to load and configure the vocabolary.
 
 ### SetCulture
+
+The SetCulture changes the current culture, like this:
 
 ```c#
 LocalizationManager.SetCulture(new CultureInfo("en-US"));
@@ -42,18 +57,34 @@ LocalizationManager.SetCulture(new CultureInfo("en-US"));
 
 ### Translate without default value
 
+Get the resource's value we are using the following code:
+
 ```c#
 var label = LocalizationManager.Instance["resourceKey"];
 ```
 
+The result can be null.
+
 ### Translate with default value
+
+It is possible get the resource's value with a Translate method, like this:
 
 ```c#
 var label = LocalizationManager.Instance.Translate("resourceKey","#Default value");
 ```
 
+If resource's value doesn't exests the function returns the Default value 
+passed as argument.
+
 # Vocabolary Service Provider
-line...
+
+The following code defines the vocabolary service provider where all vacabolaries 
+are defined or where the vocabolaries are loaded. 
+
+Inside the Provider is possbile to manage a cache.
+
+A sample is represented into following code:
+
 ```c# xaml
 public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
 {
@@ -91,35 +122,50 @@ public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
 }
 ```
 
-# Localization Uses
-line....
-
 # Xamarin
-line...
+
+The Xamarin has a specific library to manage the culture inside the project. In first
+time is necesasry initializing the LocalizationManager. Like this:
 
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 ```
+
+Inside your xaml file is necessary include the Localization.Xamarin library, like this:
 
 ```c# xaml
  xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Localization.Xamarin"
 ```
 
+In the following code is displayed how the Label's text works:
+
 ```c# xaml
 <Label Text="{culture:Translate MainWindow, DefaultValue=Main Window}"></Label>
 ```
 
-# WPF
-line...
+In this case, when the culture changed, the LocalizationManager changing the
+Label's Text value with the current culture value.
+
+# WPF Windows
+
+The Wpf Windows has a specific library to manage the culture inside the project. In first
+time is necesasry initializing the LocalizationManager. Like this:
 
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 ```
 
+Inside your xaml file is necessary include the Localization.Windows library, like this:
+
 ```c# xaml
 xmlns:culture="clr-namespace:Localization.Windows;assembly=Localization.Windows"
 ```
 
+In the following code is displayed how the Label's text works:
+
 ```c# xaml
 <Label Content="{culture:Translate MainWindow, DefaultValue=Main Window}"></Label>
 ```
+
+In this case, when the culture changed, the LocalizationManager changing the
+Label's Text value with the current culture value.

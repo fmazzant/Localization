@@ -3,6 +3,7 @@ A library for .net that can help you to manage the localization in your applicat
 
 # Architecture
 line...
+![alt Localization Manager Diagram](art/diagram.png)
 
 # LocalizationManager
 line...
@@ -70,6 +71,11 @@ line....
 
 # Xamarin
 line...
+
+```c#
+LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+```
+
 ```c# xaml
  xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Localization.Xamarin"
 ```
@@ -80,6 +86,11 @@ line...
 
 # WPF
 line...
+
+```c#
+LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+```
+
 ```c# xaml
 xmlns:culture="clr-namespace:Localization.Windows;assembly=Localization.Windows"
 ```

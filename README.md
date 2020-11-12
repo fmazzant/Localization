@@ -2,25 +2,51 @@
 A library for .net that can help you to manage the localization in your application with a simple method.
 
 # Architecture
-line...
+The following image represets a localization manager diagram:
+
+![alt Localization Manager Diagram](art/diagram.png)
+
+Actually there are two extenetion of library: Wpf Window and Xamarin App. 
+The library can be used without extentions but using the Localization Manager 
+Instance directly.
 
 # LocalizationManager
-line...
+
+LocalizationManager is more important component of this library. The library manages
+the current culture and it provides to load a vocabolary in culture.
+
+### Init
+
+The Init provides to initilize the LocalizationManager. There two kind: Initializing
+without culture (take the thread cultire) and with a specific culture.
+
+The initilizing without culture like this:
+
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 ```
+
+The inizializing with the culture like this:
 
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { }, new CultureInfo("en-US"));
 ```
 
+The inizializing of library is very important to load the vocabolary.
+
+### SetCulture
+
 ```c#
 LocalizationManager.SetCulture(new CultureInfo("en-US"));
 ```
 
+### Translate without default value
+
 ```c#
 var label = LocalizationManager.Instance["resourceKey"];
 ```
+
+### Translate with default value
 
 ```c#
 var label = LocalizationManager.Instance.Translate("resourceKey","#Default value");
@@ -70,6 +96,11 @@ line....
 
 # Xamarin
 line...
+
+```c#
+LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+```
+
 ```c# xaml
  xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Localization.Xamarin"
 ```
@@ -80,6 +111,11 @@ line...
 
 # WPF
 line...
+
+```c#
+LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+```
+
 ```c# xaml
 xmlns:culture="clr-namespace:Localization.Windows;assembly=Localization.Windows"
 ```

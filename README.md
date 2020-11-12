@@ -10,7 +10,7 @@ Using Wpf Windows it is necesary installing the Mafe.Localization.Windows librar
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Windows?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Windows)
 
-Using Xamaring it is possible installing the Mafe.Localization.Xamarin library only:
+Using Xamarin it is possible installing the Mafe.Localization.Xamarin library only:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Xamarin?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
 

@@ -101,18 +101,13 @@ namespace Localization
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static string Translate(string key, string defaultValue) => Instance[key] ?? $"#{defaultValue}";
+        public static string Translate(string key, string defaultValue) => Instance[key] ?? $"{defaultValue}";
 
         /// <summary>
         /// Initilizes the LocalizationManger with the default culture.
         /// </summary>
         /// <param name="provider">Service provider</param>
-        public static void Init(IVocabolaryServiceProvider provider)
-        {
-            provider.Initialize().Wait();
-            Instance.ServiceProvider = provider;
-            Instance.SetCulture(CurrentCulture);
-        }
+        public static void Init(IVocabolaryServiceProvider provider) => Init(provider, CurrentCulture);
 
         /// <summary>
         /// Initilizes the LocalizationManger with the culture.

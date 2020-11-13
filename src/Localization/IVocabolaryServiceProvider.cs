@@ -57,7 +57,7 @@ namespace Localization
         Task SaveAsync(IVocabolary vocabolary);
 
         /// <summary>
-        /// When a term uses inside your application not exists inside your vocabolary, this methods is run.
+        /// When a generic term uses inside your application not exists in your vocabolary, this methods is invoked, so you can manage the new key.
         /// </summary>
         /// <param name="vocabolaries">Current vocabolary</param>
         /// <param name="key">ResourceKey</param>

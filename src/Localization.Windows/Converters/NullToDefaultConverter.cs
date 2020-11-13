@@ -48,7 +48,7 @@ namespace Localization.Windows.Converters
         /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value ?? $"#{parameter}";
+            return value ?? $"{parameter}";
         }
 
         /// <summary>

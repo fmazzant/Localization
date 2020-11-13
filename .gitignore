@@ -16,3 +16,4 @@
 /src/Localization.Windows/obj
 /samples/.vs/Localization.Samples/v16/.suo
 /src/Localization/bin/Release
+/src/Localization.Xamarin/bin/Release

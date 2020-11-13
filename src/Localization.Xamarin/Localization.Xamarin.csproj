@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization" Version="1.0.0-rc2" />
+    <PackageReference Include="Mafe.Localization" Version="1.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="4.0.0.709238" />
   </ItemGroup>
 

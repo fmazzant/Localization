@@ -46,13 +46,16 @@ namespace Localization.Samples.VocabolaryServiceProvider
                 {"it-IT", new Vocabolary {
                         { "MainWindow","Finestra Principale" },
                         { "TitleWpf","Localization Manager Wpf - Italiano" },
-                        { "ChangeYourLanguageText", "Cambia la tua lingua"}
+                        { "ChangeYourLanguageText", "Cambia la tua lingua"},
+                        { "AboutText","Libraria .net che può aiutarti a gestire la localizzazione della localizzazione della tua applicazione. La libreria include estensopme Wpf, estensione Xamarin and estensione Mvc. " },
                     }
                 },
                 {"en-US", new Vocabolary {
                         { "MainWindow","Main Window" },
                         { "TitleWpf","Localization Manager Wpf - English" },
-                        { "ChangeYourLanguageText", "Change your language"}
+                        { "ChangeYourLanguageText", "Change your language"},
+                        { "AboutText","A library for .net that can help you to manage the localization in your application. The library includes Wpf extension, Xamarin extension and Mvc extension. " },
+
                     }
                 }
             };

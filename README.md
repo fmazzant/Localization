@@ -169,3 +169,12 @@ In the following code is displayed how the Label's text works:
 
 In this case, when the culture changed, the LocalizationManager changing the
 Label's Text value with the current culture value.
+
+# ASP.NET MVC
+
+The ASP.NET MVC has a specific library to manage the culture inside the project. In first
+time is necesasry initializing the LocalizationManager. Like this:
+
+```c#
+
+```

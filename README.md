@@ -189,6 +189,8 @@ public void ConfigureServices(IServiceCollection services)
     ...
 }
 ```
+The "options.Culture" value represents the initilized culture.
+
 Then we define the ViewModel using the TranslateAttribute, like this:
 
 ```c#

@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Localization.Samples.SharedLayer", "Localization.Samples.VocabolaryServiceProvider\Localization.Samples.SharedLayer.shproj", "{E0D66FD1-B3EA-41F2-AF2F-0582B1049EEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Samples.AppWpf", "Localization.Samples.AppWpf\Localization.Samples.AppWpf.csproj", "{AF93E074-F586-49C4-B4ED-ECC9CA81D507}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{af93e074-f586-49c4-b4ed-ecc9ca81d507}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{e0d66fd1-b3ea-41f2-af2f-0582b1049eef}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF93E074-F586-49C4-B4ED-ECC9CA81D507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF93E074-F586-49C4-B4ED-ECC9CA81D507}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF93E074-F586-49C4-B4ED-ECC9CA81D507}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF93E074-F586-49C4-B4ED-ECC9CA81D507}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

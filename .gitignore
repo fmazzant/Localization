@@ -19,3 +19,6 @@
 /src/Localization.Xamarin/bin/Release
 /src/Localization.Mvc/bin
 /src/Localization.Mvc/obj
+/samples/Localization.Samples.AppWpf/obj
+/samples/Localization.Samples.AppWpf/bin/Debug/netcoreapp3.1
+/samples/Localization.Samples.AppWpf/Localization.Samples.AppWpf.csproj.user

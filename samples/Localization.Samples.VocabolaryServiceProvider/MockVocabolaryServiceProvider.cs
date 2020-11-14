@@ -44,11 +44,13 @@ namespace Localization.Samples.VocabolaryServiceProvider
             all = new Dictionary<string, Vocabolary>
             {
                 {"it-IT", new Vocabolary {
-                        { "MainWindow","Main Window in italian language" }
+                        { "MainWindow","Finestra Principale" },
+                        { "TitleWpf","Localization Manager Wpf - Italiano" }
                     }
                 },
                 {"en-US", new Vocabolary {
-                        { "MainWindow","Main Window in english language" }
+                        { "MainWindow","Main Window" },
+                        { "TitleWpf","Localization Manager Wpf - English" }
                     }
                 }
             };

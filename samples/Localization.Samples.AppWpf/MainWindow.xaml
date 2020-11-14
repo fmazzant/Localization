@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Localization.Samples.AppWpf"
+        xmlns:culture="clr-namespace:Localization.Windows;assembly=Localization.Windows"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{culture:Translate MainWindow, DefaultValue='#Main Window'}" 
+        Height="450" 
+        Width="800">
     <Grid>
-
+        <StackPanel Height="43" VerticalAlignment="Top">
+            <Label Content="{culture:Translate TitleWpf, DefaultValue='#Localization Manager Wpf'}"
+                   FontSize="20" 
+                   Foreground="White">
+            </Label>
+        </StackPanel>
     </Grid>
 </Window>

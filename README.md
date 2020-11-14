@@ -176,8 +176,7 @@ Label's Text value with the current culture value.
 
 # ASP.NET MVC
 
-The ASP.NET MVC has a specific library to manage the culture inside the project. In first
-time is necesasry initializing the LocalizationManager.
+The ASP.NET MVC has a specific library to manage the culture inside the project. Is necessary initializing the LocalizationManager.
 
 In first time we configure the localizationManager inside the Startup.cs:
 

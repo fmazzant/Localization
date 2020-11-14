@@ -130,10 +130,6 @@ public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
 
 The Xamarin has a specific library to manage the culture inside the project. 
 
-It possible install the package with the following command: 
-```c#
-Install-Package Mafe.Localization.Xamarin -Version 1.0.0
-```
 In first time is necessary initializing the LocalizationManager. Like this:
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
@@ -152,11 +148,6 @@ Label's Text value with the current culture value.
 # WPF Windows
 
 The Wpf Windows has a specific library to manage the culture inside the project. 
-
-It possible install the package with the following command: 
-```c#
-Install-Package Mafe.Localization.Windows -Version 1.0.0
-```
 
 In first time is necessary initializing the LocalizationManager. Like this:
 
@@ -182,13 +173,6 @@ Label's Text value with the current culture value.
 # ASP.NET MVC
 
 The ASP.NET MVC has a specific library to manage the culture inside the project. 
-
-It possible install the package with the following command: 
-```c#
-Install-Package Mafe.Localization.Mvc -Version 1.0.0-alpha1
-```
-
-In first time is necesasry initializing the LocalizationManager.
 
 In first time we configure the localizationManager inside the Startup.cs:
 

@@ -32,17 +32,17 @@ namespace Localization.Mvc
     using System;
 
     /// <summary>
-    /// 
+    /// Specifies the display name for a property, event, or public void method which takes no arguments.
     /// </summary>
     public class TranslateAttribute : Attribute
     {
         /// <summary>
-        /// 
+        /// Tt is a key of resource
         /// </summary>
-        public string ResourseKey { get; set; }
+        public string ResourceKey { get; set; }
 
         /// <summary>
-        /// 
+        /// The default value string that specifies when the value is null or the resource key not exists inside vocabolory.
         /// </summary>
         public string DefaultValue { get; set; }
     }

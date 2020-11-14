@@ -43,13 +43,13 @@ namespace Localization.Mvc.Rendering
     public static class HtmlHelperLabelExtensions
     {
         /// <summary>
-        /// 
+        /// Returns a <label> element for the specified expression.
         /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="htmlHelper"></param>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TResult">The type of the expression result.</typeparam>
+        /// <param name="htmlHelper">The Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper`1 instance this method extends.</param>
+        /// <param name="expression">An expression to be evaluated against the current model.</param>
+        /// <returns>The type of the expression result.</returns>
         public static IHtmlContent TranslateLabelFor<TModel, TResult>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TResult>> expression)
         {
             Type type = typeof(TModel);
@@ -79,22 +79,23 @@ namespace Localization.Mvc.Rendering
             TranslateAttribute attr;
             attr = (TranslateAttribute)type.GetProperty(propertyName).GetCustomAttributes(typeof(TranslateAttribute), true).SingleOrDefault();
 
-            var s = LocalizationManager.Translate(attr.ResourseKey, attr.DefaultValue);
+            var s = LocalizationManager.Translate(attr.ResourceKey, attr.DefaultValue);
 
             IHtmlContent html = htmlHelper.LabelFor(expression, labelText: s);
             return html;
         }
 
         /// <summary>
-        /// 
+        /// Returns a <label> element for the specified expression.
         /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <param name="htmlHelper"></param>
-        /// <param name="expression"></param>
-        /// <param name="resourceKey"></param>
-        /// <param name="defaultValue"></param>
-        /// <param name="htmlAttributes"></param>
-        /// <returns></returns>
+        /// <param name="htmlHelper">The Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper instance this method extends.</param>
+        /// <param name="expression">Expression name, relative to the current model.</param>
+        /// <param name="resourceKey">The ResourceKey, it is a key of resource.</param>
+        /// <param name="defaultValue">The default value string that specifies when the value is null or the resource key not exists inside vocabolory.</param>
+        /// <param name="htmlAttributes">An System.Object that contains the HTML attributes for the element. Alternatively,
+        /// an System.Collections.Generic.IDictionary`2 instance containing the HTML attributes.
+        /// </param>
+        /// <returns>A new Microsoft.AspNetCore.Html.IHtmlContent containing the <label> element.</returns>
         public static IHtmlContent TranslateLabel<TModel>(this IHtmlHelper<TModel> htmlHelper, string expression, string resourceKey, string defaultValue, object htmlAttributes = null)
         {
             var labelText = LocalizationManager.Translate(resourceKey, defaultValue);

@@ -37,7 +37,7 @@ namespace Localization.Mvc
     public class TranslateAttribute : Attribute
     {
         /// <summary>
-        /// Tt is a key of resource
+        /// The key of resource
         /// </summary>
         public string ResourceKey { get; set; }
 

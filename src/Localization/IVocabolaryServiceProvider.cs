@@ -33,7 +33,7 @@ namespace Localization
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Provides the interface to a providers to the loading the vocabolaries
+    /// The interface to a providers to the loading the vocabolaries
     /// </summary>
     public interface IVocabolaryServiceProvider
     {

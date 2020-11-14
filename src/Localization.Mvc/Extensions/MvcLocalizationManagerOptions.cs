@@ -32,17 +32,17 @@ namespace Localization.Mvc.Extensions
     using System.Globalization;
 
     /// <summary>
-    /// 
+    /// Provides the options of localization manager
     /// </summary>
     public class MvcLocalizationManagerOptions
     {
         /// <summary>
-        /// 
+        /// The interface to a providers to the loading the vocabolaries
         /// </summary>
         public IVocabolaryServiceProvider ServiceProvider { get; set; }
 
         /// <summary>
-        /// 
+        /// Privides information about the culture to set.
         /// </summary>
         public CultureInfo Culture { get; set; }
     }

@@ -38,7 +38,7 @@ namespace Localization.Mvc.Extensions
     public static class ServiceCollectionServiceExtensions
     {
         /// <summary>
-        /// 
+        /// Adds and inits the localization manager to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
         /// </summary>
         /// <param name="services"></param>
         /// <param name="options"></param>

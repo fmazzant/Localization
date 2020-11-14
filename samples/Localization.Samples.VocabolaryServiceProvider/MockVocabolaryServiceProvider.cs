@@ -45,12 +45,14 @@ namespace Localization.Samples.VocabolaryServiceProvider
             {
                 {"it-IT", new Vocabolary {
                         { "MainWindow","Finestra Principale" },
-                        { "TitleWpf","Localization Manager Wpf - Italiano" }
+                        { "TitleWpf","Localization Manager Wpf - Italiano" },
+                        { "ChangeYourLanguageText", "Cambia la tua lingua"}
                     }
                 },
                 {"en-US", new Vocabolary {
                         { "MainWindow","Main Window" },
-                        { "TitleWpf","Localization Manager Wpf - English" }
+                        { "TitleWpf","Localization Manager Wpf - English" },
+                        { "ChangeYourLanguageText", "Change your language"}
                     }
                 }
             };

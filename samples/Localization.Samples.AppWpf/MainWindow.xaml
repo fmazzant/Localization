@@ -16,5 +16,21 @@
                    Foreground="White">
             </Label>
         </StackPanel>
+        <Label Content="{culture:Translate ChangeYourLanguageText, DefaultValue='#Change your language'}" 
+               HorizontalAlignment="Left" 
+               Margin="10,56,0,0" 
+               VerticalAlignment="Top" 
+               Width="250"/>
+        <ComboBox HorizontalAlignment="Left" 
+                  SelectionChanged="ComboBox_SelectionChanged"
+                  Margin="10,87,0,0" 
+                  VerticalAlignment="Top" 
+                  Width="250">
+            <ComboBoxItem Content="Italian" Name="Italian" Tag="it-IT">
+            </ComboBoxItem>
+            <ComboBoxItem Content="English" Name="English" Tag="en-US">
+            </ComboBoxItem>
+        </ComboBox>
+
     </Grid>
 </Window>

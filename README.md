@@ -144,7 +144,7 @@ Inside your xaml file is necessary include the Localization.Xamarin library, lik
 In the following code is displayed how the Label's text works:
 
 ```c# xaml
-<Label Text="{culture:Translate MainWindow, DefaultValue=Main Window}"></Label>
+<Label Text="{culture:Translate MainWindow, DefaultValue='Main Window'}"></Label>
 ```
 
 In this case, when the culture changed, the LocalizationManager changing the
@@ -168,7 +168,7 @@ xmlns:culture="clr-namespace:Localization.Windows;assembly=Localization.Windows"
 In the following code is displayed how the Label's text works:
 
 ```c# xaml
-<Label Content="{culture:Translate MainWindow, DefaultValue=Main Window}"></Label>
+<Label Content="{culture:Translate MainWindow, DefaultValue='Main Window'}"></Label>
 ```
 
 In this case, when the culture changed, the LocalizationManager changing the

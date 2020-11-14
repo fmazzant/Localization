@@ -6,13 +6,18 @@ To use it in your project, Mafe.Localization NuGet package represents a base lib
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization)
 
-Using Wpf Windows it is necesary installing the Mafe.Localization.Windows library only:
+Using Wpf Windows it is necesary installing the Mafe.Localization.Windows library:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Windows?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Windows)
 
-Using Xamarin it is possible installing the Mafe.Localization.Xamarin library only:
+Using Xamarin it is possible installing the Mafe.Localization.Xamarin library:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Xamarin?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
+
+Using ASP.NET MVC it is possible installing the Mafe.Localization.Mvc library:
+
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
+
 
 # Architecture
 The following image represets a localization manager diagram:
@@ -169,3 +174,12 @@ In the following code is displayed how the Label's text works:
 
 In this case, when the culture changed, the LocalizationManager changing the
 Label's Text value with the current culture value.
+
+# ASP.NET MVC
+
+The ASP.NET MVC has a specific library to manage the culture inside the project. In first
+time is necesasry initializing the LocalizationManager. Like this:
+
+```c#
+
+```

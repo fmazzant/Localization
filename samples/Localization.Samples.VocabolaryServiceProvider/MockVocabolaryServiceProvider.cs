@@ -59,7 +59,6 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "TitleWpf","Localization Manager Wpf - English" },
                         { "ChangeYourLanguageText", "Change your language"},
                         { "AboutText","A library for .net that can help you to manage the localization in your application. The library includes Wpf extension, Xamarin extension and Mvc extension. " },
-
                     }
                 }
             };

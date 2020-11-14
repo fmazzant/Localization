@@ -17,3 +17,5 @@
 /samples/.vs/Localization.Samples/v16/.suo
 /src/Localization/bin/Release
 /src/Localization.Xamarin/bin/Release
+/src/Localization.Mvc/bin
+/src/Localization.Mvc/obj

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Windows", "Loc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Xamarin", "Localization.Xamarin\Localization.Xamarin.csproj", "{CC5CCB7A-3663-4972-910F-6294906E89BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Mvc", "Localization.Mvc\Localization.Mvc.csproj", "{65B87408-99BB-461F-9746-850FFA5D01B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{CC5CCB7A-3663-4972-910F-6294906E89BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC5CCB7A-3663-4972-910F-6294906E89BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC5CCB7A-3663-4972-910F-6294906E89BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65B87408-99BB-461F-9746-850FFA5D01B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65B87408-99BB-461F-9746-850FFA5D01B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65B87408-99BB-461F-9746-850FFA5D01B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65B87408-99BB-461F-9746-850FFA5D01B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

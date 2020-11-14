@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Federico Mazzanti</Authors>
+    <Description>A MVC library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
+    <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>localization, c-sharp, dotnet-core, mvc</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Mafe.Localization.Mvc</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

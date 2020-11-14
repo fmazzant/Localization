@@ -7,10 +7,10 @@
         xmlns:culture="clr-namespace:Localization.Windows;assembly=Localization.Windows"
         mc:Ignorable="d"
         Title="{culture:Translate MainWindow, DefaultValue='#Main Window'}" 
-        Height="450" 
-        Width="800">
+        Height="369" 
+        Width="668">
     <Grid>
-        <StackPanel Height="43" VerticalAlignment="Top">
+        <StackPanel Height="43" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <Label Content="{culture:Translate TitleWpf, DefaultValue='#Localization Manager Wpf'}"
                    FontSize="20" 
                    Foreground="White">
@@ -21,16 +21,20 @@
                Margin="10,56,0,0" 
                VerticalAlignment="Top" 
                Width="250"/>
-        <ComboBox HorizontalAlignment="Left" 
+        <ComboBox 
                   SelectionChanged="ComboBox_SelectionChanged"
-                  Margin="10,87,0,0" 
-                  VerticalAlignment="Top" 
-                  Width="250">
-            <ComboBoxItem Content="Italian" Name="Italian" Tag="it-IT">
+                  Margin="10,87,10,0" 
+                  Width="Auto" Height="30" VerticalAlignment="Top">
+            <ComboBoxItem Content="Italian" Name="Italian" Tag="it-IT" IsSelected="True">
             </ComboBoxItem>
             <ComboBoxItem Content="English" Name="English" Tag="en-US">
             </ComboBoxItem>
         </ComboBox>
+        <TextBlock Padding="15,5,15,5" 
+                   Margin="10,122,10,10" 
+                   FontSize="16" TextAlignment="Justify"
+                   Text="{culture:Translate AboutText, DefaultValue='#about introduction..'}" 
+                   TextWrapping="Wrap" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>

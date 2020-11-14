@@ -18,7 +18,6 @@ Using ASP.NET MVC it is possible installing the Mafe.Localization.Mvc library:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
 
-
 # Architecture
 The following image represets a localization manager diagram:
 
@@ -178,8 +177,55 @@ Label's Text value with the current culture value.
 # ASP.NET MVC
 
 The ASP.NET MVC has a specific library to manage the culture inside the project. In first
-time is necesasry initializing the LocalizationManager. Like this:
+time is necesasry initializing the LocalizationManager.
+
+In first time we configure the localizationManager inside the Startup.cs:
 
 ```c#
+using Localization.Mvc.Extensions;
+...
+public void ConfigureServices(IServiceCollection services)
+{
+    ... 
+    services.AddMvcLocalizationManager(options => {
+        options.ServiceProvider = new MockVocabolaryServiceProvider { };
+        options.Culture = new CultureInfo("it-IT");
+    });
+    ...
+}
+```
+Then we define the ViewModel using the TranslateAttribute, like this:
+```c#
+public class MyViewModel
+{
+    [Translate(ResourceKey = "NameText", DefaultValue = "#Name")]
+    public string Name { get; set; }
 
+    [Translate(ResourceKey = "LastNameText", DefaultValue = "#LastName")]
+    public string LastName { get; set; }
+
+    [Translate(ResourceKey = "AddressText", DefaultValue = "#Address")]
+    public string Address { get; set; }
+}
+```
+Now we using our ViewModel inside the view, like this:
+```c#
+<p>
+    @Html.TranslateLabelFor(m => m.Name)
+    @Html.Label("Name", Model.Name)
+</p>
+<p>
+    @Html.TranslateLabelFor(m => m.LastName)
+    @Html.Label("LastName", Model.LastName)
+</p>
+<p>
+    @Html.TranslateLabelFor(m => m.Address)
+    @Html.Label("Address", Model.Address)
+</p>
+```
+It is possible using the TranslateLabel directly, like this:
+```c#
+<p>
+     @Html.TranslateLabel("LabelTitle", "ResourceKey", "#Default Value of Label")
+</p>
 ```

@@ -1,8 +1,4 @@
 ﻿// <summary>
-
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
 /// 
 /// The MIT License (MIT)
 /// 
@@ -30,8 +26,16 @@ using System.Threading.Tasks;
 /// OTHER DEALINGS IN THE SOFTWARE.
 /// 
 /// </summary>
+
 namespace Localization.Samples.VocabolaryServiceProvider
 {
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Mock Vocabolary Service Provider
+    /// </summary>
     public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
     {
         Dictionary<string, Vocabolary> all = null;

@@ -207,7 +207,7 @@ public class MyViewModel
     public string Address { get; set; }
 }
 ```
-Now we using our ViewModel inside the view, like this:
+Now we using the ViewModel inside the view, like this:
 ```c#
 <p>
     @Html.TranslateLabelFor(m => m.Name)

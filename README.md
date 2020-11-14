@@ -128,32 +128,37 @@ public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
 
 # Xamarin
 
-The Xamarin has a specific library to manage the culture inside the project. In first
-time is necesasry initializing the LocalizationManager. Like this:
+The Xamarin has a specific library to manage the culture inside the project. 
 
+It possible install the package with the following command: 
+```c#
+Install-Package Mafe.Localization.Xamarin -Version 1.0.0
+```
+In first time is necessary initializing the LocalizationManager. Like this:
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 ```
-
 Inside your xaml file is necessary include the Localization.Xamarin library, like this:
-
 ```c# xaml
  xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Localization.Xamarin"
 ```
-
 In the following code is displayed how the Label's text works:
-
 ```c# xaml
 <Label Text="{culture:Translate MainWindow, DefaultValue='Main Window'}"></Label>
 ```
-
 In this case, when the culture changed, the LocalizationManager changing the
 Label's Text value with the current culture value.
 
 # WPF Windows
 
-The Wpf Windows has a specific library to manage the culture inside the project. In first
-time is necesasry initializing the LocalizationManager. Like this:
+The Wpf Windows has a specific library to manage the culture inside the project. 
+
+It possible install the package with the following command: 
+```c#
+Install-Package Mafe.Localization.Windows -Version 1.0.0
+```
+
+In first time is necessary initializing the LocalizationManager. Like this:
 
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
@@ -176,8 +181,14 @@ Label's Text value with the current culture value.
 
 # ASP.NET MVC
 
-The ASP.NET MVC has a specific library to manage the culture inside the project. In first
-time is necesasry initializing the LocalizationManager.
+The ASP.NET MVC has a specific library to manage the culture inside the project. 
+
+It possible install the package with the following command: 
+```c#
+Install-Package Mafe.Localization.Mvc -Version 1.0.0-alpha1
+```
+
+In first time is necesasry initializing the LocalizationManager.
 
 In first time we configure the localizationManager inside the Startup.cs:
 
@@ -195,6 +206,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 Then we define the ViewModel using the TranslateAttribute, like this:
+
 ```c#
 public class MyViewModel
 {

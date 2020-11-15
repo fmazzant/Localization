@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using XamarinForms = Xamarin.Forms;
 
 namespace Localization.Samples.AppXamarin.UWP
 {
@@ -57,7 +58,8 @@ namespace Localization.Samples.AppXamarin.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                Xamarin.Forms.Forms.Init(e);
+                XamarinForms.Forms.Init(e);
+                
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

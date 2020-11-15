@@ -60,6 +60,12 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "TitlePage","Label con traduzione:" },
                         { "Title","Esempio di Localizzazione" },
                         { "AbstractText","Usa questa pagina di dettaglio per la localizzazione di esempio" },
+                        //XAMARIN
+                        { "Welcome","Benvenuto in Xamarin.Forms!" },
+                        { "StartDevelopingNow","Parti ora con lo sviluppo!" },
+                        { "HotReloadText","Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" } ,
+                        { "ChangeLanguage","Cambia la tua lingua" },
+                       
                     }
                 },
                 {"en-US", new Vocabolary {
@@ -75,6 +81,11 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "TitlePage","Label with translation:" },
                         { "Title","Culture Example" },
                         { "AbstractText","Use this page to detail your site's culture example." },
+                        //XAMARIN
+                        { "Welcome","Welcome to Xamarin.Forms!" },
+                        { "StartDevelopingNow","Start developing now" },
+                        { "HotReloadText","Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" },
+                        { "ChangeLanguage","Change your language" },
                     }
                 }
             };

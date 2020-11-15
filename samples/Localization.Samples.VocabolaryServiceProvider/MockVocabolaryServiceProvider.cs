@@ -63,7 +63,7 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         //XAMARIN
                         { "Welcome","Benvenuto in Xamarin.Forms!" },
                         { "StartDevelopingNow","Parti ora con lo sviluppo!" },
-                        { "HotReloadText","Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" } ,
+                        { "HotReloadText","Apporta le modifiche al tuo file XAML e salva per vedere l'aggiornamento dell'interfaccia utente nell'app in esecuzione con XAML Hot Reload. Provaci!" } ,
                         { "ChangeLanguage","Cambia la tua lingua" },
                        
                     }

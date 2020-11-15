@@ -27,53 +27,11 @@
 /// 
 /// </summary>
 
-namespace Localization.Blazor.Converters
-{
-    using System;
-    using System.Globalization;
-
-    public interface IValueConverter
-    {
-        object Convert(object value, Type targetType, object parameter, CultureInfo culture);
-        object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture);
-    }
-}
 
 namespace Localization.Blazor.Bindings
 {
     using Localization.Blazor.Converters;
     using System;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public interface IBinding
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        LocalizationManager Source { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        string ResourceKey { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        IValueConverter Converter { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        object ConverterParamenter { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        string StringFormat { get; }
-    }
 
     /// <summary>
     /// 
@@ -118,16 +76,16 @@ namespace Localization.Blazor.Bindings
         /// <param name="converter"></param>
         /// <param name="converterParamenter"></param>
         /// <param name="stringFormat"></param>
-        public Binding(LocalizationManager source, string resourceKey, IValueConverter converter, object converterParamenter, string stringFormat)
+        public Binding(string resourceKey, IValueConverter converter, object converterParamenter, string stringFormat)
         {
-            this.Source = source ?? throw new ArgumentNullException(nameof(source));
-            this.ResourceKey = resourceKey ?? throw new ArgumentNullException(nameof(source));
-            this.Converter = converter ?? throw new ArgumentNullException(nameof(converter));
-            this.ConverterParamenter = converterParamenter ?? throw new ArgumentNullException(nameof(converterParamenter));
-            this.StringFormat = stringFormat ?? throw new ArgumentNullException(nameof(stringFormat));
+            this.Source = LocalizationManager.Instance;
+            this.ResourceKey = resourceKey ?? throw new ArgumentNullException(nameof(resourceKey));
+            this.Converter = converter;
+            this.ConverterParamenter = converterParamenter;
+            this.StringFormat = stringFormat;
             this.Source.PropertyChanged += (s, e) =>
             {
-                var value = source[this.ResourceKey];
+                var value = this.Source[this.ResourceKey];
 
                 if (Converter != null)
                 {
@@ -137,5 +95,14 @@ namespace Localization.Blazor.Bindings
                 BindingValueChanged?.Invoke(this, value);
             };
         }
+
+
+        public static object Bind(string resourceKey, IValueConverter converter, object converterParamenter, string stringFormat)
+        {
+            var binding = new Binding(resourceKey, converter, converterParamenter, stringFormat);
+
+            return null;// binding.GetValue();
+        }
+
     }
 }

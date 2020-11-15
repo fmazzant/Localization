@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Localization.Samples.VocabolaryServiceProvider;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,6 +16,7 @@ namespace Localization.Samples.AppXamarin
 
         protected override void OnStart()
         {
+            Localization.LocalizationManager.Init(new MockVocabolaryServiceProvider { });
         }
 
         protected override void OnSleep()

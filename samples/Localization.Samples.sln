@@ -25,8 +25,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wpf", "Wpf", "{98634098-3B6
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{5c3e20f2-029d-4183-a7fe-f018c03303f4}*SharedItemsImports = 4
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{87334221-8093-43f4-a665-f6e96516546a}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{90609386-cfa4-4b3f-8009-f86e9b3c9bbc}*SharedItemsImports = 4
 		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{af93e074-f586-49c4-b4ed-ecc9ca81d507}*SharedItemsImports = 5
 		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{c768b165-2002-414c-ae16-a88b9d4c5de8}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{cc5b8aa9-30bb-463d-92f7-ee9dd72f6736}*SharedItemsImports = 4
 		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{e0d66fd1-b3ea-41f2-af2f-0582b1049eef}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

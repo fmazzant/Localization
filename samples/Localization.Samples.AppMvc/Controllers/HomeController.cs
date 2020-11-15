@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +27,20 @@ namespace Localization.Samples.AppMvc.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult Culture(string lang = null)
+        {
+            if (lang != null)
+            {
+                LocalizationManager.Instance.SetCulture(new CultureInfo(lang));
+            }
+            return View(new MyModel()
+            {
+                Name = "NameValue",
+                LastName = "LastnameValue",
+                Address = "AddressValue"
+            });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,3 +1,5 @@
+using Localization.Mvc.Extensions;
+using Localization.Samples.VocabolaryServiceProvider;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +27,10 @@ namespace Localization.Samples.AppMvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddMvcLocalizationManager(options => {
+                options.ServiceProvider = new MockVocabolaryServiceProvider { };
+                options.Culture = new CultureInfo("it-IT");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

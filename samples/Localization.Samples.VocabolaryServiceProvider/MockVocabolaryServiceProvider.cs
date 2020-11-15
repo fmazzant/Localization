@@ -48,17 +48,33 @@ namespace Localization.Samples.VocabolaryServiceProvider
             all = new Dictionary<string, Vocabolary>
             {
                 {"it-IT", new Vocabolary {
+                        //WPF
                         { "MainWindow","Finestra Principale" },
                         { "TitleWpf","Localization Manager Wpf - Italiano" },
                         { "ChangeYourLanguageText", "Cambia la tua lingua"},
                         { "AboutText","Libraria .net che può aiutarti a gestire la localizzazione della localizzazione della tua applicazione. La libreria include estensopme Wpf, estensione Xamarin and estensione Mvc. " },
+                        //MVC
+                        { "NameText","Nome:" },
+                        { "LastNameText","Cognome:" },
+                        { "AddressText","Indirizzo:" },
+                        { "TitlePage","Label con traduzione:" },
+                        { "Title","Esempio di Localizzazione" },
+                        { "AbstractText","Usa questa pagina di dettaglio per la localizzazione di esempio" },
                     }
                 },
                 {"en-US", new Vocabolary {
+                        //WPF
                         { "MainWindow","Main Window" },
                         { "TitleWpf","Localization Manager Wpf - English" },
                         { "ChangeYourLanguageText", "Change your language"},
                         { "AboutText","A library for .net that can help you to manage the localization in your application. The library includes Wpf extension, Xamarin extension and Mvc extension. " },
+                        //MVC
+                        { "NameText","Name:" },
+                        { "LastNameText","LastName:" },
+                        { "AddressText","Address:" },
+                        { "TitlePage","Label with translation:" },
+                        { "Title","Culture Example" },
+                        { "AbstractText","Use this page to detail your site's culture example." },
                     }
                 }
             };

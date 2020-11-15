@@ -1,0 +1,51 @@
+﻿
+@model MyModel
+@using Localization.Mvc.Rendering;
+@using Localization;
+
+@{ ViewData["Title"] = LocalizationManager.Translate("Title", "#Culture Example");
+    var italian = LocalizationManager.Translate("Italian", "Italiano");
+    var english = LocalizationManager.Translate("English", "English"); }
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    @Html.TranslateLabel("abstract", "AbstractText", "#Use this page to detail your site's culture example.")
+
+</p>
+
+<p>
+    @Html.ActionLink(
+                           linkText: italian,
+                           actionName: "Culture",
+                           controllerName: "Home",
+                           routeValues: new { lang = "it-IT" },
+                           htmlAttributes: null)
+</p>
+
+<p>
+    @Html.ActionLink(
+                              linkText: english,
+                              actionName: "Culture",
+                              controllerName: "Home",
+                              routeValues: new { lang = "en-US" },
+                              htmlAttributes: null)
+</p>
+<p>
+    @Html.TranslateLabel("LabelTitle", "TitlePage", "#Label con traduzione:")
+</p>
+<p>
+    @Html.TranslateLabelFor(m => m.Name)
+    @Html.Label("Name", Model.Name)
+</p>
+<p>
+    @Html.TranslateLabelFor(m => m.LastName)
+    @Html.Label("LastName", Model.LastName)
+</p>
+<p>
+    @Html.TranslateLabelFor(m => m.Address)
+    @Html.Label("Address", Model.Address)
+</p>
+<p>
+    @Html.TranslateLabel("AboutText", "AboutText", "#intro");
+</p>

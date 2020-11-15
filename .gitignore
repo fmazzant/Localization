@@ -28,3 +28,9 @@
 /samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin.UWP/obj/x86/Release
 /samples/Localization.Samples.AppWpf/Localization.Samples.AppWpf.csproj.user
 /samples/.vs/Localization.Samples/DesignTimeBuild
+/samples/Localization.Samples.AppMvc/obj
+/samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin/obj/Debug/netstandard2.0/.NETStandard,Version=v2.0.AssemblyAttributes.cs
+/samples/Localization.Samples.AppWpf/obj
+/samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin/obj
+/samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin.Android/obj
+/samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin.UWP/obj

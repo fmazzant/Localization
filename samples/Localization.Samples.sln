@@ -5,11 +5,14 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Localization.Samples.SharedLayer", "Localization.Samples.VocabolaryServiceProvider\Localization.Samples.SharedLayer.shproj", "{E0D66FD1-B3EA-41F2-AF2F-0582B1049EEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Samples.AppWpf", "Localization.Samples.AppWpf\Localization.Samples.AppWpf.csproj", "{AF93E074-F586-49C4-B4ED-ECC9CA81D507}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Samples.AppWpf", "Localization.Samples.AppWpf\Localization.Samples.AppWpf.csproj", "{AF93E074-F586-49C4-B4ED-ECC9CA81D507}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Samples.AppMvc", "Localization.Samples.AppMvc\Localization.Samples.AppMvc.csproj", "{C768B165-2002-414C-AE16-A88B9D4C5DE8}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{af93e074-f586-49c4-b4ed-ecc9ca81d507}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{c768b165-2002-414c-ae16-a88b9d4c5de8}*SharedItemsImports = 5
 		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{e0d66fd1-b3ea-41f2-af2f-0582b1049eef}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +24,10 @@ Global
 		{AF93E074-F586-49C4-B4ED-ECC9CA81D507}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF93E074-F586-49C4-B4ED-ECC9CA81D507}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF93E074-F586-49C4-B4ED-ECC9CA81D507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C768B165-2002-414C-AE16-A88B9D4C5DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C768B165-2002-414C-AE16-A88B9D4C5DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C768B165-2002-414C-AE16-A88B9D4C5DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C768B165-2002-414C-AE16-A88B9D4C5DE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

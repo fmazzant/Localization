@@ -42,7 +42,7 @@ namespace Localization.Blazor.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="options"></param>
-        public static void AddMvcLocalizationManager(this IServiceCollection services, Action<BlazorLocalizationManagerOptions> options)
+        public static void AddBlazorLocalizationManager(this IServiceCollection services, Action<BlazorLocalizationManagerOptions> options)
         {
             BlazorLocalizationManagerOptions localizationManagerOptions = new BlazorLocalizationManagerOptions { };
             options(localizationManagerOptions);

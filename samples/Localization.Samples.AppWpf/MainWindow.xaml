@@ -31,10 +31,11 @@
             </ComboBoxItem>
         </ComboBox>
         <TextBlock Padding="15,5,15,5" 
-                   Margin="10,122,10,10" 
+                   Margin="10,122,10,33" 
                    FontSize="16" TextAlignment="Justify"
                    Text="{culture:Translate AboutText, DefaultValue='#A library for .net that can help you to manage the localization in your application. The library includes Wpf extension, Xamarin extension and Mvc extension...'}" 
-                   TextWrapping="Wrap" Grid.ColumnSpan="2"/>
+                   TextWrapping="Wrap"/>
+        <Label Content="{culture:Translate RESOURCE_WITHOUT_DEFAULTVALUE}" Margin="10,0,10,7" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

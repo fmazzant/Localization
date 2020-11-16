@@ -80,7 +80,7 @@ namespace Localization.Xamarin
                 Source = LocalizationManager.Instance,
                 StringFormat = StringFormat,
                 Converter = new NullToDefaultConverter(),
-                ConverterParameter = DefaultValue
+                ConverterParameter = DefaultValue ?? ResourceKey,
             };
             return binding;
         }

@@ -37,3 +37,6 @@
 /samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin/bin/Debug/netstandard2.0
 /samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin.UWP/bin/x86/Debug
 /samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin.UWP/BundleArtifacts
+/samples/.vs/Localization.Samples/v16/TestStore/0
+/samples/.vs/Localization.Samples/config
+/samples/Localization.Samples.AppMvc/bin/Debug/netcoreapp3.1

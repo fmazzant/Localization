@@ -49,6 +49,11 @@ namespace Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
+        public string DefaultValue { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         IValueConverter Converter { get; }
 
         /// <summary>

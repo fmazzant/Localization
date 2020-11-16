@@ -32,9 +32,29 @@ namespace Localization.Blazor.Converters
     using System;
     using System.Globalization;
 
+    /// <summary>
+    /// Provides a way to convert the null value with the default value passing as paramenter.
+    /// </summary>
     public interface IValueConverter
     {
+        /// <summary>
+        /// Converts a value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         object Convert(object value, Type targetType, object parameter, CultureInfo culture);
+
+        /// <summary>
+        /// Converts to back value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture);
     }
 }

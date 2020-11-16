@@ -51,7 +51,7 @@ namespace Localization.Blazor.Converters
         }
 
         /// <summary>
-        /// Converts a value.
+        /// Converts to back value.
         /// </summary>
         /// <param name="value">The value that is produced by the binding target.</param>
         /// <param name="targetType">The type to convert to.</param>

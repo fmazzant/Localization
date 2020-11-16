@@ -27,11 +27,11 @@
 /// 
 /// </summary>
 
-
 namespace Localization.Blazor.Bindings
 {
     using Localization.Blazor.Converters;
     using System;
+    using System.ComponentModel;
 
     /// <summary>
     /// 
@@ -51,6 +51,11 @@ namespace Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
+        public string DefaultValue { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IValueConverter Converter { get; }
 
         /// <summary>
@@ -66,7 +71,7 @@ namespace Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<object> BindingValueChanged;
+        public event PropertyChangedEventHandler BindingValueChanged;
 
         /// <summary>
         /// 
@@ -83,26 +88,30 @@ namespace Localization.Blazor.Bindings
             this.Converter = converter;
             this.ConverterParamenter = converterParamenter;
             this.StringFormat = stringFormat;
-            this.Source.PropertyChanged += (s, e) =>
-            {
-                var value = this.Source[this.ResourceKey];
-
-                if (Converter != null)
-                {
-                    value = Converter.Convert(value, value.GetType(), this.ConverterParamenter, LocalizationManager.CurrentCulture) as string;
-                }
-
-                BindingValueChanged?.Invoke(this, value);
-            };
+            this.Source.PropertyChanged += (s, e) => BindingValueChanged?.Invoke(this, e);
         }
 
-
-        public static object Bind(string resourceKey, IValueConverter converter, object converterParamenter, string stringFormat)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resourceKey"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="stringFormat"></param>
+        /// <returns></returns>
+        public static object Translate(string resourceKey, string defaultValue = null, string stringFormat = null)
         {
-            var binding = new Binding(resourceKey, converter, converterParamenter, stringFormat);
-
-            return null;// binding.GetValue();
+            var binding = new Binding(resourceKey, new NullToDefaultConverter(), defaultValue, stringFormat);
+            return binding;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="binding"></param>
+        public static implicit operator string(Binding binding) =>
+            (string)binding.Converter.Convert(binding.Source[binding.ResourceKey],
+            typeof(string),
+            binding.DefaultValue ?? binding.ResourceKey,
+            LocalizationManager.CurrentCulture);
     }
 }

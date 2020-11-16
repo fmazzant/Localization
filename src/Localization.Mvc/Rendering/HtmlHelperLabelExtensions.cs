@@ -79,7 +79,7 @@ namespace Localization.Mvc.Rendering
             TranslateAttribute attr;
             attr = (TranslateAttribute)type.GetProperty(propertyName).GetCustomAttributes(typeof(TranslateAttribute), true).SingleOrDefault();
 
-            var s = LocalizationManager.Translate(attr.ResourceKey, attr.DefaultValue);
+            var s = LocalizationManager.Translate(attr.ResourceKey, attr.DefaultValue ?? attr.ResourceKey);
 
             IHtmlContent html = htmlHelper.LabelFor(expression, labelText: s);
             return html;
@@ -98,7 +98,7 @@ namespace Localization.Mvc.Rendering
         /// <returns>A new Microsoft.AspNetCore.Html.IHtmlContent containing the <label> element.</returns>
         public static IHtmlContent TranslateLabel<TModel>(this IHtmlHelper<TModel> htmlHelper, string expression, string resourceKey, string defaultValue, object htmlAttributes = null)
         {
-            var labelText = LocalizationManager.Translate(resourceKey, defaultValue);
+            var labelText = LocalizationManager.Translate(resourceKey, defaultValue ?? resourceKey);
             return htmlHelper.Label(expression, labelText, htmlAttributes);
         }
     }

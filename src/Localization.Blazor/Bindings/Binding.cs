@@ -35,7 +35,7 @@ namespace Localization.Blazor.Bindings
     /// <summary>
     /// 
     /// </summary>
-    public class Binding : IBinding
+    public class Binding
     {
         /// <summary>
         /// 
@@ -87,7 +87,7 @@ namespace Localization.Blazor.Bindings
         /// <param name="defaultValue"></param>
         /// <param name="stringFormat"></param>
         /// <returns></returns>
-        public static object Translate(string resourceKey, string defaultValue = null, string stringFormat = null)
+        public static Binding Translate(string resourceKey, string defaultValue = null, string stringFormat = null)
         {
             var binding = new Binding
             {
@@ -107,12 +107,7 @@ namespace Localization.Blazor.Bindings
         /// 
         /// </summary>
         /// <param name="binding"></param>
-        public static implicit operator string(Binding binding) =>
-            binding.Converter.Convert(
-                binding.Source[binding.ResourceKey],
-                typeof(string),
-                binding.ConverterParamenter,
-                LocalizationManager.CurrentCulture) as string;
+        public static implicit operator string(Binding binding) => binding.GetValue() as string;
 
         /// <summary>
         /// 

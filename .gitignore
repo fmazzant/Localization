@@ -40,3 +40,5 @@
 /samples/.vs/Localization.Samples/v16/TestStore/0
 /samples/.vs/Localization.Samples/config
 /samples/Localization.Samples.AppMvc/bin/Debug/netcoreapp3.1
+/src/Localization.Blazor/obj/Debug
+/src/Localization.Blazor/obj

@@ -49,7 +49,7 @@ namespace Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
-        public string DefaultValue { get; set; }
+        public string DefaultValue { get; }
 
         /// <summary>
         /// 
@@ -65,5 +65,11 @@ namespace Localization.Blazor.Bindings
         /// 
         /// </summary>
         string StringFormat { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        object GetValue();
     }
 }

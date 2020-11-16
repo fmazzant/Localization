@@ -30,7 +30,6 @@
 namespace Localization.Blazor.Bindings
 {
     using Localization.Blazor.Converters;
-    using System;
     using System.ComponentModel;
 
     /// <summary>
@@ -41,32 +40,32 @@ namespace Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
-        public LocalizationManager Source { get; }
+        public LocalizationManager Source { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string ResourceKey { get; }
+        public string ResourceKey { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string DefaultValue { get; set; }
+        public string DefaultValue { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public IValueConverter Converter { get; }
+        public IValueConverter Converter { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public object ConverterParamenter { get; }
+        public object ConverterParamenter { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string StringFormat { get; }
+        public string StringFormat { get; private set; }
 
         /// <summary>
         /// 
@@ -76,19 +75,9 @@ namespace Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="resourceKey"></param>
-        /// <param name="converter"></param>
-        /// <param name="converterParamenter"></param>
-        /// <param name="stringFormat"></param>
-        public Binding(string resourceKey, IValueConverter converter, object converterParamenter, string stringFormat)
+        public Binding()
         {
-            this.Source = LocalizationManager.Instance;
-            this.ResourceKey = resourceKey ?? throw new ArgumentNullException(nameof(resourceKey));
-            this.Converter = converter;
-            this.ConverterParamenter = converterParamenter;
-            this.StringFormat = stringFormat;
-            this.Source.PropertyChanged += (s, e) => BindingValueChanged?.Invoke(this, e);
+
         }
 
         /// <summary>
@@ -100,7 +89,17 @@ namespace Localization.Blazor.Bindings
         /// <returns></returns>
         public static object Translate(string resourceKey, string defaultValue = null, string stringFormat = null)
         {
-            var binding = new Binding(resourceKey, new NullToDefaultConverter(), defaultValue, stringFormat);
+            var binding = new Binding
+            {
+                Source = LocalizationManager.Instance,
+                ResourceKey = resourceKey,
+                DefaultValue = defaultValue,
+                Converter = new NullToDefaultConverter(),
+                ConverterParamenter = defaultValue ?? resourceKey,
+                StringFormat = stringFormat
+            };
+            binding.Source.PropertyChanged += (s, e)
+                => binding.BindingValueChanged?.Invoke(binding, e);
             return binding;
         }
 
@@ -109,9 +108,21 @@ namespace Localization.Blazor.Bindings
         /// </summary>
         /// <param name="binding"></param>
         public static implicit operator string(Binding binding) =>
-            (string)binding.Converter.Convert(binding.Source[binding.ResourceKey],
-            typeof(string),
-            binding.DefaultValue ?? binding.ResourceKey,
-            LocalizationManager.CurrentCulture);
+            binding.Converter.Convert(
+                binding.Source[binding.ResourceKey],
+                typeof(string),
+                binding.ConverterParamenter,
+                LocalizationManager.CurrentCulture) as string;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public object GetValue() =>
+             this.Converter.Convert(
+                this.Source[this.ResourceKey],
+                typeof(string),
+                this.ConverterParamenter,
+                LocalizationManager.CurrentCulture) as string;
     }
 }

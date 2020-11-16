@@ -35,7 +35,7 @@ namespace Localization.Blazor.Extensions
     /// <summary>
     /// IServicesConfiguration Extensions
     /// </summary>
-    public static class ServiceCollectionServiceExtensions
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds and inits the localization manager to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
@@ -47,7 +47,7 @@ namespace Localization.Blazor.Extensions
             BlazorLocalizationManagerOptions localizationManagerOptions = new BlazorLocalizationManagerOptions { };
             options(localizationManagerOptions);
             LocalizationManager.Init(localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
-            services.AddSingleton(typeof(LocalizationManager), LocalizationManager.Instance);
+            services.Add(new ServiceDescriptor(typeof(LocalizationManager), LocalizationManager.Instance));
         }
     }
 }

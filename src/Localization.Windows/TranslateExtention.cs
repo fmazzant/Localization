@@ -82,7 +82,7 @@ namespace Localization.Windows
                 Source = LocalizationManager.Instance,
                 Path = new PropertyPath($"[{ResourceKey}]"),
                 Converter = new NullToDefaultConverter(),
-                ConverterParameter = DefaultValue,
+                ConverterParameter = DefaultValue ?? ResourceKey,
                 StringFormat = StringFormat
             };
             return binding.ProvideValue(serviceProvider);

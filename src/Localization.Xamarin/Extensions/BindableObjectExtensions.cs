@@ -56,6 +56,23 @@ namespace Localization.Xamarin.Extensions
         }
 
         /// <summary>
+        /// Assigns a complex binding to a property to translate when the culture is changed. 
+        /// </summary>
+        /// <param name="bindableObject"></param>
+        /// <param name="bindableProperty"></param>
+        /// <param name="onChangedProperty"></param>
+        public static void Translate(this BindableObject bindableObject, BindableProperty bindableProperty, Func<LocalizationManager, object> onCultureChanged)
+        {
+            Binding binding = new Binding()
+            {
+                Source = LocalizationManager.Instance,
+                Path = $"[{Guid.NewGuid()}]",
+                Converter = new BindableTranslateWithLocalizationManagerConverter(onCultureChanged)
+            };
+            bindableObject.SetBinding(bindableProperty, binding);
+        }
+
+        /// <summary>
         /// Defining methods for two-way value conversion between types.
         /// </summary>
         class BindableTranslateConverter : IValueConverter
@@ -79,6 +96,46 @@ namespace Localization.Xamarin.Extensions
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
                 return DoSomethings();
+            }
+
+            /// <summary>
+            /// Implement this method to convert value back from targetType by using parameter and culture.
+            /// </summary>
+            /// <param name="value"></param>
+            /// <param name="targetType"></param>
+            /// <param name="parameter"></param>
+            /// <param name="culture"></param>
+            /// <returns></returns>
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Defining methods for two-way value conversion between types.
+        /// </summary>
+        class BindableTranslateWithLocalizationManagerConverter : IValueConverter
+        {
+            Func<LocalizationManager, object> DoSomethings = null;
+
+            /// <summary>
+            /// Defining methods for two-way value conversion between types.
+            /// </summary>
+            /// <param name="doSomethings"></param>
+            public BindableTranslateWithLocalizationManagerConverter(Func<LocalizationManager, object> doSomethings) { DoSomethings = doSomethings; }
+
+            /// <summary>
+            /// Implement this method to convert value to targetType by using parameter and culture.
+            /// </summary>
+            /// <param name="value"></param>
+            /// <param name="targetType"></param>
+            /// <param name="parameter"></param>
+            /// <param name="culture"></param>
+            /// <returns></returns>
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return DoSomethings(LocalizationManager.Instance);
             }
 
             /// <summary>

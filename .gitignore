@@ -44,3 +44,5 @@
 /src/Localization.Blazor/obj
 /samples/Localization.Samples.AppWpf/bin/Debug/netcoreapp3.1
 /src/Localization.Blazor/bin/Debug
+/samples/Localization.Samples.AppBlazor/bin/Debug/netcoreapp3.1
+/samples/Localization.Samples.AppBlazor/obj

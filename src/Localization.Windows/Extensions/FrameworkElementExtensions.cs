@@ -27,16 +27,17 @@
 /// 
 /// </summary>
 
-namespace Localization.Xamarin.Extensions
+namespace Localization.Windows.Extensions
 {
-    using global::Xamarin.Forms;
     using System;
     using System.Globalization;
+    using System.Windows;
+      using System.Windows.Data;
 
     /// <summary>
     /// Extensions a single 1:1 immutable data binding
     /// </summary>
-    public static class BindableObjectExtensions
+    public static class FrameworkElementExtensions
     {
         /// <summary>
         /// Assigns a complex binding to a property to translate when the culture is changed. 
@@ -44,12 +45,12 @@ namespace Localization.Xamarin.Extensions
         /// <param name="bindableObject"></param>
         /// <param name="bindableProperty"></param>
         /// <param name="onChangedProperty"></param>
-        public static void Translate(this BindableObject bindableObject, BindableProperty bindableProperty, Func<object> onCultureChanged)
+        public static void Translate(this FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<object> onCultureChanged)
         {
             Binding binding = new Binding()
             {
                 Source = LocalizationManager.Instance,
-                Path = $"[{Guid.NewGuid()}]",
+                Path = new PropertyPath($"[{Guid.NewGuid()}]"),
                 Converter = new BindableTranslateConverter(onCultureChanged)
             };
             bindableObject.SetBinding(bindableProperty, binding);

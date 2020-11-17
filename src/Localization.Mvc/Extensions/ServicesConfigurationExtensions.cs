@@ -47,6 +47,7 @@ namespace Localization.Mvc.Extensions
             MvcLocalizationManagerOptions localizationManagerOptions = new MvcLocalizationManagerOptions { };
             options(localizationManagerOptions);
             LocalizationManager.Init(localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
+            services.Add(new ServiceDescriptor(typeof(LocalizationManager), LocalizationManager.Instance));
         }
     }
 }

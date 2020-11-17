@@ -145,6 +145,16 @@ In the following code is displayed how the Label's text works:
 In this case, when the culture changed, the LocalizationManager changing the
 Label's Text value with the current culture value.
 
+Using this code to invoke a func when the culture is changed, like this:
+```c# xaml
+label.Translate(Label.TextProperty, () =>
+{
+    string val = doSamethinds();
+    return val;
+});
+```
+where label is a BindableObject.
+
 # WPF Windows
 
 The Wpf Windows has a specific library to manage the culture inside the project. 
@@ -169,6 +179,16 @@ In the following code is displayed how the Label's text works:
 
 In this case, when the culture changed, the LocalizationManager changing the
 Label's Text value with the current culture value.
+
+Using this code to invoke a func when the culture is changed, like this:
+```c# xaml
+label.Translate(Label.TextProperty, () =>
+{
+    string val = doSamethinds();
+    return val;
+});
+```
+where label is a FrameworkElement.
 
 # ASP.NET MVC
 

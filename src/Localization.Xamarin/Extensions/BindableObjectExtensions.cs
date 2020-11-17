@@ -44,7 +44,7 @@ namespace Localization.Xamarin.Extensions
         /// <param name="bindableObject"></param>
         /// <param name="bindableProperty"></param>
         /// <param name="onChangedProperty"></param>
-        public static void Translate(this BindableObject bindableObject, BindableProperty bindableProperty, Func<string> onCultureChanged)
+        public static void Translate(this BindableObject bindableObject, BindableProperty bindableProperty, Func<object> onCultureChanged)
         {
             Binding binding = new Binding()
             {

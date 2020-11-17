@@ -45,7 +45,7 @@ namespace Localization.Windows.Extensions
         /// <param name="bindableObject"></param>
         /// <param name="bindableProperty"></param>
         /// <param name="onChangedProperty"></param>
-        public static void Translate(this FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<string> onCultureChanged)
+        public static void Translate(this FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<object> onCultureChanged)
         {
             Binding binding = new Binding()
             {

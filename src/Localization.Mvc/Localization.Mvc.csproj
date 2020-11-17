@@ -13,7 +13,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Mafe.Localization.Mvc</PackageId>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization" Version="1.0.0" />
+    <PackageReference Include="Mafe.Localization" Version="1.0.1" />
   </ItemGroup>
 
 </Project>

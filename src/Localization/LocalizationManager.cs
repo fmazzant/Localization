@@ -101,7 +101,7 @@ namespace Localization
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static string Translate(string key, string defaultValue) => Instance[key] ?? $"{defaultValue}";
+        public static string Translate(string key, string defaultValue = null) => Instance[key] ?? $"{defaultValue ?? key}";
 
         /// <summary>
         /// Initilizes the LocalizationManger with the default culture.

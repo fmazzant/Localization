@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Localization.Windows.Extensions;
 
 namespace Localization.Samples.AppWpf
 {
@@ -24,6 +25,16 @@ namespace Localization.Samples.AppWpf
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            int numberOfCultureChanged = 0;
+            labelBindingTest.Translate(Label.ContentProperty, () => {
+                return $"ciao {++numberOfCultureChanged}";
+            });
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

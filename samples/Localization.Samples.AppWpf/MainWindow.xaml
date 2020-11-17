@@ -35,7 +35,7 @@
                    FontSize="16" TextAlignment="Justify"
                    Text="{culture:Translate AboutText, DefaultValue='#A library for .net that can help you to manage the localization in your application. The library includes Wpf extension, Xamarin extension and Mvc extension...'}" 
                    TextWrapping="Wrap"/>
-        <Label Content="{culture:Translate RESOURCE_WITHOUT_DEFAULTVALUE}" Margin="10,0,10,7" VerticalAlignment="Bottom"/>
+        <Label x:Name="labelBindingTest" Content="{culture:Translate RESOURCE_WITHOUT_DEFAULTVALUE}" Margin="10,0,10,7" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

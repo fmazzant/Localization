@@ -9,7 +9,7 @@
   <Import Project="..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization.Windows" Version="1.0.1" />
+    <PackageReference Include="Mafe.Localization.Windows" Version="1.0.4" />
   </ItemGroup>
 
 </Project>

@@ -251,7 +251,7 @@ It is possible using the TranslateLabel directly, like this:
      @Html.TranslateLabel("LabelTitle", "ResourceKey", "#Default Value of Label")
 </p>
 ```
-# ABlazor
+# Blazor
 
 The Blazor has a specific library to manage the culture inside the project. 
 

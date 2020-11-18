@@ -16,7 +16,11 @@ Using Xamarin it is possible installing the Mafe.Localization.Xamarin library:
 
 Using ASP.NET MVC it is possible installing the Mafe.Localization.Mvc library:
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Mvc)
+
+Using Blazor it is possible installing the Mafe.Localization.Blazor library:
+
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
 
 # Architecture
 The following image represets a localization manager diagram:

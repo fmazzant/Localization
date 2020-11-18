@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,7 +7,7 @@
   <Import Project="..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization.Mvc" Version="1.0.1" />
+    <PackageReference Include="Mafe.Localization.Mvc" Version="1.0.5" />
   </ItemGroup>
 
 </Project>

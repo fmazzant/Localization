@@ -251,3 +251,23 @@ It is possible using the TranslateLabel directly, like this:
      @Html.TranslateLabel("LabelTitle", "ResourceKey", "#Default Value of Label")
 </p>
 ```
+# ABlazor
+
+The Blazor has a specific library to manage the culture inside the project. 
+
+In first time we configure the localizationManager inside the Startup.cs:
+
+```c#
+using Localization.Blazor.Extensions;
+...
+public void ConfigureServices(IServiceCollection services)
+{
+    ... 
+    services.AddBlazorocalizationManager(options => {
+        options.ServiceProvider = new MockVocabolaryServiceProvider { };
+        options.Culture = new CultureInfo("it-IT");
+    });
+    ...
+}
+```
+The "options.Culture" value represents the initilized culture.

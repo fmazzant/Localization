@@ -20,7 +20,7 @@ Using ASP.NET MVC it is possible installing the Mafe.Localization.Mvc library:
 
 Using Blazor it is possible installing the Mafe.Localization.Blazor library:
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
 
 # Architecture
 The following image represets a localization manager diagram:

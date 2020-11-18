@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp3.0</TargetFrameworks>
     <Authors>Federico Mazzanti</Authors>
     <Description>A MVC library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
     <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
@@ -13,7 +13,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Mafe.Localization.Mvc</PackageId>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
   </PropertyGroup>
 
   <ItemGroup>

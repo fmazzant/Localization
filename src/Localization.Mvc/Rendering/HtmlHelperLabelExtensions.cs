@@ -79,9 +79,9 @@ namespace Localization.Mvc.Rendering
             TranslateAttribute attr;
             attr = (TranslateAttribute)type.GetProperty(propertyName).GetCustomAttributes(typeof(TranslateAttribute), true).SingleOrDefault();
 
-            var s = LocalizationManager.Translate(attr.ResourceKey, attr.DefaultValue ?? attr.ResourceKey);
+            var labelText = LocalizationManager.Translate(attr.ResourceKey, attr.DefaultValue ?? attr.ResourceKey);
 
-            IHtmlContent html = htmlHelper.LabelFor(expression, labelText: s);
+            IHtmlContent html = htmlHelper.LabelFor(expression, labelText: labelText);
             return html;
         }
 

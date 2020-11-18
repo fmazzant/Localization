@@ -32,7 +32,7 @@ namespace Localization.Windows.Extensions
     using System;
     using System.Globalization;
     using System.Windows;
-      using System.Windows.Data;
+    using System.Windows.Data;
 
     /// <summary>
     /// Extensions a single 1:1 immutable data binding
@@ -51,7 +51,26 @@ namespace Localization.Windows.Extensions
             {
                 Source = LocalizationManager.Instance,
                 Path = new PropertyPath($"[{Guid.NewGuid()}]"),
-                Converter = new BindableTranslateConverter(onCultureChanged)
+                Converter = new BindableTranslateConverter(onCultureChanged),
+                ConverterParameter = LocalizationManager.Instance
+            };
+            bindableObject.SetBinding(bindableProperty, binding);
+        }
+
+        /// <summary>
+        /// Assigns a complex binding to a property to translate when the culture is changed. 
+        /// </summary>
+        /// <param name="bindableObject"></param>
+        /// <param name="bindableProperty"></param>
+        /// <param name="onChangedProperty"></param>
+        public static void Translate(this FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<LocalizationManager, object> onCultureChanged)
+        {
+            Binding binding = new Binding()
+            {
+                Source = LocalizationManager.Instance,
+                Path = new PropertyPath($"[{Guid.NewGuid()}]"),
+                Converter = new BindableTranslateWithLocalizationManagerConverter(onCultureChanged),
+                ConverterParameter = LocalizationManager.Instance
             };
             bindableObject.SetBinding(bindableProperty, binding);
         }
@@ -80,6 +99,46 @@ namespace Localization.Windows.Extensions
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
                 return DoSomethings();
+            }
+
+            /// <summary>
+            /// Implement this method to convert value back from targetType by using parameter and culture.
+            /// </summary>
+            /// <param name="value"></param>
+            /// <param name="targetType"></param>
+            /// <param name="parameter"></param>
+            /// <param name="culture"></param>
+            /// <returns></returns>
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Defining methods for two-way value conversion between types.
+        /// </summary>
+        class BindableTranslateWithLocalizationManagerConverter : IValueConverter
+        {
+            Func<LocalizationManager, object> DoSomethings = null;
+
+            /// <summary>
+            /// Defining methods for two-way value conversion between types.
+            /// </summary>
+            /// <param name="doSomethings"></param>
+            public BindableTranslateWithLocalizationManagerConverter(Func<LocalizationManager, object> doSomethings) { DoSomethings = doSomethings; }
+
+            /// <summary>
+            /// Implement this method to convert value to targetType by using parameter and culture.
+            /// </summary>
+            /// <param name="value"></param>
+            /// <param name="targetType"></param>
+            /// <param name="parameter"></param>
+            /// <param name="culture"></param>
+            /// <returns></returns>
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return DoSomethings(parameter as LocalizationManager);
             }
 
             /// <summary>

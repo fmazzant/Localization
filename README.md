@@ -263,7 +263,7 @@ using Localization.Blazor.Extensions;
 public void ConfigureServices(IServiceCollection services)
 {
     ... 
-    services.AddBlazorocalizationManager(options => {
+    services.AddBlazorLocalizationManager(options => {
         options.ServiceProvider = new MockVocabolaryServiceProvider { };
         options.Culture = new CultureInfo("it-IT");
     });

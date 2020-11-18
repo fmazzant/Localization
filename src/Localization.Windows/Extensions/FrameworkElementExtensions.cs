@@ -32,7 +32,7 @@ namespace Localization.Windows.Extensions
     using System;
     using System.Globalization;
     using System.Windows;
-      using System.Windows.Data;
+    using System.Windows.Data;
 
     /// <summary>
     /// Extensions a single 1:1 immutable data binding

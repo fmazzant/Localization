@@ -16,7 +16,11 @@ Using Xamarin it is possible installing the Mafe.Localization.Xamarin library:
 
 Using ASP.NET MVC it is possible installing the Mafe.Localization.Mvc library:
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Mvc)
+
+Using Blazor it is possible installing the Mafe.Localization.Blazor library:
+
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
 
 # Architecture
 The following image represets a localization manager diagram:
@@ -247,3 +251,23 @@ It is possible using the TranslateLabel directly, like this:
      @Html.TranslateLabel("LabelTitle", "ResourceKey", "#Default Value of Label")
 </p>
 ```
+# Blazor
+
+The Blazor has a specific library to manage the culture inside the project. 
+
+In first time we configure the localizationManager inside the Startup.cs:
+
+```c#
+using Localization.Blazor.Extensions;
+...
+public void ConfigureServices(IServiceCollection services)
+{
+    ... 
+    services.AddBlazorLocalizationManager(options => {
+        options.ServiceProvider = new MockVocabolaryServiceProvider { };
+        options.Culture = new CultureInfo("it-IT");
+    });
+    ...
+}
+```
+The "options.Culture" value represents the initilized culture.

@@ -1,12 +1,14 @@
-﻿<div class="alert alert-secondary mt-4" role="alert">
+﻿@using Localization.Blazor.Bindings
+
+<div class="alert alert-secondary mt-4" role="alert">
     <span class="oi oi-pencil mr-2" aria-hidden="true"></span>
     <strong>@Title</strong>
 
     <span class="text-nowrap">
-        Please take our
-        <a target="_blank" class="font-weight-bold" href="https://go.microsoft.com/fwlink/?linkid=2112271">brief survey</a>
+        @Binding.Translate("BlazorSpan1")
+        <a target="_blank" class="font-weight-bold" href="https://go.microsoft.com/fwlink/?linkid=2112271">@Binding.Translate("BlazorSpan2")</a>
     </span>
-    and tell us what you think.
+    @Binding.Translate("BlazorSpan3")
 </div>
 
 @code {

@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using Localization.Blazor.Bindings
 
 <div class="sidebar">
     <NavMenu />
@@ -6,6 +7,8 @@
 
 <div class="main">
     <div class="top-row px-4">
+        <button @onclick="SetItalianLanguage">@Binding.Translate("BlazorSetItalian")</button>
+        <button href="#" @onclick="SetEnglishLanguage">@Binding.Translate("BlazorSetEnglish")</button>
         <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
     </div>
 
@@ -13,3 +16,13 @@
         @Body
     </div>
 </div>
+@code {
+    private void SetItalianLanguage()
+    {
+        LocalizationManager.Instance.SetCulture(new System.Globalization.CultureInfo("it-IT"));
+    }
+    private void SetEnglishLanguage()
+    {
+        LocalizationManager.Instance.SetCulture(new System.Globalization.CultureInfo("en-US"));
+    }
+}

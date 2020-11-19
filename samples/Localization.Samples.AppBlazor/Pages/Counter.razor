@@ -1,10 +1,11 @@
 ﻿@page "/counter"
+@using Localization.Blazor.Bindings
 
-<h1>Counter</h1>
+<h1>@Binding.Translate("BlazorCounter")</h1>
 
-<p>Current count: @currentCount</p>
+<p>@Binding.Translate("BlazorCurrentCount"): @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="IncrementCount">@Binding.Translate("BlazorClickMe")</button>
 
 @code {
     private int currentCount = 0;

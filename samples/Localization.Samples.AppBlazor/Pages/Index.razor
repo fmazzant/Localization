@@ -1,7 +1,9 @@
 ﻿@page "/"
+@using Localization.Blazor.Bindings
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+<h1>@Binding.Translate("BlazorHelloWorld")</h1>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@Binding.Translate("BlazorWelcome")
+
+<SurveyPrompt Title="@Binding.Translate("BlazorHowisitworks")" />

@@ -65,7 +65,26 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "StartDevelopingNow","Parti ora con lo sviluppo!" },
                         { "HotReloadText","Apporta le modifiche al tuo file XAML e salva per vedere l'aggiornamento dell'interfaccia utente nell'app in esecuzione con XAML Hot Reload. Provaci!" } ,
                         { "ChangeLanguage","Cambia la tua lingua" },
-                       
+                        //BLAZOR
+                        { "BlazorTitle","Benvenuto in Localization.Blazor!" },
+                        { "BlazorHome","Home" },
+                        { "BlazorCounter","Contatore" },
+                        { "BlazorFetchData","Recupero dati" },
+                        { "BlazorClickMe","Clicca me" },
+                        { "BlazorCurrentCount","Valore corrente" },
+                        { "BlazorHelloWorld","Ciao, mondo" },
+                        { "BlazorWelcome","Benvenuto nella tua prima app." },
+                        { "BlazorHowisitworks", "Come funziona Blazor per te?"},
+                        { "BlazorWeatherForecast", "Weather forecast" },
+                        { "BlazorWeatherForecastIntroduction", "Questo componente dimostra come recuperare i dati." },
+
+                        { "BlazorSpan1", "Per favore, prendi la nostra" },
+                        { "BlazorSpan2", "breve indagine" },
+                        { "BlazorSpan3", "e diteci cosa ne pensate breve sondaggio." },
+
+                        { "BlazorSetItalian", "Italiano" },
+                        { "BlazorSetEnglish", "Inglese" }
+
                     }
                 },
                 {"en-US", new Vocabolary {
@@ -86,6 +105,26 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "StartDevelopingNow","Start developing now" },
                         { "HotReloadText","Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" },
                         { "ChangeLanguage","Change your language" },
+                        //BLAZOR
+                        { "BlazorTitle","Welcome to Localization.Blazor!" },
+                        { "BlazorHome","Home" },
+                        { "BlazorCounter","Counter" },
+                        { "BlazorFetchData","Fetch data" },
+                        { "BlazorClickMe","Click me" },
+                        { "BlazorCurrentCount","Current count:" },
+                        { "BlazorHelloWorld","Hello, world!" },
+                        { "BlazorWelcome","Welcome to your new app." },
+                        { "BlazorHowisitworks", "How is Blazor working for you?"},
+                        { "BlazorWeatherForecast", "Weather forecast" },
+                        { "BlazorWeatherForecastIntroduction", "This component demonstrates fetching data from a service." },
+
+                        { "BlazorSpan1", "Please take our" },
+                        { "BlazorSpan2", "brief survey" },
+                        { "BlazorSpan3", "and tell us what you think." },
+
+                        { "BlazorSetItalian", "Italian" },
+                        { "BlazorSetEnglish", "English" }
+
                     }
                 }
             };

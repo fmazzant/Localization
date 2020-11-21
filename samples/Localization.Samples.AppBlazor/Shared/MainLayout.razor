@@ -17,6 +17,11 @@
     </div>
 </div>
 @code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
     private void SetItalianLanguage()
     {
         LocalizationManager.Instance.SetCulture(new System.Globalization.CultureInfo("it-IT"));

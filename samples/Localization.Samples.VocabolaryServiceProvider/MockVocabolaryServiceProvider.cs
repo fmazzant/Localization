@@ -41,7 +41,7 @@ namespace Localization.Samples.VocabolaryServiceProvider
         Dictionary<string, Vocabolary> all = null;
 
         public Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null)
-            => Task.FromResult(1);
+            => Task.CompletedTask;
 
         public Task Initialize()
         {
@@ -140,6 +140,6 @@ namespace Localization.Samples.VocabolaryServiceProvider
         }
 
         public Task SaveAsync(IVocabolary vocabolary)
-            => Task.FromResult(1);
+            => Task.CompletedTask;
     }
 }

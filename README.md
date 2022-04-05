@@ -27,7 +27,7 @@ The following image represets a localization manager diagram:
 
 ![alt Localization Manager Diagram](art/diagram.png)
 
-Actually there are two extenetion of library: Wpf Window and Xamarin App. 
+Actually there are two extenesion of library: Wpf Window and Xamarin App. 
 The library can be used without extentions but using the Localization Manager 
 Instance directly.
 

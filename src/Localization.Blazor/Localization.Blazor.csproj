@@ -14,6 +14,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Mafe.Localization.Blazor</PackageId>
     <Version>2.0.0</Version>
+    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

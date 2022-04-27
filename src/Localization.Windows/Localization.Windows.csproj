@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Version>1.0.5</Version>
+    <Version>2.0.0</Version>
     <PackageId>Mafe.Localization.Windows</PackageId>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>

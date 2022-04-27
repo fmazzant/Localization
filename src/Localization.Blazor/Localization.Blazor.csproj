@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization" Version="1.0.0" />
+    <PackageReference Include="Mafe.Localization" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

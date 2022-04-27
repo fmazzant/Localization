@@ -13,7 +13,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <Description>A library for .net that can help you to manage the localization in your application.</Description>
     <Authors>Federico Mazzanti</Authors>
-    <AssemblyName>Mafe.Localization</AssemblyName>
+    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
     <Product>Localization</Product>

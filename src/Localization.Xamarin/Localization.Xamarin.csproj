@@ -15,6 +15,7 @@
     <Description>A Xamarin library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
+    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

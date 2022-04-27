@@ -16,6 +16,7 @@
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>localization, c-sharp, dotnet-core, windows, wpf</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
+    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

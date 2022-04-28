@@ -51,3 +51,4 @@
 /src/Localization.Blazor/obj/Release/netcoreapp3.0
 /src/.vs/Localization/v17/.suo
 /src/.vs/Localization/v17/.futdcache.v1
+*.suo

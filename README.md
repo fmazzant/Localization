@@ -140,7 +140,7 @@ LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 ```
 Inside your xaml file is necessary include the Localization.Xamarin library, like this:
 ```c# xaml
- xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Localization.Xamarin"
+ xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
 ```
 In the following code is displayed how the Label's text works:
 ```c# xaml
@@ -172,7 +172,7 @@ LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 Inside your xaml file is necessary include the Localization.Windows library, like this:
 
 ```c# xaml
-xmlns:culture="clr-namespace:Localization.Windows;assembly=Localization.Windows"
+xmlns:culture="clr-namespace:Localization.Windows;assembly=Mafe.Localization.Windows"
 ```
 
 In the following code is displayed how the Label's text works:

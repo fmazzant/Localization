@@ -26,11 +26,11 @@ Using Blazor it is possible installing the Mafe.Localization.Blazor library:
 The version 2.0.0 changed the Assembly's name. So is necessary adding "Mafe." where is necessary.
 Xamarin project and WPF proejct needs this upgrade.
 
-To Xamarin:
+Xamarin:
 ```c# xaml
  xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
 ```
-To WPF:
+WPF:
 ```c# xaml
 xmlns:culture="clr-namespace:Localization.Windows;assembly=Mafe.Localization.Windows"
 ```

@@ -22,8 +22,19 @@ Using Blazor it is possible installing the Mafe.Localization.Blazor library:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
 
-# Warning!!!!!!
-The version 2.0.0 changed the Assembly's name. So is necessary adding "Mafe." where is necessary. 
+# Warning to 2.0.0 version!!!!!!
+The version 2.0.0 changed the Assembly's name. So is necessary adding "Mafe." where is necessary.
+Xamarin project and WPF proejct needs this upgrade.
+
+To Xamarin:
+```c# xaml
+ xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
+```
+To WPF:
+```c# xaml
+xmlns:culture="clr-namespace:Localization.Windows;assembly=Mafe.Localization.Windows"
+```
+
 
 # Architecture
 The following image represets a localization manager diagram:

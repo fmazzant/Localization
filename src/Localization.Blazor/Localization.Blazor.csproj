@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;net6.0;netcoreapp3.1;</TargetFrameworks>
     <Authors>Federico Mazzanti</Authors>
     <Description>A Blazor library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
     <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
@@ -13,7 +13,8 @@
     <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Mafe.Localization.Blazor</PackageId>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
+    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization" Version="1.0.0" />
+    <PackageReference Include="Mafe.Localization" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>

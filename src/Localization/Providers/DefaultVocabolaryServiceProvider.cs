@@ -47,7 +47,11 @@ namespace Localization.Providers
         /// <returns></returns>
         public Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null)
         {
+#if NET452
             return Task.FromResult(0);
+#else
+            return Task.CompletedTask;
+#endif
         }
 
         /// <summary>
@@ -56,7 +60,11 @@ namespace Localization.Providers
         /// <returns></returns>
         public Task Initialize()
         {
+#if NET452
             return Task.FromResult(0);
+#else
+            return Task.CompletedTask;
+#endif
         }
 
         /// <summary>
@@ -78,7 +86,11 @@ namespace Localization.Providers
         /// <returns></returns>
         public Task SaveAsync(IVocabolary vocabolary)
         {
+#if NET452
             return Task.FromResult(0);
+#else
+            return Task.CompletedTask;
+#endif
         }
     }
 }

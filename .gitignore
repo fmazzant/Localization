@@ -54,3 +54,4 @@
 *.suo
 *.v1
 /src/.vs/Localization/FileContentIndex
+/src/.vs/ProjectEvaluation

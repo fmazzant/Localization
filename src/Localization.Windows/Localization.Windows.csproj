@@ -16,6 +16,7 @@
     <PackageTags>localization, c-sharp, dotnet-core, windows, wpf</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

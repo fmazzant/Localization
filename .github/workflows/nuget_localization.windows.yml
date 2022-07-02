@@ -28,4 +28,4 @@ jobs:
       run: dotnet pack -c Release -o . src/Localization.Windows/Localization.Windows.csproj 
       
     - name: Publish on NuGet
-      run: dotnet nuget push ./*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push D:\a\Localization\Localization\*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

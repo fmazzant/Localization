@@ -1,4 +1,4 @@
-name: Publish on NuGet Localization Xamarin
+name: Publish NuGet Xamarin
  
 on:
   push:

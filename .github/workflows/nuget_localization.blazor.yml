@@ -1,0 +1,31 @@
+name: Publish on NuGet
+ 
+on:
+  push:
+    branches: [ master ]
+    paths: [ 'src/**' ]
+  workflow_dispatch:
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore src/Localization.Blazor/Localization.Blazor.csproj 
+      
+    - name: Build
+      run: dotnet build --no-restore src/Localization.Blazor/Localization.Blazor.csproj 
+        
+    - name: Package
+      run: dotnet pack -c Release -o . src/Localization.Blazor/Localization.Blazor.csproj 
+      
+    - name: Publish on NuGet
+      run: dotnet nuget push ./*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Localization.Windows.Extensions;
+using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Localization.Windows.Extensions;
 
 namespace Localization.Samples.AppWpf
 {
@@ -32,8 +21,9 @@ namespace Localization.Samples.AppWpf
             base.OnActivated(e);
 
             int numberOfCultureChanged = 0;
-            labelBindingTest.Translate(Label.ContentProperty, () => {
-                return $"ciao {++numberOfCultureChanged}";
+            labelBindingTest.Translate(Label.ContentProperty, () =>
+            {
+                return $"pressed {++numberOfCultureChanged} times";
             });
         }
 

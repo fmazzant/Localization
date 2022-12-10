@@ -53,18 +53,22 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "TitleWpf","Localization Manager Wpf - Italiano" },
                         { "ChangeYourLanguageText", "Cambia la tua lingua"},
                         { "AboutText","Libraria .net che può aiutarti a gestire la localizzazione della localizzazione della tua applicazione. La libreria include estensopme Wpf, estensione Xamarin and estensione Mvc. " },
+                        
                         //MVC
                         { "NameText","Nome:" },
                         { "LastNameText","Cognome:" },
                         { "AddressText","Indirizzo:" },
                         { "TitlePage","Label con traduzione:" },
                         { "Title","Esempio di Localizzazione" },
+                         { "ChangedTimesTemplate","cambiato {0} volte." },
                         { "AbstractText","Usa questa pagina di dettaglio per la localizzazione di esempio" },
+                        
                         //XAMARIN
                         { "Welcome","Benvenuto in Xamarin.Forms!" },
                         { "StartDevelopingNow","Parti ora con lo sviluppo!" },
                         { "HotReloadText","Apporta le modifiche al tuo file XAML e salva per vedere l'aggiornamento dell'interfaccia utente nell'app in esecuzione con XAML Hot Reload. Provaci!" } ,
                         { "ChangeLanguage","Cambia la tua lingua" },
+                        
                         //BLAZOR
                         { "BlazorTitle","Benvenuto in Localization.Blazor!" },
                         { "BlazorHome","Home" },
@@ -93,18 +97,22 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "TitleWpf","Localization Manager Wpf - English" },
                         { "ChangeYourLanguageText", "Change your language"},
                         { "AboutText","A library for .net that can help you to manage the localization in your application. The library includes Wpf extension, Xamarin extension and Mvc extension. " },
+                        
                         //MVC
                         { "NameText","Name:" },
                         { "LastNameText","LastName:" },
                         { "AddressText","Address:" },
                         { "TitlePage","Label with translation:" },
                         { "Title","Culture Example" },
+                        { "ChangedTimesTemplate","changed {0} times." },
                         { "AbstractText","Use this page to detail your site's culture example." },
+                        
                         //XAMARIN
                         { "Welcome","Welcome to Xamarin.Forms!" },
                         { "StartDevelopingNow","Start developing now" },
                         { "HotReloadText","Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" },
                         { "ChangeLanguage","Change your language" },
+                        
                         //BLAZOR
                         { "BlazorTitle","Welcome to Localization.Blazor!" },
                         { "BlazorHome","Home" },

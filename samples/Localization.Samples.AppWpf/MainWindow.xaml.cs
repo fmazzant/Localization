@@ -23,7 +23,9 @@ namespace Localization.Samples.AppWpf
             int numberOfCultureChanged = 0;
             labelBindingTest.Translate(Label.ContentProperty, () =>
             {
-                return $"pressed {++numberOfCultureChanged} times";
+                var textTemplate = LocalizationManager.Instance["ChangedTimesTemplate"];
+                var text = string.Format(textTemplate, ++numberOfCultureChanged);
+                return text;
             });
         }
 

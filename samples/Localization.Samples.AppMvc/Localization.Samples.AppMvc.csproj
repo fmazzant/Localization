@@ -7,7 +7,7 @@
   <Import Project="..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization.Mvc" Version="2.0.0" />
+    <PackageReference Include="Mafe.Localization.Mvc" Version="2.0.1" />
   </ItemGroup>
 
 </Project>

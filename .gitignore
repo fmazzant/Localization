@@ -55,3 +55,5 @@
 *.v1
 /src/.vs/Localization/FileContentIndex
 /src/.vs/ProjectEvaluation
+/samples/.vs/Localization.Samples/FileContentIndex
+/src/.vs/Localization/v17

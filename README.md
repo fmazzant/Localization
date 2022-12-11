@@ -167,7 +167,7 @@ Using this code to invoke a func when the culture is changed, like this:
 ```c# xaml
 label.Translate(Label.TextProperty, () =>
 {
-    string val = doSamethinds();
+    string val = doSomething();
     return val;
 });
 ```
@@ -202,7 +202,7 @@ Using this code to invoke a func when the culture is changed, like this:
 ```c# xaml
 label.Translate(Label.TextProperty, () =>
 {
-    string val = doSamethinds();
+    string val = doSomething();
     return val;
 });
 ```

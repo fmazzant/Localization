@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Localization.Samples.AppMaui.MainPage">
+
+    <StackLayout>
+        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
+            <Label Text="{culture:Translate Welcome, DefaultValue='Welcome to Xamarin.Forms!'}" 
+                HorizontalTextAlignment="Center" 
+                TextColor="White" 
+                FontSize="36"/>
+        </Frame>
+        <Label Text="{culture:Translate StartDevelopingNow, DefaultValue='Start developing now'}" FontSize="Title" Padding="30,10,30,10"/>
+        <Label Text="{culture:Translate HotReloadText, DefaultValue='...'}" 
+            FontSize="16" Padding="30,0,30,0"/>
+        <Label FontSize="16" Padding="30,24,30,0">
+            <Label.FormattedText>
+                <FormattedString>
+                    <FormattedString.Spans>
+                        <Span Text="Learn more at "/>
+                        <Span Text="https://aka.ms/xamarin-quickstart" FontAttributes="Bold"/>
+                    </FormattedString.Spans>
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+        <Button Text="{culture:Translate ChangeLanguage, DefaultValue='Change Language'}"
+             Clicked="Button_Clicked"></Button>
+    </StackLayout>
+
+</ContentPage>

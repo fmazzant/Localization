@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30523.141
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Localization.Samples.SharedLayer", "Localization.Samples.VocabolaryServiceProvider\Localization.Samples.SharedLayer.shproj", "{E0D66FD1-B3EA-41F2-AF2F-0582B1049EEF}"
 EndProject
@@ -25,19 +25,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wpf", "Wpf", "{98634098-3B6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blazor", "Blazor", "{CC9BC995-8F8B-4803-9E77-674749A5D847}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Samples.AppBlazor", "Localization.Samples.AppBlazor\Localization.Samples.AppBlazor.csproj", "{98AA01BF-508F-4E35-B821-6CB3BE5D6B95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Samples.AppBlazor", "Localization.Samples.AppBlazor\Localization.Samples.AppBlazor.csproj", "{98AA01BF-508F-4E35-B821-6CB3BE5D6B95}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maui", "Maui", "{5AFE980C-8783-4A06-8FDF-608B2EA99EAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Samples.AppMaui", "Localization.Samples.AppMaui\Localization.Samples.AppMaui.csproj", "{5F9E1D23-8819-4197-9C9B-5CF1888434EC}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{5c3e20f2-029d-4183-a7fe-f018c03303f4}*SharedItemsImports = 4
-		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{87334221-8093-43f4-a665-f6e96516546a}*SharedItemsImports = 5
-		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{90609386-cfa4-4b3f-8009-f86e9b3c9bbc}*SharedItemsImports = 4
-		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{98aa01bf-508f-4e35-b821-6cb3be5d6b95}*SharedItemsImports = 5
-		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{af93e074-f586-49c4-b4ed-ecc9ca81d507}*SharedItemsImports = 5
-		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{c768b165-2002-414c-ae16-a88b9d4c5de8}*SharedItemsImports = 5
-		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{cc5b8aa9-30bb-463d-92f7-ee9dd72f6736}*SharedItemsImports = 4
-		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{e0d66fd1-b3ea-41f2-af2f-0582b1049eef}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -225,6 +219,42 @@ Global
 		{98AA01BF-508F-4E35-B821-6CB3BE5D6B95}.Release|x64.Build.0 = Release|Any CPU
 		{98AA01BF-508F-4E35-B821-6CB3BE5D6B95}.Release|x86.ActiveCfg = Release|Any CPU
 		{98AA01BF-508F-4E35-B821-6CB3BE5D6B95}.Release|x86.Build.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|ARM.Deploy.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|iPhone.Deploy.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|iPhoneSimulator.Deploy.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|ARM.Build.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|ARM.Deploy.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|iPhone.Build.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|iPhone.Deploy.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|iPhoneSimulator.Deploy.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|x64.Build.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|x64.Deploy.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|x86.Build.0 = Release|Any CPU
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -237,8 +267,20 @@ Global
 		{90609386-CFA4-4B3F-8009-F86E9B3C9BBC} = {579F7E5B-16D7-4942-9A45-52709BDF3B32}
 		{87334221-8093-43F4-A665-F6E96516546A} = {579F7E5B-16D7-4942-9A45-52709BDF3B32}
 		{98AA01BF-508F-4E35-B821-6CB3BE5D6B95} = {CC9BC995-8F8B-4803-9E77-674749A5D847}
+		{5F9E1D23-8819-4197-9C9B-5CF1888434EC} = {5AFE980C-8783-4A06-8FDF-608B2EA99EAD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6A82420D-8D93-4D94-8DA2-BA2B115EF298}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{5c3e20f2-029d-4183-a7fe-f018c03303f4}*SharedItemsImports = 4
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{5f9e1d23-8819-4197-9c9b-5cf1888434ec}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{87334221-8093-43f4-a665-f6e96516546a}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{90609386-cfa4-4b3f-8009-f86e9b3c9bbc}*SharedItemsImports = 4
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{98aa01bf-508f-4e35-b821-6cb3be5d6b95}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{af93e074-f586-49c4-b4ed-ecc9ca81d507}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{c768b165-2002-414c-ae16-a88b9d4c5de8}*SharedItemsImports = 5
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{cc5b8aa9-30bb-463d-92f7-ee9dd72f6736}*SharedItemsImports = 4
+		Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems*{e0d66fd1-b3ea-41f2-af2f-0582b1049eef}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

@@ -87,8 +87,13 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "BlazorSpan3", "e diteci cosa ne pensate breve sondaggio." },
 
                         { "BlazorSetItalian", "Italiano" },
-                        { "BlazorSetEnglish", "Inglese" }
+                        { "BlazorSetEnglish", "Inglese" },
 
+                         //MAUI
+                        { "WelcomeMaui","Benvenuto in Maui!" },
+                        { "StartDevelopingNowMaui","Parti ora con lo sviluppo!" },
+                        { "HotReloadTextMaui","Apporta le modifiche al tuo file XAML e salva per vedere l'aggiornamento dell'interfaccia utente nell'app in esecuzione con XAML Hot Reload. Provaci!" } ,
+                        { "ChangeLanguageMaui","Cambia la tua lingua" },
                     }
                 },
                 {"en-US", new Vocabolary {
@@ -131,7 +136,13 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "BlazorSpan3", "and tell us what you think." },
 
                         { "BlazorSetItalian", "Italian" },
-                        { "BlazorSetEnglish", "English" }
+                        { "BlazorSetEnglish", "English" },
+
+                        //MAUI
+                         { "WelcomeMaui","Welcome to Xamarin.Forms!" },
+                        { "StartDevelopingNowMaui","Start developing now" },
+                        { "HotReloadTextMaui","Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" },
+                        { "ChangeLanguageMaui","Change your language" },
 
                     }
                 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30523.141
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization", "Localization\Localization.csproj", "{AED5262C-DD44-4476-B5FA-6200EFE8C429}"
 EndProject
@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Xamarin", "Loc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Mvc", "Localization.Mvc\Localization.Mvc.csproj", "{65B87408-99BB-461F-9746-850FFA5D01B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Blazor", "Localization.Blazor\Localization.Blazor.csproj", "{C588EC91-087F-447B-B40B-E8F5CD193420}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Blazor", "Localization.Blazor\Localization.Blazor.csproj", "{C588EC91-087F-447B-B40B-E8F5CD193420}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Maui", "Localization.Maui\Localization.Maui.csproj", "{646DEC5A-284E-4B3F-B02A-ECE501B29B29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C588EC91-087F-447B-B40B-E8F5CD193420}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C588EC91-087F-447B-B40B-E8F5CD193420}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C588EC91-087F-447B-B40B-E8F5CD193420}.Release|Any CPU.Build.0 = Release|Any CPU
+		{646DEC5A-284E-4B3F-B02A-ECE501B29B29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{646DEC5A-284E-4B3F-B02A-ECE501B29B29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{646DEC5A-284E-4B3F-B02A-ECE501B29B29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{646DEC5A-284E-4B3F-B02A-ECE501B29B29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

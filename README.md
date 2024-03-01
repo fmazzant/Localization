@@ -22,6 +22,11 @@ Using Blazor it is possible installing the Mafe.Localization.Blazor library:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
 
+Using Maui it is possible installing the Mafe.Localization.Maui library:
+
+[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Maui)
+
+
 # Version >= 2.0.0
 The version 2.0.0 changed the Assembly's name. So is necessary adding "Mafe." where is necessary.
 
@@ -172,6 +177,63 @@ label.Translate(Label.TextProperty, () =>
 });
 ```
 where label is a BindableObject.
+
+# Maui
+
+The Maui has a specific library to manage the culture inside the project. 
+
+In first time is necessary initializing the LocalizationManager. Like this:
+```c#
+var builder = MauiApp.CreateBuilder();
+builder
+    .UseMauiApp<...>()
+    .ConfigureLocalization(new MockVocabolaryServiceProvider { })
+    ...;
+```
+or you can initializing the LocalizationManager like Xamarin:
+```c#
+LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+```
+Inside your xaml file is necessary include the Localization.Maui library, like this:
+```c# xaml
+ xmlns:culture="clr-namespace:Localization.Maui;assembly=Mafe.Localization.Maui"
+```
+In the following code is displayed how the Label's text works:
+```c# xaml
+<Label Text="{culture:Translate MainWindow, DefaultValue='Main Window'}"></Label>
+```
+In this case, when the culture changed, the LocalizationManager changing the
+Label's Text value with the current culture value.
+
+Using this code to invoke a func when the culture is changed, like this:
+```c# xaml
+label.Translate(Label.TextProperty, () =>
+{
+    string val = doSomething();
+    return val;
+});
+```
+where label is a BindableObject.
+
+# Migration Xamarin to Maui
+
+To migrate from Xamarin to Maui is very easy. It's necessary to rename within Xaml file the include definition, 
+like this.
+
+from
+
+```c# xaml
+ xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
+```
+
+to
+
+```c# xaml
+ xmlns:culture="clr-namespace:Localization.Maui;assembly=Mafe.Localization.Maui"
+```
+
+After you can build and run again your app. Clearly you need to install the package Mafe.Localization.Maui and remove
+Mafe.Localization.Xamarin from your project.
 
 # WPF Windows
 

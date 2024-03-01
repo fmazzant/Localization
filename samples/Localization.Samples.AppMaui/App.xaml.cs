@@ -7,8 +7,6 @@ namespace Localization.Samples.AppMaui
         public App()
         {
             InitializeComponent();
-
-            Localization.LocalizationManager.Init(new MockVocabolaryServiceProvider { });
             MainPage = new MainPage();
         }
     }

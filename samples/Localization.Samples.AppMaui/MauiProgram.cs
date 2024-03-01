@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Localization.Samples.VocabolaryServiceProvider;
+using Localization.Maui.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Localization.Samples.AppMaui
 {
@@ -9,10 +11,11 @@ namespace Localization.Samples.AppMaui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .ConfigureLocalization(new MockVocabolaryServiceProvider { })
                 .ConfigureFonts(fonts =>
                 {
-                    //fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    //fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
 #if DEBUG

@@ -59,3 +59,5 @@
 /src/.vs/Localization/v17
 /samples/.vs/Localization.Samples/v17
 /samples/.vs/ProjectEvaluation
+/src/Localization.Maui/bin/Release
+/src/Localization.Maui/obj

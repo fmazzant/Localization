@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
-
   <Import Project="..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
-
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization.Windows" Version="2.0.2" />
+    <PackageReference Include="Mafe.Localization.Windows" Version="2.1.0" />
   </ItemGroup>
-
 </Project>

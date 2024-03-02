@@ -69,3 +69,4 @@
 /src/Localization.Maui/bin
 /samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin/bin/Release/netstandard2.0
 /samples/Localization.Samples.AppXamarin/Localization.Samples.AppXamarin.Android/.vs
+/samples/Localization.Samples.AppBlazor/bin/Debug/net8.0

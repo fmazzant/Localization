@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager _navigationManager
 @using Localization.Blazor.Bindings
 
 <div class="sidebar">
@@ -25,9 +26,11 @@
     private void SetItalianLanguage()
     {
         LocalizationManager.Instance.SetCulture(new System.Globalization.CultureInfo("it-IT"));
+        _navigationManager.NavigateTo(_navigationManager.Uri, true);
     }
     private void SetEnglishLanguage()
     {
         LocalizationManager.Instance.SetCulture(new System.Globalization.CultureInfo("en-US"));
+        _navigationManager.NavigateTo(_navigationManager.Uri, true);
     }
 }

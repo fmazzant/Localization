@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;netstandard2.1;netstandard2.0;</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.1;netstandard2.0;</TargetFrameworks>
     <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>localization, c-sharp, dotnet-standard, dotnet-core, dotnet-framework, xamarin</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>2.1.0</Version>
+    <Version>2.2.0-rc1</Version>
     <PackageId>Mafe.Localization.Xamarin</PackageId>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>

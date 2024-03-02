@@ -3,7 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization.Blazor" Version="2.1.0" />
+    <PackageReference Include="Mafe.Localization.Blazor" Version="2.2.0-rc1" />
   </ItemGroup>
   <Import Project="..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
 </Project>

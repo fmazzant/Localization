@@ -178,9 +178,9 @@ label.Translate(Label.TextProperty, () =>
 ```
 where label is a BindableObject.
 
-# Maui
+# .NET MAUI
 
-The Maui has a specific library to manage the culture inside the project. 
+The .NET MAUI has a specific library to manage the culture inside the project. 
 
 In first time is necessary initializing the LocalizationManager. Like this:
 ```c#
@@ -215,9 +215,9 @@ label.Translate(Label.TextProperty, () =>
 ```
 where label is a BindableObject.
 
-# Migration Xamarin to Maui
+# Migration Xamarin to .NET MAUI
 
-To migrate from Xamarin to Maui is very easy. It's necessary to rename within Xaml file the include definition, 
+To migrate from Xamarin to .NET MAUI is very easy. It's necessary to rename within Xaml file the include definition, 
 like this.
 
 from

@@ -11,7 +11,7 @@
     <PackageId>Mafe.Localization.Maui</PackageId>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
-    <Description>A MAUI library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
+    <Description>A .NET MAUI library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <Copyright>Copyright (c) 2024 Federico Mazzanti</Copyright>
     <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>

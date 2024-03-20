@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net7.0-android;net7.0-ios;net8.0;net8.0-android;net8.0-ios</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;</TargetFrameworks>
     <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>

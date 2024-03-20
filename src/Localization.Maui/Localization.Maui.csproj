@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net7.0-android;net7.0-ios;net8.0;net8.0-android;net8.0-ios</TargetFrameworks>
     <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>localization, c-sharp, dotnet-standard, dotnet-core, dotnet-framework, maui</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>2.2.0-rc1</Version>
+    <Version>2.2.0-rc2</Version>
     <PackageId>Mafe.Localization.Maui</PackageId>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>

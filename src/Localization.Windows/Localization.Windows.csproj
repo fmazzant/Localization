@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0-windows;net7.0-windows;net8.0-windows;netcoreapp3.1;</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Version>2.2.0-rc1</Version>
+    <Version>2.2.0</Version>
     <PackageId>Mafe.Localization.Windows</PackageId>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>

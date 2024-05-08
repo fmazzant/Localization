@@ -22,7 +22,7 @@ Using Blazor it is possible installing the Mafe.Localization.Blazor library:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
 
-Using Maui it is possible installing the Mafe.Localization.Maui library:
+Using .NET MAUI it is possible installing the Mafe.Localization.Maui library:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Maui)
 

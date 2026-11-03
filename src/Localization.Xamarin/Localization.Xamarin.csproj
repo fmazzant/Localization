@@ -1,31 +1,46 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
+  <!--
+    Xamarin.Forms reached end of support on May 1, 2024.
+    This package is kept for existing applications only: please migrate to Mafe.Localization.Maui.
+  -->
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.1;netstandard2.0;</TargetFrameworks>
-    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>localization, c-sharp, dotnet-standard, dotnet-core, dotnet-framework, xamarin</PackageTags>
-    <NeutralLanguage>en</NeutralLanguage>
-    <Version>2.2.0</Version>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+  </PropertyGroup>
+
+  <!-- NuGet package -->
+  <PropertyGroup>
     <PackageId>Mafe.Localization.Xamarin</PackageId>
+    <Version>3.0.0</Version>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
-    <Description>A Xamarin library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
+    <Copyright>Copyright (c) 2020-2026 Federico Mazzanti</Copyright>
+    <Description>[Deprecated: Xamarin.Forms is out of support, use Mafe.Localization.Maui] A Xamarin library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
+    <PackageTags>localization;i18n;c-sharp;dotnet-standard;xamarin</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
-    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="4.0.0.709238" />
+    <None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2662" />
   </ItemGroup>
 
   <ItemGroup>

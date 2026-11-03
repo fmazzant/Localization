@@ -1,5 +1,3 @@
-﻿using Localization.Samples.VocabolaryServiceProvider;
-
 namespace Localization.Samples.AppMaui
 {
     public partial class App : Application
@@ -7,7 +5,9 @@ namespace Localization.Samples.AppMaui
         public App()
         {
             InitializeComponent();
-            MainPage = new MainPage();
         }
+
+        protected override Window CreateWindow(IActivationState? activationState)
+            => new Window(new MainPage());
     }
 }

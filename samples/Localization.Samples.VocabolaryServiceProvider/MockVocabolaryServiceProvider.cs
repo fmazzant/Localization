@@ -27,6 +27,8 @@
 /// 
 /// </summary>
 
+#nullable disable
+
 namespace Localization.Samples.VocabolaryServiceProvider
 {
     using System.Collections.Generic;
@@ -139,7 +141,7 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "BlazorSetEnglish", "English" },
 
                         //MAUI
-                         { "WelcomeMaui","Welcome to Xamarin.Forms!" },
+                         { "WelcomeMaui","Welcome to .NET MAUI!" },
                         { "StartDevelopingNowMaui","Start developing now" },
                         { "HotReloadTextMaui","Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" },
                         { "ChangeLanguageMaui","Change your language" },

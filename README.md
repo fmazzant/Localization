@@ -27,6 +27,39 @@ Using .NET MAUI it is possible installing the Mafe.Localization.Maui library:
 [![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Maui)
 
 
+# Version 3.0.0
+
+Version 3.0.0 adds .NET 10 support and removes the frameworks that are out of support.
+
+| Package | Target frameworks |
+|---|---|
+| Mafe.Localization | .NET Framework 4.6.2 / 4.7.2 / 4.8, .NET Standard 2.0 / 2.1, .NET 8, .NET 9, .NET 10 |
+| Mafe.Localization.Windows | net8.0-windows, net9.0-windows, net10.0-windows |
+| Mafe.Localization.Mvc | .NET 8, .NET 9, .NET 10 |
+| Mafe.Localization.Blazor | .NET 8, .NET 9, .NET 10 |
+| Mafe.Localization.Maui | .NET 8, .NET 9, .NET 10 (MAUI 8 / 9 / 10) |
+| Mafe.Localization.Xamarin | .NET Standard 2.0 / 2.1 (**deprecated**: Xamarin.Forms is out of support, migrate to Mafe.Localization.Maui) |
+
+Breaking changes:
+
+* removed .NET Framework 4.5.2 - 4.6.1, .NET Core 3.1, .NET 6 and .NET 7 specific builds
+  (.NET 6/7 applications using Mafe.Localization get the .NET Standard 2.1 build);
+* `AddMvcLocalizationManager` and `AddBlazorLocalizationManager` now return `IServiceCollection` (recompile needed)
+  and throw if `options.ServiceProvider` is not set;
+* the exceptions thrown by the provider during `Init`/`SetCulture` are no longer wrapped in an `AggregateException`.
+
+What's new:
+
+* `LocalizationManager.InitAsync(...)` and `LocalizationManager.Instance.SetCultureAsync(...)`;
+* `SetCulture`/`Init` no longer deadlock when called from a UI thread (WPF, MAUI...) with an asynchronous provider;
+* `LocalizationManager.Instance.CultureChanged` event;
+* if `options.Culture` is not set the current UI culture is used (before a null culture was passed to the provider);
+* MVC: the `[Translate]` attribute is also used by the standard helpers (`Html.LabelFor`, `Html.DisplayNameFor`,
+  `<label asp-for="...">`, validation messages) and `TranslateLabelFor` no longer fails on properties without `[Translate]`;
+* Blazor: `Binding` no longer leaks memory (it listens to the culture change only while someone subscribes
+  `BindingValueChanged`) and now applies `StringFormat`;
+* packages include README, XML documentation, Source Link and symbols (.snupkg).
+
 # Version >= 2.0.0
 The version 2.0.0 changed the Assembly's name. So is necessary adding "Mafe." where is necessary.
 
@@ -79,7 +112,10 @@ The inizializing library is necessary to load and configure the vocabolary.
 The SetCulture changes the current culture, like this:
 
 ```c#
-LocalizationManager.SetCulture(new CultureInfo("en-US"));
+LocalizationManager.Instance.SetCulture(new CultureInfo("en-US"));
+
+// or, without blocking the caller:
+await LocalizationManager.Instance.SetCultureAsync(new CultureInfo("en-US"));
 ```
 
 ### Translate without default value
@@ -97,7 +133,7 @@ The result can be null.
 It is possible get the resource's value with a Translate method, like this:
 
 ```c#
-var label = LocalizationManager.Instance.Translate("resourceKey","#Default value");
+var label = LocalizationManager.Translate("resourceKey", "#Default value");
 ```
 
 If resource's value doesn't exests the function returns the Default value 
@@ -347,3 +383,36 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 The "options.Culture" value represents the initilized culture.
+
+Inside a component the text is translated with `Binding.Translate`:
+
+```razor
+@using Localization.Blazor.Bindings
+
+<h1>@Binding.Translate("BlazorCounter")</h1>
+<p>@Binding.Translate("ChangedTimesTemplate", stringFormat: "({0})")</p>
+```
+
+To refresh a component when the culture changes, subscribe the `CultureChanged` event:
+
+```razor
+@implements IDisposable
+
+@code {
+    protected override void OnInitialized() => LocalizationManager.Instance.CultureChanged += OnCultureChanged;
+    private void OnCultureChanged(object sender, EventArgs e) => InvokeAsync(StateHasChanged);
+    public void Dispose() => LocalizationManager.Instance.CultureChanged -= OnCultureChanged;
+}
+```
+
+> **Note**: `LocalizationManager` is a process-wide singleton. In server applications (ASP.NET MVC, Blazor Server)
+> the selected culture is shared by all users.
+
+# Build and test
+
+```
+dotnet build src/Localization.sln
+dotnet test src/Localization.Tests
+```
+
+The samples (`samples/Localization.Samples.sln`) reference the projects inside `src`, so they always run with the current code.

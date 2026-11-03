@@ -1,0 +1,12 @@
+<Project>
+
+  <!-- Shared build settings for every project under src/ (NuGet metadata lives in each .csproj) -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Deterministic>true</Deterministic>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <IsTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
+    <IsPackable Condition="'$(IsTestProject)' == 'true'">false</IsPackable>
+  </PropertyGroup>
+
+</Project>

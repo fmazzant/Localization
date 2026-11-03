@@ -2,11 +2,39 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-    <PackageId>Mafe.Localization.Maui</PackageId>
-    <Description>A .NET MAUI library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
-    <PackageTags>localization;i18n;c-sharp;dotnet-core;maui</PackageTags>
+    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
+  <!-- NuGet package -->
+  <PropertyGroup>
+    <PackageId>Mafe.Localization.Maui</PackageId>
+    <Version>3.0.0</Version>
+    <Authors>Federico Mazzanti</Authors>
+    <Company>Federico Mazzanti</Company>
+    <Copyright>Copyright (c) 2024-2026 Federico Mazzanti</Copyright>
+    <Description>A .NET MAUI library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
+    <PackageTags>localization;i18n;c-sharp;dotnet-core;maui</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+  <!-- Minimum MAUI version for each .NET version: the application can use any newer one -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
   </ItemGroup>

@@ -1,31 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;</TargetFrameworks>
-    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>localization, c-sharp, dotnet-standard, dotnet-core, dotnet-framework, maui</PackageTags>
-    <NeutralLanguage>en</NeutralLanguage>
-    <Version>2.2.0</Version>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <PackageId>Mafe.Localization.Maui</PackageId>
-    <Authors>Federico Mazzanti</Authors>
-    <Company>Federico Mazzanti</Company>
     <Description>A .NET MAUI library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Copyright>Copyright (c) 2024 Federico Mazzanti</Copyright>
-    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <PackageTags>localization;i18n;c-sharp;dotnet-core;maui</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>

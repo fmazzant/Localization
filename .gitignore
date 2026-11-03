@@ -74,3 +74,16 @@
 /samples/Localization.Samples.AppWpf/bin/Debug/net8.0-windows
 /samples/.vs/Localization.Samples/v18
 /src/.vs/Localization/v18
+
+################################################################################
+# Generic .NET / Visual Studio entries
+################################################################################
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+TestResults/
+artifacts/
+*.nupkg
+*.snupkg

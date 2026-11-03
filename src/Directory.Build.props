@@ -1,0 +1,42 @@
+<Project>
+
+  <!-- Shared settings for every project under src/ -->
+  <PropertyGroup>
+    <Version>3.0.0</Version>
+    <Authors>Federico Mazzanti</Authors>
+    <Company>Federico Mazzanti</Company>
+    <Copyright>Copyright (c) 2020-2026 Federico Mazzanti</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+
+    <LangVersion>latest</LangVersion>
+    <Deterministic>true</Deterministic>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <IsTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
+    <IsPackable Condition="'$(IsTestProject)' == 'true'">false</IsPackable>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata (only for packable projects) -->
+  <PropertyGroup Condition="'$(IsPackable)' != 'false'">
+    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Source Link (built into the .NET 8+ SDK) and symbol packages -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' != 'false'">
+    <None Include="$(MSBuildThisFileDirectory)..\LICENSE.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)..\README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+</Project>

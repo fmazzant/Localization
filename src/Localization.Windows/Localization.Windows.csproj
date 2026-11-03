@@ -1,29 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows;net7.0-windows;net8.0-windows;netcoreapp3.1;</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Version>2.2.0</Version>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <PackageId>Mafe.Localization.Windows</PackageId>
-    <Authors>Federico Mazzanti</Authors>
-    <Company>Federico Mazzanti</Company>
     <Description>A Window WPF library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
-    <Copyright>Copyright (c) 2020 Federico Mazzanti</Copyright>
-    <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>localization, c-sharp, dotnet-core, windows, wpf</PackageTags>
-    <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <PackageTags>localization;i18n;c-sharp;dotnet-core;windows;wpf</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Localization\Localization.csproj" />

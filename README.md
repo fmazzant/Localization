@@ -5,6 +5,9 @@ A library for .net that can help you to manage the localization in your applicat
 > **Version 4.0.0: the packages are now published as `Mafesoft.*`** and all the namespaces start with `Mafesoft.`.
 > If you are using the `Mafe.Localization*` packages, read [Migrating from `Mafe.Localization`](#migrating-from-mafelocalization).
 
+The changes of every release are listed in the [CHANGELOG](CHANGELOG.md). To report a security problem, read the
+[security policy](SECURITY.md).
+
 To use it in your project, the Mafesoft.Localization NuGet package represents the base library:
 
 [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization)

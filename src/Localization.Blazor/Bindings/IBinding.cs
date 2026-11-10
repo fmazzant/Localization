@@ -44,12 +44,12 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
-        string ResourceKey { get; }
+        string? ResourceKey { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string DefaultValue { get; }
+        string? DefaultValue { get; }
 
         /// <summary>
         /// 
@@ -59,17 +59,17 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
-        object ConverterParameter { get; }
+        object? ConverterParameter { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        string StringFormat { get; }
+        string? StringFormat { get; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        object GetValue();
+        object? GetValue();
     }
 }

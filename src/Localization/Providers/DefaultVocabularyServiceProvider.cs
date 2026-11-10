@@ -43,7 +43,7 @@ namespace Mafesoft.Localization.Providers
         /// <summary>
         /// Invoked when a term used by the application does not exist in the vocabulary: does nothing.
         /// </summary>
-        public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string defaultValue = null, CancellationToken cancellationToken = default) => CompletedTask;
+        public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string? defaultValue = null, CancellationToken cancellationToken = default) => CompletedTask;
 
         /// <summary>
         /// Initializes the provider.

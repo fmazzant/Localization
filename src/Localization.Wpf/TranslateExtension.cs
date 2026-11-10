@@ -58,17 +58,17 @@ namespace Mafesoft.Localization.Wpf
         /// <summary>
         /// Gets and Sets the ResourceKey, it is a key of resource.
         /// </summary>
-        public string ResourceKey { get; set; }
+        public string? ResourceKey { get; set; }
 
         /// <summary>
         /// Gets or sets a string that specifies how to format the binding if it displays the bound value as a string.
         /// </summary>
-        public string StringFormat { get; set; }
+        public string? StringFormat { get; set; }
 
         /// <summary>
         /// Gets or sets a default value string that specifies when the value is null.
         /// </summary>
-        public string DefaultValue { get; set; }
+        public string? DefaultValue { get; set; }
 
         /// <summary>
         /// When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.

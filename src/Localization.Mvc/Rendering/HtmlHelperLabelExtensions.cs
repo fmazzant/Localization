@@ -62,13 +62,13 @@ namespace Mafesoft.Localization.Mvc.Rendering
         /// <param name="expression">An expression to be evaluated against the current model.</param>
         /// <param name="htmlAttributes">An System.Object that contains the HTML attributes for the element.</param>
         /// <returns>A new Microsoft.AspNetCore.Html.IHtmlContent containing the &lt;label&gt; element.</returns>
-        public static IHtmlContent TranslateLabelFor<TModel, TResult>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TResult>> expression, object htmlAttributes)
+        public static IHtmlContent TranslateLabelFor<TModel, TResult>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TResult>> expression, object? htmlAttributes)
         {
             if (htmlHelper is null) throw new ArgumentNullException(nameof(htmlHelper));
             if (expression is null) throw new ArgumentNullException(nameof(expression));
 
             var member = GetMember(expression.Body);
-            var attribute = member is null ? null : (TranslateAttribute)Attribute.GetCustomAttribute(member, typeof(TranslateAttribute), inherit: true);
+            var attribute = member is null ? null : (TranslateAttribute?)Attribute.GetCustomAttribute(member, typeof(TranslateAttribute), inherit: true);
 
             if (attribute is null)
             {
@@ -90,7 +90,7 @@ namespace Mafesoft.Localization.Mvc.Rendering
         /// an System.Collections.Generic.IDictionary`2 instance containing the HTML attributes.
         /// </param>
         /// <returns>A new Microsoft.AspNetCore.Html.IHtmlContent containing the &lt;label&gt; element.</returns>
-        public static IHtmlContent TranslateLabel<TModel>(this IHtmlHelper<TModel> htmlHelper, string expression, string resourceKey, string defaultValue = null, object htmlAttributes = null)
+        public static IHtmlContent TranslateLabel<TModel>(this IHtmlHelper<TModel> htmlHelper, string expression, string resourceKey, string? defaultValue = null, object? htmlAttributes = null)
         {
             if (htmlHelper is null) throw new ArgumentNullException(nameof(htmlHelper));
 
@@ -98,7 +98,7 @@ namespace Mafesoft.Localization.Mvc.Rendering
             return htmlHelper.Label(expression, labelText, htmlAttributes);
         }
 
-        private static MemberInfo GetMember(Expression body)
+        private static MemberInfo? GetMember(Expression body)
         {
             while (body is UnaryExpression unary
                 && (unary.NodeType == ExpressionType.Convert || unary.NodeType == ExpressionType.ConvertChecked))

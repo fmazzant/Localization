@@ -1,0 +1,23 @@
+@page "/"
+@implements IDisposable
+
+<PageTitle>Localization.Blazor WebAssembly</PageTitle>
+
+<h1>@Binding.Translate("BlazorHelloWorld")</h1>
+
+<p>@Binding.Translate("BlazorWelcome")</p>
+
+<button @onclick='() => SetCultureAsync("it-IT")'>Italiano</button>
+<button @onclick='() => SetCultureAsync("en-US")'>English</button>
+
+<p>@LocalizationManager.CurrentCulture.Name</p>
+
+@code {
+    protected override void OnInitialized() => LocalizationManager.Instance.CultureChanged += OnCultureChanged;
+
+    private Task SetCultureAsync(string culture) => LocalizationManager.Instance.SetCultureAsync(new CultureInfo(culture));
+
+    private void OnCultureChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => LocalizationManager.Instance.CultureChanged -= OnCultureChanged;
+}

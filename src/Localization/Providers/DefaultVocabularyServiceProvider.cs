@@ -30,33 +30,34 @@
 namespace Mafesoft.Localization.Providers
 {
     using System.Globalization;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Provides a Default providers to the loading the vocabolaries
+    /// The default provider: it loads empty vocabularies.
     /// </summary>
-    internal sealed class DefaultVocabolaryServiceProvider : IVocabolaryServiceProvider
+    internal sealed class DefaultVocabularyServiceProvider : IVocabularyServiceProvider
     {
         private static readonly Task CompletedTask = Task.FromResult(true);
 
         /// <summary>
-        /// When a term uses inside your application not exists inside your vocabolary, this methods is run.
+        /// Invoked when a term used by the application does not exist in the vocabulary: does nothing.
         /// </summary>
-        public Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null) => CompletedTask;
+        public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string defaultValue = null, CancellationToken cancellationToken = default) => CompletedTask;
 
         /// <summary>
-        /// Initilize the provider.
+        /// Initializes the provider.
         /// </summary>
-        public Task Initialize() => CompletedTask;
+        public Task InitializeAsync(CancellationToken cancellationToken = default) => CompletedTask;
 
         /// <summary>
-        /// Loads and returns an empty vocabolary for the cultureinfo
+        /// Loads and returns an empty vocabulary for the culture.
         /// </summary>
-        public Task<IVocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo) => Task.FromResult<IVocabolary>(new Vocabolary());
+        public Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default) => Task.FromResult<IVocabulary>(new Vocabulary());
 
         /// <summary>
-        /// Saves the vocabolary
+        /// Saves the vocabulary: does nothing.
         /// </summary>
-        public Task SaveAsync(IVocabolary vocabolary) => CompletedTask;
+        public Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default) => CompletedTask;
     }
 }

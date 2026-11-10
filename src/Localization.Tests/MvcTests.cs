@@ -25,7 +25,7 @@ namespace Mafesoft.Localization.Tests
 
         public MvcTests()
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider(), new CultureInfo("it-IT"));
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), new CultureInfo("it-IT"));
         }
 
         [Theory]
@@ -54,7 +54,7 @@ namespace Mafesoft.Localization.Tests
         {
             var services = new ServiceCollection();
 
-            services.AddMvcLocalizationManager(o => o.ServiceProvider = new TestVocabolaryServiceProvider());
+            services.AddMvcLocalizationManager(o => o.ServiceProvider = new TestVocabularyServiceProvider());
 
             using var provider = services.BuildServiceProvider();
             Assert.Same(LocalizationManager.Instance, provider.GetRequiredService<LocalizationManager>());

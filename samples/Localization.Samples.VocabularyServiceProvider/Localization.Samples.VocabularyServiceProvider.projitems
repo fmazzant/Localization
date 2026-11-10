@@ -6,9 +6,9 @@
     <SharedGUID>e0d66fd1-b3ea-41f2-af2f-0582b1049eef</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Localization.Samples.VocabolaryServiceProvider</Import_RootNamespace>
+    <Import_RootNamespace>Localization.Samples.VocabularyServiceProvider</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)MockVocabolaryServiceProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MockVocabularyServiceProvider.cs" />
   </ItemGroup>
 </Project>

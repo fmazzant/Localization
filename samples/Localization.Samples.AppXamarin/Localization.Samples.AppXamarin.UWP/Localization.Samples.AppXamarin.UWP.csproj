@@ -173,7 +173,7 @@
       <Name>Localization.Samples.AppXamarin</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
+  <Import Project="..\..\Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

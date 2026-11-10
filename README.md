@@ -32,7 +32,8 @@ Then install the package for your technology:
 
 Version 4.0.0 renames the packages, the assemblies and the namespaces to `Mafesoft.*`
 (scheme `Mafesoft.<Product>.<Technology>`). `Localization.Windows` becomes `Localization.Wpf`.
-Apart from the namespaces and the package names, the public API does not change.
+It also fixes the naming of the public API (`Vocabolary` → `Vocabulary`, `Async` suffix and `CancellationToken`
+on the provider interface), so that the consumers migrate only once.
 
 ## Supported platforms
 
@@ -83,7 +84,23 @@ This is a **breaking change** for every consumer.
    | `Localization.Xamarin.*` | `Mafesoft.Localization.Xamarin.*` |
    | `Localization.Xamarin.Converts` | `Mafesoft.Localization.Xamarin.Converters` |
 
-3. Update the XAML namespaces:
+3. Rename the types and members of the public API:
+
+   | 3.x | 4.0.0 |
+   |---|---|
+   | `IVocabolary`, `Vocabolary` | `IVocabulary`, `Vocabulary` |
+   | `IVocabolaryServiceProvider` | `IVocabularyServiceProvider` |
+   | `IVocabolaryServiceProvider.Initialize()` | `InitializeAsync(CancellationToken cancellationToken = default)` |
+   | `IVocabolaryServiceProvider.LoadVocabolaryAsync(CultureInfo)` | `LoadVocabularyAsync(CultureInfo, CancellationToken cancellationToken = default)` |
+   | `IVocabolaryServiceProvider.SaveAsync(IVocabolary)` | `SaveAsync(IVocabulary, CancellationToken cancellationToken = default)` |
+   | `IVocabolaryServiceProvider.AddOrUpdateTermAsync(vocabolary, key, defaultValue)` | `AddOrUpdateTermAsync(vocabulary, key, defaultValue, CancellationToken cancellationToken = default)` |
+   | `IBinding.ConverterParamenter` (Blazor) | `IBinding.ConverterParameter` |
+
+   A custom provider must rename `Initialize` to `InitializeAsync` and add the `CancellationToken` parameter to every method.
+   `LocalizationManager.InitAsync`, `SetCultureAsync`, `LoadOrUpdateCultureAsync` and `SaveCultureAsync` also accept an
+   optional `CancellationToken`, which is passed to the provider.
+
+4. Update the XAML namespaces:
 
    ```xml
    <!-- MAUI -->
@@ -99,7 +116,7 @@ This is a **breaking change** for every consumer.
    xmlns:culture="clr-namespace:Mafesoft.Localization.Xamarin;assembly=Mafesoft.Localization.Xamarin"
    ```
 
-4. **Xamarin.Forms apps:** `Mafesoft.Localization.Xamarin` 4.0.0 is the **last update** of the Xamarin package and is
+5. **Xamarin.Forms apps:** `Mafesoft.Localization.Xamarin` 4.0.0 is the **last update** of the Xamarin package and is
    deprecated as soon as it is released. Plan the migration to .NET MAUI and `Mafesoft.Localization.Maui`.
 
 The `Mafe.Localization*` packages are deprecated on NuGet.org and point to the new `Mafesoft.*` packages.
@@ -149,26 +166,26 @@ Instance directly.
 # LocalizationManager
 
 LocalizationManager is more important component of this library. The library manages
-the current culture and it provides to load a vocabolary in culture.
+the current culture and it provides to load a vocabulary in culture.
 
 ### Init
 
-The Init provides to initilize the LocalizationManager. There two kind: Initializing
+The Init provides to initialize the LocalizationManager. There two kind: Initializing
 without culture (takes the culture from main thread) and with a specific culture.
 
-The initilizing without culture like this:
+The initializing without culture like this:
 
 ```c#
-LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+LocalizationManager.Init(new MockVocabularyServiceProvider { });
 ```
 
 The inizializing with the culture like this:
 
 ```c#
-LocalizationManager.Init(new MockVocabolaryServiceProvider { }, new CultureInfo("en-US"));
+LocalizationManager.Init(new MockVocabularyServiceProvider { }, new CultureInfo("en-US"));
 ```
 
-The inizializing library is necessary to load and configure the vocabolary.
+The inizializing library is necessary to load and configure the vocabulary.
 
 ### SetCulture
 
@@ -202,32 +219,32 @@ var label = LocalizationManager.Translate("resourceKey", "#Default value");
 If resource's value doesn't exests the function returns the Default value 
 passed as argument.
 
-# Vocabolary Service Provider
+# Vocabulary Service Provider
 
-The following code defines the vocabolary service provider where all vacabolaries 
-are defined or where the vocabolaries are loaded. 
+The following code defines the vocabulary service provider where all vocabularies 
+are defined or where the vocabularies are loaded. 
 
 Inside the Provider is possbile to manage a cache.
 
 A sample is represented into following code:
 
 ```c# xaml
-public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
+public class MockVocabularyServiceProvider : IVocabularyServiceProvider
 {
-    Dictionary<string, Vocabolary> all = null;
+    Dictionary<string, Vocabulary> all = null;
 
-    public Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null) 
-        => Task.Delay(1);
+    public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string defaultValue = null, CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
 
-    public Task Initialize()
+    public Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        all = new Dictionary<string, Vocabolary>
+        all = new Dictionary<string, Vocabulary>
         {
-            {"it-IT", new Vocabolary {
+            {"it-IT", new Vocabulary {
                     { "MainWindow","Main Window in italian language" }
                 }
             },
-            {"en-US", new Vocabolary {
+            {"en-US", new Vocabulary {
                     { "MainWindow","Main Window in english language" } 
                 } 
             }
@@ -235,16 +252,16 @@ public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
         return Task.FromResult(all);
     }
 
-    public Task<IVocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo)
+    public Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default)
     {
         string cultureDefault = "it-IT";
         if (all.ContainsKey(cultureInfo.ToString()))
             cultureDefault = cultureInfo.ToString();
-        return Task.FromResult<IVocabolary>(all[cultureDefault]);
+        return Task.FromResult<IVocabulary>(all[cultureDefault]);
     }
 
-    public Task SaveAsync(IVocabolary vocabolary) 
-        => Task.Delay(1);
+    public Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
 }
 ```
 
@@ -254,7 +271,7 @@ The Xamarin has a specific library to manage the culture inside the project.
 
 In first time is necessary initializing the LocalizationManager. Like this:
 ```c#
-LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+LocalizationManager.Init(new MockVocabularyServiceProvider { });
 ```
 Inside your xaml file is necessary include the Mafesoft.Localization.Xamarin library, like this:
 ```c# xaml
@@ -286,12 +303,12 @@ In first time is necessary initializing the LocalizationManager. Like this:
 var builder = MauiApp.CreateBuilder();
 builder
     .UseMauiApp<...>()
-    .ConfigureLocalization(new MockVocabolaryServiceProvider { })
+    .ConfigureLocalization(new MockVocabularyServiceProvider { })
     ...;
 ```
 or you can initializing the LocalizationManager like Xamarin:
 ```c#
-LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+LocalizationManager.Init(new MockVocabularyServiceProvider { });
 ```
 Inside your xaml file is necessary include the Mafesoft.Localization.Maui library, like this:
 ```c# xaml
@@ -341,7 +358,7 @@ The WPF has a specific library to manage the culture inside the project.
 In first time is necessary initializing the LocalizationManager. Like this:
 
 ```c#
-LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+LocalizationManager.Init(new MockVocabularyServiceProvider { });
 ```
 
 Inside your xaml file is necessary include the Mafesoft.Localization.Wpf library, like this:
@@ -382,13 +399,13 @@ public void ConfigureServices(IServiceCollection services)
 {
     ... 
     services.AddMvcLocalizationManager(options => {
-        options.ServiceProvider = new MockVocabolaryServiceProvider { };
+        options.ServiceProvider = new MockVocabularyServiceProvider { };
         options.Culture = new CultureInfo("it-IT");
     });
     ...
 }
 ```
-The "options.Culture" value represents the initilized culture.
+The "options.Culture" value represents the initialized culture.
 
 Then we define the ViewModel using the TranslateAttribute, like this:
 
@@ -439,13 +456,13 @@ public void ConfigureServices(IServiceCollection services)
 {
     ... 
     services.AddBlazorLocalizationManager(options => {
-        options.ServiceProvider = new MockVocabolaryServiceProvider { };
+        options.ServiceProvider = new MockVocabularyServiceProvider { };
         options.Culture = new CultureInfo("it-IT");
     });
     ...
 }
 ```
-The "options.Culture" value represents the initilized culture.
+The "options.Culture" value represents the initialized culture.
 
 Inside a component the text is translated with `Binding.Translate`:
 
@@ -470,6 +487,28 @@ To refresh a component when the culture changes, subscribe the `CultureChanged` 
 
 > **Note**: `LocalizationManager` is a process-wide singleton. In server applications (ASP.NET MVC, Blazor Server)
 > the selected culture is shared by all users.
+
+### Blazor WebAssembly
+
+`Mafesoft.Localization.Blazor` does not depend on the ASP.NET Core shared framework, so it works in Blazor WebAssembly
+too (and in the WebAssembly / Auto render modes of a Blazor Web App). In the browser initialize the manager
+asynchronously in `Program.cs`: a provider that loads the vocabularies with `HttpClient` cannot be waited
+synchronously on the single WebAssembly thread.
+
+```c#
+using Mafesoft.Localization;
+...
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+
+await LocalizationManager.InitAsync(new MockVocabularyServiceProvider(), new CultureInfo("it-IT"));
+builder.Services.AddSingleton(LocalizationManager.Instance);
+
+await builder.Build().RunAsync();
+```
+
+In the browser each user has their own `LocalizationManager`, so the culture is not shared.
+See the `samples/Localization.Samples.AppBlazorWasm` sample.
 
 # Build and test
 

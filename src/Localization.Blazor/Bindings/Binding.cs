@@ -52,7 +52,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
         public string ResourceKey { get; private set; }
 
         /// <summary>
-        /// The value used when the resource key does not exist inside the vocabolary.
+        /// The value used when the resource key does not exist inside the vocabulary.
         /// </summary>
         public string DefaultValue { get; private set; }
 
@@ -64,7 +64,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <summary>
         /// The parameter passed to the <see cref="Converter"/>.
         /// </summary>
-        public object ConverterParamenter { get; private set; }
+        public object ConverterParameter { get; private set; }
 
         /// <summary>
         /// A composite format string (e.g. "Title: {0}") or a standard format (e.g. "N2") applied to the translated value.
@@ -113,7 +113,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// Creates a binding for the specified resource key.
         /// </summary>
         /// <param name="resourceKey">The key of the resource.</param>
-        /// <param name="defaultValue">The value used when the resource key does not exist inside the vocabolary.</param>
+        /// <param name="defaultValue">The value used when the resource key does not exist inside the vocabulary.</param>
         /// <param name="stringFormat">A format applied to the translated value.</param>
         /// <returns></returns>
         public static Binding Translate(string resourceKey, string defaultValue = null, string stringFormat = null)
@@ -122,7 +122,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
             {
                 ResourceKey = resourceKey,
                 DefaultValue = defaultValue,
-                ConverterParamenter = defaultValue ?? resourceKey,
+                ConverterParameter = defaultValue ?? resourceKey,
                 StringFormat = stringFormat
             };
         }
@@ -140,7 +140,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
         public object GetValue()
         {
             var culture = LocalizationManager.CurrentCulture;
-            var value = Converter.Convert(Source[ResourceKey], typeof(string), ConverterParamenter, culture) as string;
+            var value = Converter.Convert(Source[ResourceKey], typeof(string), ConverterParameter, culture) as string;
 
             if (value is null || string.IsNullOrEmpty(StringFormat))
             {

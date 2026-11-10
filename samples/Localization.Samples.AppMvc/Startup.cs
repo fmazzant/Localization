@@ -1,5 +1,5 @@
 using Mafesoft.Localization.Mvc.Extensions;
-using Localization.Samples.VocabolaryServiceProvider;
+using Localization.Samples.VocabularyServiceProvider;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,7 +28,7 @@ namespace Localization.Samples.AppMvc
         {
             services.AddControllersWithViews();
             services.AddMvcLocalizationManager(options => {
-                options.ServiceProvider = new MockVocabolaryServiceProvider { };
+                options.ServiceProvider = new MockVocabularyServiceProvider { };
                 options.Culture = new CultureInfo("it-IT");
             });
         }

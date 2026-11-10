@@ -38,27 +38,27 @@ namespace Mafesoft.Localization.Maui.Extensions
     public static class MauiAppBuilderExtensions
     {
         /// <summary>
-        /// Configures the <see cref="MauiAppBuilder"/> with a specified vocabolary <paramref name="vocabolaryServiceProvider"/> to register localization manager in the application.
+        /// Configures the <see cref="MauiAppBuilder"/> with a specified vocabulary <paramref name="vocabularyServiceProvider"/> to register localization manager in the application.
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="vocabolaryServiceProvider"></param>
+        /// <param name="vocabularyServiceProvider"></param>
         /// <returns></returns>
-        public static MauiAppBuilder ConfigureLocalization(this MauiAppBuilder builder, IVocabolaryServiceProvider vocabolaryServiceProvider)
+        public static MauiAppBuilder ConfigureLocalization(this MauiAppBuilder builder, IVocabularyServiceProvider vocabularyServiceProvider)
         {
-            LocalizationManager.Init(vocabolaryServiceProvider);
+            LocalizationManager.Init(vocabularyServiceProvider);
             return builder;
         }
 
         /// <summary>
-        /// Configures the <see cref="MauiAppBuilder"/> with a specified vocabolary <paramref name="vocabolaryServiceProvider"/> and <paramref name="cultureInfo"/> to register localization manager in the application.
+        /// Configures the <see cref="MauiAppBuilder"/> with a specified vocabulary <paramref name="vocabularyServiceProvider"/> and <paramref name="cultureInfo"/> to register localization manager in the application.
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="vocabolaryServiceProvider"></param>
+        /// <param name="vocabularyServiceProvider"></param>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
-        public static MauiAppBuilder ConfigureLocalization(this MauiAppBuilder builder, IVocabolaryServiceProvider vocabolaryServiceProvider, CultureInfo cultureInfo)
+        public static MauiAppBuilder ConfigureLocalization(this MauiAppBuilder builder, IVocabularyServiceProvider vocabularyServiceProvider, CultureInfo cultureInfo)
         {
-            LocalizationManager.Init(vocabolaryServiceProvider, cultureInfo);
+            LocalizationManager.Init(vocabularyServiceProvider, cultureInfo);
             return builder;
         }
     }

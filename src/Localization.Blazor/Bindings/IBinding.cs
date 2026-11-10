@@ -59,7 +59,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <summary>
         /// 
         /// </summary>
-        object ConverterParamenter { get; }
+        object ConverterParameter { get; }
 
         /// <summary>
         /// 

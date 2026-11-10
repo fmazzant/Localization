@@ -46,7 +46,7 @@ namespace Mafesoft.Localization.Mvc
         /// Initializes a new instance of the <see cref="TranslateAttribute"/> class.
         /// </summary>
         /// <param name="resourceKey">The key of resource.</param>
-        /// <param name="defaultValue">The value used when the resource key does not exist inside the vocabolary.</param>
+        /// <param name="defaultValue">The value used when the resource key does not exist inside the vocabulary.</param>
         public TranslateAttribute(string resourceKey, string defaultValue = null)
         {
             ResourceKey = resourceKey;
@@ -59,7 +59,7 @@ namespace Mafesoft.Localization.Mvc
         public string ResourceKey { get; set; }
 
         /// <summary>
-        /// The default value string that specifies when the value is null or the resource key not exists inside vocabolory.
+        /// The default value string that specifies when the value is null or the resource key not exists inside vocabulary.
         /// </summary>
         public string DefaultValue { get; set; }
     }

@@ -37,9 +37,9 @@ namespace Mafesoft.Localization.Mvc.Extensions
     public class MvcLocalizationManagerOptions
     {
         /// <summary>
-        /// The interface to a providers to the loading the vocabolaries
+        /// The interface to a providers to the loading the vocabularies
         /// </summary>
-        public IVocabolaryServiceProvider ServiceProvider { get; set; }
+        public IVocabularyServiceProvider ServiceProvider { get; set; }
 
         /// <summary>
         /// Privides information about the culture to set.

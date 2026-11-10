@@ -1,6 +1,6 @@
 using Mafesoft.Localization.Blazor.Extensions;
 using Localization.Samples.AppBlazor.Data;
-using Localization.Samples.VocabolaryServiceProvider;
+using Localization.Samples.VocabularyServiceProvider;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -33,7 +33,7 @@ namespace Localization.Samples.AppBlazor
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddBlazorLocalizationManager(options => {
-                options.ServiceProvider = new MockVocabolaryServiceProvider() { };
+                options.ServiceProvider = new MockVocabularyServiceProvider() { };
                 options.Culture = new CultureInfo("it-IT");
             });
         }

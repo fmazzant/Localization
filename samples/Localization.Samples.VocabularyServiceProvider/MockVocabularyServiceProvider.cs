@@ -29,28 +29,29 @@
 
 #nullable disable
 
-namespace Localization.Samples.VocabolaryServiceProvider
+namespace Localization.Samples.VocabularyServiceProvider
 {
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Threading;
     using System.Threading.Tasks;
     using Mafesoft.Localization;
 
     /// <summary>
-    /// Mock Vocabolary Service Provider
+    /// Mock Vocabulary Service Provider
     /// </summary>
-    public class MockVocabolaryServiceProvider : IVocabolaryServiceProvider
+    public class MockVocabularyServiceProvider : IVocabularyServiceProvider
     {
-        Dictionary<string, Vocabolary> all = null;
+        Dictionary<string, Vocabulary> all = null;
 
-        public Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null)
+        public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string defaultValue = null, CancellationToken cancellationToken = default)
             => Task.FromResult(1);
 
-        public Task Initialize()
+        public Task InitializeAsync(CancellationToken cancellationToken = default)
         {
-            all = new Dictionary<string, Vocabolary>
+            all = new Dictionary<string, Vocabulary>
             {
-                {"it-IT", new Vocabolary {
+                {"it-IT", new Vocabulary {
                         //WPF
                         { "MainWindow","Finestra Principale" },
                         { "TitleWpf","Localization Manager Wpf - Italiano" },
@@ -99,7 +100,7 @@ namespace Localization.Samples.VocabolaryServiceProvider
                         { "ChangeLanguageMaui","Cambia la tua lingua" },
                     }
                 },
-                {"en-US", new Vocabolary {
+                {"en-US", new Vocabulary {
                         //WPF
                         { "MainWindow","Main Window" },
                         { "TitleWpf","Localization Manager Wpf - English" },
@@ -153,15 +154,15 @@ namespace Localization.Samples.VocabolaryServiceProvider
             return Task.FromResult(all);
         }
 
-        public Task<IVocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo)
+        public Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default)
         {
             string cultureDefault = "it-IT";
             if (all.ContainsKey(cultureInfo.ToString()))
                 cultureDefault = cultureInfo.ToString();
-            return Task.FromResult<IVocabolary>(all[cultureDefault]);
+            return Task.FromResult<IVocabulary>(all[cultureDefault]);
         }
 
-        public Task SaveAsync(IVocabolary vocabolary)
+        public Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default)
             => Task.FromResult(1);
     }
 }

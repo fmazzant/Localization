@@ -10,7 +10,7 @@ namespace Mafesoft.Localization.Tests
     {
         public BlazorBindingTests()
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider(), new CultureInfo("it-IT"));
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), new CultureInfo("it-IT"));
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Mafesoft.Localization.Tests
         {
             var services = new ServiceCollection();
 
-            var result = services.AddBlazorLocalizationManager(o => o.ServiceProvider = new TestVocabolaryServiceProvider());
+            var result = services.AddBlazorLocalizationManager(o => o.ServiceProvider = new TestVocabularyServiceProvider());
 
             Assert.Same(services, result);
             using var provider = services.BuildServiceProvider();

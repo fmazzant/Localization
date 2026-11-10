@@ -85,7 +85,7 @@ namespace Mafesoft.Localization.Mvc.Rendering
         /// <param name="htmlHelper">The Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper instance this method extends.</param>
         /// <param name="expression">Expression name, relative to the current model.</param>
         /// <param name="resourceKey">The ResourceKey, it is a key of resource.</param>
-        /// <param name="defaultValue">The default value string that specifies when the value is null or the resource key not exists inside vocabolory.</param>
+        /// <param name="defaultValue">The default value string that specifies when the value is null or the resource key not exists inside vocabulary.</param>
         /// <param name="htmlAttributes">An System.Object that contains the HTML attributes for the element. Alternatively,
         /// an System.Collections.Generic.IDictionary`2 instance containing the HTML attributes.
         /// </param>

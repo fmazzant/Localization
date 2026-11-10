@@ -6,12 +6,12 @@ using System.Globalization;
 
 namespace Mafesoft.Localization.Tests
 {
-    internal sealed class TestVocabolaryServiceProvider : IVocabolaryServiceProvider
+    internal sealed class TestVocabularyServiceProvider : IVocabularyServiceProvider
     {
-        private readonly Dictionary<string, Vocabolary> vocabolaries = new()
+        private readonly Dictionary<string, Vocabulary> vocabularies = new()
         {
-            ["it-IT"] = new Vocabolary { ["Hello"] = "Ciao", ["Format"] = "Valore {0}", ["Empty"] = "" },
-            ["en-US"] = new Vocabolary { ["Hello"] = "Hello", ["Format"] = "Value {0}" },
+            ["it-IT"] = new Vocabulary { ["Hello"] = "Ciao", ["Format"] = "Valore {0}", ["Empty"] = "" },
+            ["en-US"] = new Vocabulary { ["Hello"] = "Hello", ["Format"] = "Value {0}" },
         };
 
         public bool Initialized { get; private set; }
@@ -22,21 +22,24 @@ namespace Mafesoft.Localization.Tests
 
         public ConcurrentBag<string> MissingTerms { get; } = new();
 
-        public async Task Initialize()
+        public CancellationToken LastLoadToken { get; private set; }
+
+        public async Task InitializeAsync(CancellationToken cancellationToken = default)
         {
             if (AsyncLoading) await Task.Delay(10);
             Initialized = true;
         }
 
-        public async Task<IVocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo)
+        public async Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default)
         {
+            LastLoadToken = cancellationToken;
             if (AsyncLoading) await Task.Delay(10);
-            return vocabolaries.TryGetValue(cultureInfo.Name, out var vocabolary) ? vocabolary : new Vocabolary();
+            return vocabularies.TryGetValue(cultureInfo.Name, out var vocabulary) ? vocabulary : new Vocabulary();
         }
 
-        public Task SaveAsync(IVocabolary vocabolary) => Task.CompletedTask;
+        public Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-        public Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null)
+        public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string defaultValue = null, CancellationToken cancellationToken = default)
         {
             MissingTerms.Add(key);
             return ThrowOnMissingTerm

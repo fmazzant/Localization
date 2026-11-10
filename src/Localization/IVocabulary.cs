@@ -32,24 +32,7 @@ namespace Mafesoft.Localization
     using System.Collections.Generic;
 
     /// <summary>
-    /// Provides the implementation to a generic vocabulary
+    /// Provides the interface to a generic vocabulary
     /// </summary>
-    public class Vocabolary : Dictionary<string, string>, IVocabolary
-    {
-        /// <summary>
-        /// Initializes a new empty vocabolary.
-        /// </summary>
-        public Vocabolary() { }
-
-        /// <summary>
-        /// Initializes a new empty vocabolary that uses the specified key comparer
-        /// (e.g. <see cref="System.StringComparer.OrdinalIgnoreCase"/>).
-        /// </summary>
-        public Vocabolary(IEqualityComparer<string> comparer) : base(comparer) { }
-
-        /// <summary>
-        /// Initializes a new vocabolary that contains the elements copied from the specified dictionary.
-        /// </summary>
-        public Vocabolary(IDictionary<string, string> dictionary) : base(dictionary) { }
-    }
+    public interface IVocabulary : IDictionary<string, string> { }
 }

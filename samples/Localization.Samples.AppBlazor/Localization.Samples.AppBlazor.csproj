@@ -5,5 +5,5 @@
   <ItemGroup>
     <ProjectReference Include="../../src/Localization.Blazor/Localization.Blazor.csproj" />
   </ItemGroup>
-  <Import Project="..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
+  <Import Project="..\Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems" Label="Shared" />
 </Project>

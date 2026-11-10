@@ -34,7 +34,7 @@ namespace Mafesoft.Localization.Xamarin.Converters
     using System.Globalization;
 
     /// <summary>
-    /// Provides a way to convert the null value with the default value passing as paramenter.
+    /// Provides a way to convert the null value with the default value passing as parameter.
     /// </summary>
     public class NullToDefaultConverter : IValueConverter
     {

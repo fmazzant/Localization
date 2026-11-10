@@ -30,38 +30,41 @@
 namespace Mafesoft.Localization
 {
     using System.Globalization;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// The interface to a providers to the loading the vocabolaries
+    /// The interface of the providers that load the vocabularies.
     /// </summary>
-    public interface IVocabolaryServiceProvider
+    public interface IVocabularyServiceProvider
     {
         /// <summary>
-        /// Initilize the provider.
+        /// Initializes the provider.
         /// </summary>
-        /// <returns></returns>
-        Task Initialize();
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        Task InitializeAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Loads and returns the vocabolary for the cultureinfo
+        /// Loads and returns the vocabulary of the culture.
         /// </summary>
-        /// <param name="cultureInfo">culture to load</param>
-        /// <returns></returns>
-        Task<IVocabolary> LoadVocabolaryAsync(CultureInfo cultureInfo);
+        /// <param name="cultureInfo">Culture to load.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Saves the vocabolary
+        /// Saves the vocabulary.
         /// </summary>
-        /// <param name="vocabolary">Vocabolary to save</param>
-        Task SaveAsync(IVocabolary vocabolary);
+        /// <param name="vocabulary">Vocabulary to save.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// When a generic term uses inside your application not exists in your vocabolary, this methods is invoked, so you can manage the new key.
+        /// Invoked when a term used by the application does not exist in the vocabulary, so the provider can store the new key.
         /// </summary>
-        /// <param name="vocabolary">Current vocabolary</param>
-        /// <param name="key">ResourceKey</param>
-        /// <param name="defaultValue">ResourceKey's default value</param>
-        Task AddOrUpdateTermAsync(IVocabolary vocabolary, string key, string defaultValue = null);
+        /// <param name="vocabulary">Current vocabulary.</param>
+        /// <param name="key">Resource key.</param>
+        /// <param name="defaultValue">Default value of the resource key.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string defaultValue = null, CancellationToken cancellationToken = default);
     }
 }

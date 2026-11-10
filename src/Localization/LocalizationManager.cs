@@ -38,25 +38,25 @@ namespace Mafesoft.Localization
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Provides a Location base manager. The manager uses a provider and a binding Exetionion to associate the culture to a Element
+    /// Provides the localization manager. The manager uses a provider to load the vocabulary of the current culture and notifies the bindings when the culture changes.
     /// </summary>
     public class LocalizationManager : INotifyPropertyChanged
     {
         private static CultureInfo currentCulture = CultureInfo.CurrentUICulture;
 
         private readonly object syncRoot = new object();
-        private IVocabolaryServiceProvider serviceProvider;
-        private IVocabolary currentVocabolary;
+        private IVocabularyServiceProvider serviceProvider;
+        private IVocabulary currentVocabulary;
         private int cultureRequest;
         private int version;
 
         /// <summary>
-        /// Handler to notificate when a property value is changed.
+        /// Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Occurs after the current culture (and its vocabolary) has been changed.
+        /// Occurs after the current culture (and its vocabulary) has been changed.
         /// </summary>
         public event EventHandler CultureChanged;
 
@@ -70,14 +70,14 @@ namespace Mafesoft.Localization
         }
 
         /// <summary>
-        /// Localization Manager instance. The manager has a Default Vocabulary during initializing the Localization Manger
+        /// The LocalizationManager instance. Until it is initialized it uses a default provider with empty vocabularies.
         /// </summary>
-        public static LocalizationManager Instance { get; } = new LocalizationManager(new DefaultVocabolaryServiceProvider());
+        public static LocalizationManager Instance { get; } = new LocalizationManager(new DefaultVocabularyServiceProvider());
 
         /// <summary>
-        /// Vocabolary service provider
+        /// Vocabulary service provider
         /// </summary>
-        public IVocabolaryServiceProvider ServiceProvider
+        public IVocabularyServiceProvider ServiceProvider
         {
             get => Volatile.Read(ref serviceProvider);
             private set => Volatile.Write(ref serviceProvider, value);
@@ -91,27 +91,27 @@ namespace Mafesoft.Localization
         public int Version => Volatile.Read(ref version);
 
         /// <summary>
-        /// Current Vocabolary
+        /// Current Vocabulary
         /// </summary>
-        private IVocabolary CurrentVocabolary
+        private IVocabulary CurrentVocabulary
         {
-            get => Volatile.Read(ref currentVocabolary);
-            set => Volatile.Write(ref currentVocabolary, value);
+            get => Volatile.Read(ref currentVocabulary);
+            set => Volatile.Write(ref currentVocabulary, value);
         }
 
         /// <summary>
-        /// Create a LocalizationManager with a service provider.
+        /// Creates a LocalizationManager with a service provider.
         /// </summary>
         /// <param name="provider"></param>
-        protected LocalizationManager(IVocabolaryServiceProvider provider)
+        protected LocalizationManager(IVocabularyServiceProvider provider)
         {
             ServiceProvider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
         /// <summary>
-        /// Returns the value associated to resourceKey inside to the current vocabolary.
+        /// Returns the value associated to resourceKey inside to the current vocabulary.
         /// When the key does not exist the provider is notified through
-        /// <see cref="IVocabolaryServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
+        /// <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
         /// </summary>
         /// <param name="resourceKey"></param>
         /// <returns></returns>
@@ -119,24 +119,24 @@ namespace Mafesoft.Localization
         {
             get
             {
-                var vocabolary = CurrentVocabolary;
-                if (vocabolary is null || string.IsNullOrEmpty(resourceKey))
+                var vocabulary = CurrentVocabulary;
+                if (vocabulary is null || string.IsNullOrEmpty(resourceKey))
                 {
                     return null;
                 }
 
-                if (vocabolary.TryGetValue(resourceKey, out var value) && !string.IsNullOrEmpty(value))
+                if (vocabulary.TryGetValue(resourceKey, out var value) && !string.IsNullOrEmpty(value))
                 {
                     return value;
                 }
 
-                NotifyMissingTerm(vocabolary, resourceKey);
+                NotifyMissingTerm(vocabulary, resourceKey);
                 return null;
             }
         }
 
         /// <summary>
-        /// Returns the value associated the key. The default value is shows when the key not inside into Vocabolary.
+        /// Returns the value of the key. When the key is not in the vocabulary, the default value (or the key itself) is returned.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -144,57 +144,62 @@ namespace Mafesoft.Localization
         public static string Translate(string key, string defaultValue = null) => Instance[key] ?? defaultValue ?? key ?? string.Empty;
 
         /// <summary>
-        /// Initilizes the LocalizationManger with the default culture.
+        /// Initializes the LocalizationManager with the default culture.
         /// </summary>
         /// <param name="provider">Service provider</param>
-        public static void Init(IVocabolaryServiceProvider provider) => Init(provider, CurrentCulture);
+        public static void Init(IVocabularyServiceProvider provider) => Init(provider, CurrentCulture);
 
         /// <summary>
-        /// Initilizes the LocalizationManger with the culture.
+        /// Initializes the LocalizationManager with the culture.
         /// </summary>
         /// <param name="provider">Service provider</param>
         /// <param name="culture">Culture to set. When null the current culture is used.</param>
-        public static void Init(IVocabolaryServiceProvider provider, CultureInfo culture)
+        public static void Init(IVocabularyServiceProvider provider, CultureInfo culture)
         {
             if (provider is null) throw new ArgumentNullException(nameof(provider));
 
-            RunSync(async () => { await provider.Initialize().ConfigureAwait(false); return true; });
+            RunSync(async () => { await provider.InitializeAsync().ConfigureAwait(false); return true; });
             Instance.ServiceProvider = provider;
             Instance.SetCulture(culture ?? CurrentCulture);
         }
 
         /// <summary>
-        /// Initilizes asynchronously the LocalizationManger with the default culture.
+        /// Initializes asynchronously the LocalizationManager with the default culture.
         /// </summary>
         /// <param name="provider">Service provider</param>
-        public static Task InitAsync(IVocabolaryServiceProvider provider) => InitAsync(provider, CurrentCulture);
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        public static Task InitAsync(IVocabularyServiceProvider provider, CancellationToken cancellationToken = default)
+            => InitAsync(provider, CurrentCulture, cancellationToken);
 
         /// <summary>
-        /// Initilizes asynchronously the LocalizationManger with the culture.
+        /// Initializes asynchronously the LocalizationManager with the culture.
         /// </summary>
         /// <param name="provider">Service provider</param>
         /// <param name="culture">Culture to set. When null the current culture is used.</param>
-        public static async Task InitAsync(IVocabolaryServiceProvider provider, CultureInfo culture)
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        public static async Task InitAsync(IVocabularyServiceProvider provider, CultureInfo culture, CancellationToken cancellationToken = default)
         {
             if (provider is null) throw new ArgumentNullException(nameof(provider));
 
-            await provider.Initialize();
+            await provider.InitializeAsync(cancellationToken);
             Instance.ServiceProvider = provider;
-            await Instance.SetCultureAsync(culture ?? CurrentCulture);
+            await Instance.SetCultureAsync(culture ?? CurrentCulture, cancellationToken);
         }
 
         /// <summary>
-        /// Loads and Returns the vocabolary associated to cultureInfo
+        /// Loads and returns the vocabulary of the culture.
         /// </summary>
-        /// <param name="cultureInfo"></param>
-        /// <returns></returns>
-        public Task<IVocabolary> LoadOrUpdateCultureAsync(CultureInfo cultureInfo) => ServiceProvider.LoadVocabolaryAsync(cultureInfo);
+        /// <param name="cultureInfo">Culture to load.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        public Task<IVocabulary> LoadOrUpdateCultureAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default)
+            => ServiceProvider.LoadVocabularyAsync(cultureInfo, cancellationToken);
 
         /// <summary>
-        /// Saves the culture associated to current vocabolary.
+        /// Saves the current vocabulary.
         /// </summary>
-        /// <returns></returns>
-        public Task SaveCultureAsync() => ServiceProvider.SaveAsync(CurrentVocabolary);
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        public Task SaveCultureAsync(CancellationToken cancellationToken = default)
+            => ServiceProvider.SaveAsync(CurrentVocabulary, cancellationToken);
 
         /// <summary>
         /// Set the new culture and invalidate the old values.
@@ -205,26 +210,28 @@ namespace Mafesoft.Localization
             if (culture is null) throw new ArgumentNullException(nameof(culture));
 
             int request = Interlocked.Increment(ref cultureRequest);
-            var vocabolary = RunSync(() => LoadOrUpdateCultureAsync(culture));
-            ApplyCulture(request, culture, vocabolary);
+            var vocabulary = RunSync(() => LoadOrUpdateCultureAsync(culture));
+            ApplyCulture(request, culture, vocabulary);
         }
 
         /// <summary>
         /// Set asynchronously the new culture and invalidate the old values.
         /// The change notification is raised on the caller's context (e.g. the UI thread).
         /// </summary>
-        /// <param name="culture"></param>
-        public async Task SetCultureAsync(CultureInfo culture)
+        /// <param name="culture">Culture to set.</param>
+        /// <param name="cancellationToken">Token to cancel the operation: when canceled the current culture does not change.</param>
+        public async Task SetCultureAsync(CultureInfo culture, CancellationToken cancellationToken = default)
         {
             if (culture is null) throw new ArgumentNullException(nameof(culture));
 
             int request = Interlocked.Increment(ref cultureRequest);
-            var vocabolary = await LoadOrUpdateCultureAsync(culture);
-            ApplyCulture(request, culture, vocabolary);
+            var vocabulary = await LoadOrUpdateCultureAsync(culture, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            ApplyCulture(request, culture, vocabulary);
         }
 
         /// <summary>
-        /// Raise the Property Changed when invoked.
+        /// Raises the PropertyChanged and CultureChanged events.
         /// </summary>
         protected void OnCultureChanged()
         {
@@ -233,7 +240,7 @@ namespace Mafesoft.Localization
             CultureChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ApplyCulture(int request, CultureInfo culture, IVocabolary vocabolary)
+        private void ApplyCulture(int request, CultureInfo culture, IVocabulary vocabulary)
         {
             lock (syncRoot)
             {
@@ -243,16 +250,16 @@ namespace Mafesoft.Localization
                     return;
                 }
                 CurrentCulture = culture;
-                CurrentVocabolary = vocabolary;
+                CurrentVocabulary = vocabulary;
             }
             OnCultureChanged();
         }
 
-        private void NotifyMissingTerm(IVocabolary vocabolary, string resourceKey)
+        private void NotifyMissingTerm(IVocabulary vocabulary, string resourceKey)
         {
             try
             {
-                ServiceProvider.AddOrUpdateTermAsync(vocabolary, resourceKey)?.ContinueWith(
+                ServiceProvider.AddOrUpdateTermAsync(vocabulary, resourceKey)?.ContinueWith(
                     t => TraceMissingTermError(resourceKey, t.Exception?.GetBaseException()),
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,

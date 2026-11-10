@@ -1,4 +1,4 @@
-﻿using Localization.Samples.VocabolaryServiceProvider;
+﻿using Localization.Samples.VocabularyServiceProvider;
 using Mafesoft.Localization.Maui.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +11,7 @@ namespace Localization.Samples.AppMaui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .ConfigureLocalization(new MockVocabolaryServiceProvider { })
+                .ConfigureLocalization(new MockVocabularyServiceProvider { })
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

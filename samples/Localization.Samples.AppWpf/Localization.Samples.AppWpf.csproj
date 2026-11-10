@@ -4,7 +4,7 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
-  <Import Project="..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
+  <Import Project="..\Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems" Label="Shared" />
   <ItemGroup>
     <ProjectReference Include="../../src/Localization.Wpf/Localization.Wpf.csproj" />
   </ItemGroup>

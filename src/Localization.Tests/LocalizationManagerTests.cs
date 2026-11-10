@@ -9,9 +9,9 @@ namespace Mafesoft.Localization.Tests
         private static readonly CultureInfo English = new("en-US");
 
         [Fact]
-        public void Init_LoadsVocabolaryOfTheRequestedCulture()
+        public void Init_LoadsVocabularyOfTheRequestedCulture()
         {
-            var provider = new TestVocabolaryServiceProvider();
+            var provider = new TestVocabularyServiceProvider();
 
             LocalizationManager.Init(provider, Italian);
 
@@ -24,9 +24,9 @@ namespace Mafesoft.Localization.Tests
         [Fact]
         public void Init_WithNullCulture_KeepsTheCurrentCulture()
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider(), English);
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), English);
 
-            LocalizationManager.Init(new TestVocabolaryServiceProvider(), null);
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), null);
 
             Assert.Equal(English, LocalizationManager.CurrentCulture);
         }
@@ -38,9 +38,9 @@ namespace Mafesoft.Localization.Tests
         }
 
         [Fact]
-        public async Task InitAsync_LoadsVocabolary()
+        public async Task InitAsync_LoadsVocabulary()
         {
-            await LocalizationManager.InitAsync(new TestVocabolaryServiceProvider { AsyncLoading = true }, English);
+            await LocalizationManager.InitAsync(new TestVocabularyServiceProvider { AsyncLoading = true }, English);
 
             Assert.Equal("Hello", LocalizationManager.Translate("Hello"));
         }
@@ -48,7 +48,7 @@ namespace Mafesoft.Localization.Tests
         [Fact]
         public void SetCulture_ChangesTranslationsAndRaisesEvents()
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider(), Italian);
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), Italian);
             var propertyChanged = new List<string>();
             var cultureChanged = 0;
             PropertyChangedEventHandler onPropertyChanged = (s, e) => propertyChanged.Add(e.PropertyName);
@@ -75,7 +75,7 @@ namespace Mafesoft.Localization.Tests
         [Fact]
         public async Task SetCultureAsync_ChangesTranslations()
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider { AsyncLoading = true }, Italian);
+            LocalizationManager.Init(new TestVocabularyServiceProvider { AsyncLoading = true }, Italian);
 
             await LocalizationManager.Instance.SetCultureAsync(English);
 
@@ -85,7 +85,7 @@ namespace Mafesoft.Localization.Tests
         [Fact]
         public async Task SetCulture_WithBlockedSynchronizationContext_DoesNotDeadlock()
         {
-            var provider = new TestVocabolaryServiceProvider { AsyncLoading = true };
+            var provider = new TestVocabularyServiceProvider { AsyncLoading = true };
 
             // Simulates a UI thread: SetCulture is called synchronously while a SynchronizationContext is installed.
             var task = Task.Factory.StartNew(() =>
@@ -115,7 +115,7 @@ namespace Mafesoft.Localization.Tests
         [InlineData("Hello", "#Default", "Ciao")]
         public void Translate_FallsBackToDefaultValueOrKey(string key, string defaultValue, string expected)
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider(), Italian);
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), Italian);
 
             Assert.Equal(expected, LocalizationManager.Translate(key, defaultValue));
         }
@@ -123,7 +123,7 @@ namespace Mafesoft.Localization.Tests
         [Fact]
         public void Indexer_WithNullOrEmptyKey_ReturnsNull()
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider(), Italian);
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), Italian);
 
             Assert.Null(LocalizationManager.Instance[null]);
             Assert.Null(LocalizationManager.Instance[string.Empty]);
@@ -133,7 +133,7 @@ namespace Mafesoft.Localization.Tests
         [Fact]
         public void Indexer_WithMissingKey_NotifiesTheProvider()
         {
-            var provider = new TestVocabolaryServiceProvider();
+            var provider = new TestVocabularyServiceProvider();
             LocalizationManager.Init(provider, Italian);
 
             Assert.Null(LocalizationManager.Instance["NotThere"]);
@@ -144,7 +144,7 @@ namespace Mafesoft.Localization.Tests
         [Fact]
         public void Indexer_WhenProviderFailsOnMissingKey_DoesNotThrow()
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider { ThrowOnMissingTerm = true }, Italian);
+            LocalizationManager.Init(new TestVocabularyServiceProvider { ThrowOnMissingTerm = true }, Italian);
 
             Assert.Equal("#Fallback", LocalizationManager.Translate("NotThere", "#Fallback"));
         }
@@ -152,7 +152,7 @@ namespace Mafesoft.Localization.Tests
         [Fact]
         public void Version_ChangesOnEveryCultureChange()
         {
-            LocalizationManager.Init(new TestVocabolaryServiceProvider(), Italian);
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), Italian);
             var initial = LocalizationManager.Instance.Version;
 
             LocalizationManager.Instance.SetCulture(English);
@@ -169,7 +169,7 @@ namespace Mafesoft.Localization.Tests
         {
             // Simulates what the Translate() extensions of MAUI, WPF and Xamarin do:
             // a binding on the "Version" path that is re-read on every PropertyChanged.
-            var provider = new TestVocabolaryServiceProvider();
+            var provider = new TestVocabularyServiceProvider();
             LocalizationManager.Init(provider, Italian);
             var manager = LocalizationManager.Instance;
             var path = typeof(LocalizationManager).GetProperty(nameof(LocalizationManager.Version));
@@ -196,6 +196,32 @@ namespace Mafesoft.Localization.Tests
 
             Assert.Equal(new[] { "Hello", "Ciao" }, refreshed);
             Assert.Empty(provider.MissingTerms);
+        }
+
+        [Fact]
+        public async Task SetCultureAsync_PassesTheCancellationTokenToTheProvider()
+        {
+            var provider = new TestVocabularyServiceProvider();
+            LocalizationManager.Init(provider, Italian);
+            using var cts = new CancellationTokenSource();
+
+            await LocalizationManager.Instance.SetCultureAsync(English, cts.Token);
+
+            Assert.Equal(cts.Token, provider.LastLoadToken);
+        }
+
+        [Fact]
+        public async Task SetCultureAsync_WhenCanceled_KeepsTheCurrentCulture()
+        {
+            LocalizationManager.Init(new TestVocabularyServiceProvider(), Italian);
+            using var cts = new CancellationTokenSource();
+            cts.Cancel();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => LocalizationManager.Instance.SetCultureAsync(English, cts.Token));
+
+            Assert.Equal(Italian, LocalizationManager.CurrentCulture);
+            Assert.Equal("Ciao", LocalizationManager.Instance["Hello"]);
         }
     }
 }

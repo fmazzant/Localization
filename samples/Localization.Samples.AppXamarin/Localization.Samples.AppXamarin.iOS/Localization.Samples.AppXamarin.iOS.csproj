@@ -6,6 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{90609386-CFA4-4B3F-8009-F86E9B3C9BBC}</ProjectGuid>
+    <LangVersion>latest</LangVersion>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{6143fdea-f3c2-4a09-aafa-6e230626515e}</TemplateGuid>
     <OutputType>Exe</OutputType>
@@ -123,14 +124,19 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mafesoft.Localization.Xamarin">
-      <Version>4.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2622" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2662" />
     <PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Localization\Localization.csproj">
+      <Project>{AED5262C-DD44-4476-B5FA-6200EFE8C429}</Project>
+      <Name>Localization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\Localization.Xamarin\Localization.Xamarin.csproj">
+      <Project>{CC5CCB7A-3663-4972-910F-6294906E89BC}</Project>
+      <Name>Localization.Xamarin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Localization.Samples.AppXamarin\Localization.Samples.AppXamarin.csproj">
       <Project>{30CE436A-E49E-46F7-8E7A-42929AE3B830}</Project>
       <Name>Localization.Samples.AppXamarin</Name>

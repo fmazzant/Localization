@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <AssemblyName>Mafesoft.$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>Mafesoft.$(MSBuildProjectName)</RootNamespace>
   </PropertyGroup>
@@ -38,9 +38,6 @@
   <!-- Minimum MAUI version for each .NET version: the application can use any newer one -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.0" />

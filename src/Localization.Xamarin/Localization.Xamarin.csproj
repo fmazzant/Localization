@@ -14,7 +14,6 @@
   <!-- NuGet package -->
   <PropertyGroup>
     <PackageId>Mafesoft.Localization.Xamarin</PackageId>
-    <Version>4.0.0</Version>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
     <Copyright>Copyright (c) 2020-2026 Federico Mazzanti</Copyright>

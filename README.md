@@ -525,3 +525,21 @@ dotnet test src/Localization.Tests
 ```
 
 The samples (`samples/Localization.Samples.sln`) reference the projects inside `src`, so they always run with the current code.
+
+## Release
+
+All the packages share one version, `<VersionPrefix>` in `src/Directory.Build.props`. To publish a release:
+
+1. update `<VersionPrefix>` and the [CHANGELOG](CHANGELOG.md);
+2. create a GitHub release with the tag `v<version>` (e.g. `v4.1.0`, or `v4.1.0-beta.1` for a prerelease).
+
+The `Publish NuGet` workflow runs only for `v*` tags: it fails if the tag does not match `<VersionPrefix>`, then tests,
+packs and publishes all the packages with the same version. Merging to `master` publishes nothing.
+
+Every `dotnet pack` runs the [package validation](https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview):
+inside a major version the package is compared with the first release of that version (4.1.0 with 4.0.0), so a
+breaking API change in a minor or patch version fails the pack.
+
+The workflow publishes with [NuGet trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing)
+when the repository variable `NUGET_USER` is set (and the trusted publishing policy exists on nuget.org); otherwise
+it uses the `NUGET_API_KEY` secret.

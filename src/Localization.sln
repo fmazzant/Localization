@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization", "Localization\Localization.csproj", "{AED5262C-DD44-4476-B5FA-6200EFE8C429}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Windows", "Localization.Windows\Localization.Windows.csproj", "{CAB9D2A2-9DB7-4B4F-A517-2A8C837486C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Wpf", "Localization.Wpf\Localization.Wpf.csproj", "{CAB9D2A2-9DB7-4B4F-A517-2A8C837486C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization.Xamarin", "Localization.Xamarin\Localization.Xamarin.csproj", "{CC5CCB7A-3663-4972-910F-6294906E89BC}"
 EndProject

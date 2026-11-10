@@ -5,6 +5,17 @@ All notable changes to the `Mafesoft.Localization*` packages are documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - Unreleased
+
+### Added
+
+- **New package `Mafesoft.Localization.Extensions`:** `AddLocalizationManager(...)` registers the manager in the
+  dependency injection and `.AddStringLocalizer()` provides `IStringLocalizer`, `IStringLocalizer<T>` and
+  `IStringLocalizerFactory` backed by the vocabularies, so DataAnnotations (`AddDataAnnotationsLocalization()`),
+  `IViewLocalizer` and the other consumers of `Microsoft.Extensions.Localization` use them. Optional key prefix per
+  type. ([#21](https://github.com/fmazzant/Localization/issues/21))
+- `LocalizationManager.CurrentVocabulary`: the vocabulary of the current culture (read-only). ([#21](https://github.com/fmazzant/Localization/issues/21))
+
 ## [4.0.0] - Unreleased
 
 The `Mafesoft.*` release. It breaks every consumer once, so all the naming problems are fixed together.
@@ -60,4 +71,5 @@ The releases published as `Mafe.Localization*` are described in the [GitHub rele
 - [2.0.0](https://github.com/fmazzant/Localization/releases/tag/v2.0.0) - 2022-04-28
 - [1.0.0](https://github.com/fmazzant/Localization/releases/tag/1.0.0) - 2020-11-13
 
-[4.0.0]: https://github.com/fmazzant/Localization/compare/v3.0.0...HEAD
+[4.1.0]: https://github.com/fmazzant/Localization/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/fmazzant/Localization/compare/v3.0.0...v4.0.0

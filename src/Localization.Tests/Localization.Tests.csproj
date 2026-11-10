@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Localization\Localization.csproj" />
     <ProjectReference Include="..\Localization.Blazor\Localization.Blazor.csproj" />
     <ProjectReference Include="..\Localization.Mvc\Localization.Mvc.csproj" />
+    <ProjectReference Include="..\Localization.Extensions\Localization.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

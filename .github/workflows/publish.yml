@@ -90,12 +90,12 @@ jobs:
           echo "Version: $VERSION (publish: $PUBLISH)"
           echo "### Version $VERSION, publish: $PUBLISH" >> "$GITHUB_STEP_SUMMARY"
 
-      # Every package gets the same version. Package validation (Directory.Build.props) fails the pack
+      # Every package gets the same version. Package validation (src/Directory.Build.targets) fails the pack
       # when a minor or patch version breaks the API of the first release of the major version.
       - name: Pack
         shell: bash
         run: |
-          for project in Localization Localization.Wpf Localization.Mvc Localization.Blazor Localization.Maui Localization.Xamarin; do
+          for project in Localization Localization.Extensions Localization.Wpf Localization.Mvc Localization.Blazor Localization.Maui Localization.Xamarin; do
             dotnet pack "src/$project/$project.csproj" -c Release -o artifacts -p:VersionSuffix="${{ steps.version.outputs.suffix }}"
           done
           # Localization.Xamarin: 4.0.0 only, the last Xamarin release. Remove it from the list after publishing.

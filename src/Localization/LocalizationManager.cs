@@ -91,12 +91,13 @@ namespace Mafesoft.Localization
         public int Version => Volatile.Read(ref version);
 
         /// <summary>
-        /// Current Vocabulary
+        /// The vocabulary of the current culture, or null before the manager is initialized.
+        /// Reading it does not notify the provider of missing terms.
         /// </summary>
-        private IVocabulary? CurrentVocabulary
+        public IVocabulary? CurrentVocabulary
         {
             get => Volatile.Read(ref currentVocabulary);
-            set => Volatile.Write(ref currentVocabulary, value);
+            private set => Volatile.Write(ref currentVocabulary, value);
         }
 
         /// <summary>

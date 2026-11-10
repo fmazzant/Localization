@@ -50,16 +50,26 @@ the same as the resx-based `ResourceManagerStringLocalizer`:
 
 | | resx (`AddLocalization()`) | Mafesoft.Localization |
 |---|---|---|
-| Culture | `CultureInfo.CurrentUICulture`, per request with `UseRequestLocalization()` | `LocalizationManager.CurrentCulture`, one culture for the whole application, changed with `SetCulture` |
+| Culture | `CultureInfo.CurrentUICulture`, per request with `UseRequestLocalization()` | One culture for the whole application, changed with `SetCulture`. With `FollowCurrentUICulture = true`: `CultureInfo.CurrentUICulture`, per request like resx |
 | Keys | One resource file per type or view (`Controllers.HomeController.it.resx`) | One vocabulary per culture, shared by every localizer. With `UseTypeNamePrefix` the key is `TypeName.Key` (`Type.Name`, without namespace) or `baseName.Key` for the views |
 | Parent cultures | `it-IT` falls back to `it` and then to the neutral resources | No fallback, `includeParentCultures` is ignored |
 | Missing key | Returns the key, `ResourceNotFound = true` | Same, and the provider is notified (`AddOrUpdateTermAsync`) |
 | Source of the strings | `.resx` files embedded in the assembly | The `IVocabularyServiceProvider` (the resx strings must be moved there) |
 
-* **One culture per application.** The localizer does not read `CultureInfo.CurrentUICulture`, so
-  `UseRequestLocalization()`, the culture cookie and `Accept-Language` have no effect: on a server every user sees
-  the same language. It fits apps with one language at a time (desktop, Blazor WebAssembly, a site that switches the
-  language globally).
+* **One culture per application by default.** Without `FollowCurrentUICulture` the localizer does not read
+  `CultureInfo.CurrentUICulture`, so `UseRequestLocalization()`, the culture cookie and `Accept-Language` have no
+  effect and every user sees the same language. On a server enable it (each culture is loaded once and cached):
+
+  ```c#
+  builder.Services.AddLocalizationManager(options =>
+  {
+      options.ServiceProvider = new MyVocabularyServiceProvider();
+      options.FollowCurrentUICulture = true;
+  })
+  .AddStringLocalizer();
+
+  app.UseRequestLocalization(o => o.AddSupportedCultures("it-IT", "en-US").AddSupportedUICultures("it-IT", "en-US"));
+  ```
 * **Shared keys.** Two resx files that translate the same key differently collide in the vocabulary: rename the keys
   or enable `UseTypeNamePrefix`.
 * The default validation messages of DataAnnotations (without `ErrorMessage`) are not translated, as with resx.

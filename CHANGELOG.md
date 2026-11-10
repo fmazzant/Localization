@@ -15,6 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `IViewLocalizer` and the other consumers of `Microsoft.Extensions.Localization` use them. Optional key prefix per
   type. ([#21](https://github.com/fmazzant/Localization/issues/21))
 - `LocalizationManager.CurrentVocabulary`: the vocabulary of the current culture (read-only). ([#21](https://github.com/fmazzant/Localization/issues/21))
+- **Per-request culture on the server:** with `FollowCurrentUICulture = true` (`LocalizationManager.Instance`, or the
+  options of `AddLocalizationManager`, `AddMvcLocalizationManager` and `AddBlazorLocalizationManager`) every lookup uses
+  `CultureInfo.CurrentUICulture` of the caller, so `UseRequestLocalization()` gives each request, or each Blazor Server
+  circuit, its own language. Off by default: desktop and mobile apps keep one culture set with `SetCulture`.
+  ([#22](https://github.com/fmazzant/Localization/issues/22))
+- Vocabularies cached per culture: each culture is loaded once, also by concurrent callers; `SetCulture` reloads it and
+  `Init` clears the cache. `GetVocabularyAsync(culture)` returns (and preloads) the vocabulary of a culture.
+  ([#22](https://github.com/fmazzant/Localization/issues/22))
+- `LocalizationManager.Translate(key, culture, defaultValue)` and the indexer `this[key, culture]` read the vocabulary of
+  a given culture. ([#22](https://github.com/fmazzant/Localization/issues/22))
 
 ## [4.0.0] - Unreleased
 

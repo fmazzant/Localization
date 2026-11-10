@@ -45,5 +45,12 @@ namespace Mafesoft.Localization.Blazor.Extensions
         /// Privides information about the culture to set.
         /// </summary>
         public CultureInfo? Culture { get; set; }
+
+        /// <summary>
+        /// When true the translations follow <see cref="System.Globalization.CultureInfo.CurrentUICulture"/> of the caller:
+        /// with <c>app.UseRequestLocalization(...)</c> every request (or Blazor Server circuit) gets its own language.
+        /// Default false: one culture for the whole application. See <see cref="LocalizationManager.FollowCurrentUICulture"/>.
+        /// </summary>
+        public bool FollowCurrentUICulture { get; set; }
     }
 }

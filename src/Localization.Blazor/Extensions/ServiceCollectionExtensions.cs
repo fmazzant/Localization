@@ -56,6 +56,7 @@ namespace Mafesoft.Localization.Blazor.Extensions
                 throw new InvalidOperationException($"{nameof(BlazorLocalizationManagerOptions)}.{nameof(BlazorLocalizationManagerOptions.ServiceProvider)} must be set.");
             }
 
+            LocalizationManager.Instance.FollowCurrentUICulture = localizationManagerOptions.FollowCurrentUICulture;
             LocalizationManager.Init(localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
             services.AddSingleton(LocalizationManager.Instance);
             return services;

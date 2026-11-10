@@ -14,7 +14,7 @@
     A prerelease is published with a suffix: dotnet pack -p:VersionSuffix=beta.1
   -->
   <PropertyGroup>
-    <VersionPrefix>4.0.0</VersionPrefix>
+    <VersionPrefix>4.1.0</VersionPrefix>
   </PropertyGroup>
 
   <!-- Package validation: the baseline version is computed in Directory.Build.targets -->

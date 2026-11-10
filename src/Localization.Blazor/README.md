@@ -18,8 +18,15 @@ builder.Services.AddBlazorLocalizationManager(options =>
 {
     options.ServiceProvider = new MyVocabularyServiceProvider();
     options.Culture = new CultureInfo("it-IT");
+    options.FollowCurrentUICulture = true;   // since 4.1.0: one language per circuit
 });
+
+app.UseRequestLocalization(o => o.AddSupportedCultures("it-IT", "en-US").AddSupportedUICultures("it-IT", "en-US"));
 ```
+
+With `FollowCurrentUICulture` each circuit uses the culture of the request that opened it (query string, culture
+cookie or `Accept-Language`); to switch language write the culture cookie and reload the page. Without it the
+culture is shared by all users and changed with `SetCulture`.
 
 Blazor WebAssembly: initialize the manager asynchronously in `Program.cs`.
 

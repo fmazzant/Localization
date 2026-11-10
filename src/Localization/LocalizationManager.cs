@@ -31,6 +31,8 @@ namespace Mafesoft.Localization
 {
     using Mafesoft.Localization.Providers;
     using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
@@ -40,15 +42,23 @@ namespace Mafesoft.Localization
     /// <summary>
     /// Provides the localization manager. The manager uses a provider to load the vocabulary of the current culture and notifies the bindings when the culture changes.
     /// </summary>
+    /// <remarks>
+    /// By default the manager has one culture for the whole application, changed with <see cref="SetCulture"/> (desktop and
+    /// mobile apps). On a server set <see cref="FollowCurrentUICulture"/> to true: every lookup uses
+    /// <see cref="CultureInfo.CurrentUICulture"/> of the caller (set per request by <c>UseRequestLocalization()</c>, or per
+    /// circuit in Blazor Server). The vocabularies are cached per culture and each culture is loaded only once.
+    /// </remarks>
     public class LocalizationManager : INotifyPropertyChanged
     {
         private static CultureInfo currentCulture = CultureInfo.CurrentUICulture;
 
         private readonly object syncRoot = new object();
+        private readonly ConcurrentDictionary<string, Lazy<Task<IVocabulary>>> vocabularies = new ConcurrentDictionary<string, Lazy<Task<IVocabulary>>>(StringComparer.Ordinal);
         private IVocabularyServiceProvider serviceProvider;
         private IVocabulary? currentVocabulary;
         private int cultureRequest;
         private int version;
+        private int followCurrentUICulture;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -61,12 +71,25 @@ namespace Mafesoft.Localization
         public event EventHandler? CultureChanged;
 
         /// <summary>
-        /// Current Culture selected.
+        /// Current Culture selected. When <see cref="FollowCurrentUICulture"/> is true it is
+        /// <see cref="CultureInfo.CurrentUICulture"/> of the caller.
         /// </summary>
         public static CultureInfo CurrentCulture
         {
-            get => Volatile.Read(ref currentCulture);
+            get => Instance.FollowCurrentUICulture ? CultureInfo.CurrentUICulture : Volatile.Read(ref currentCulture);
             private set => Volatile.Write(ref currentCulture, value);
+        }
+
+        /// <summary>
+        /// When true every lookup uses <see cref="CultureInfo.CurrentUICulture"/> of the caller instead of the culture set
+        /// with <see cref="SetCulture"/>, so on a server each request (or Blazor Server circuit) gets its own language.
+        /// <see cref="SetCulture"/> still reloads the vocabulary of a culture and raises the change events, but it does not
+        /// change the culture seen by the callers. Default false: one culture for the whole application.
+        /// </summary>
+        public bool FollowCurrentUICulture
+        {
+            get => Volatile.Read(ref followCurrentUICulture) != 0;
+            set => Volatile.Write(ref followCurrentUICulture, value ? 1 : 0);
         }
 
         /// <summary>
@@ -91,12 +114,16 @@ namespace Mafesoft.Localization
         public int Version => Volatile.Read(ref version);
 
         /// <summary>
-        /// The vocabulary of the current culture, or null before the manager is initialized.
+        /// The vocabulary of the current culture (see <see cref="CurrentCulture"/>), or null before the manager is initialized.
         /// Reading it does not notify the provider of missing terms.
         /// </summary>
         public IVocabulary? CurrentVocabulary
         {
-            get => Volatile.Read(ref currentVocabulary);
+            get
+            {
+                var vocabulary = Volatile.Read(ref currentVocabulary);
+                return vocabulary is null || !FollowCurrentUICulture ? vocabulary : GetVocabulary(CultureInfo.CurrentUICulture);
+            }
             private set => Volatile.Write(ref currentVocabulary, value);
         }
 
@@ -116,24 +143,22 @@ namespace Mafesoft.Localization
         /// </summary>
         /// <param name="resourceKey"></param>
         /// <returns></returns>
-        public string? this[string? resourceKey]
+        public string? this[string? resourceKey] => Lookup(CurrentVocabulary, resourceKey);
+
+        /// <summary>
+        /// Returns the value associated to resourceKey inside the vocabulary of the culture, whatever the current culture is.
+        /// The vocabulary is loaded the first time and then cached. When the key does not exist the provider is notified
+        /// through <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
+        /// </summary>
+        /// <param name="resourceKey">The key of the resource.</param>
+        /// <param name="culture">The culture of the vocabulary.</param>
+        public string? this[string? resourceKey, CultureInfo culture]
         {
             get
             {
-                var vocabulary = CurrentVocabulary;
-                // string.IsNullOrEmpty has no nullable annotations on netstandard2.0 and net462
-                if (vocabulary is null || resourceKey is null || resourceKey.Length == 0)
-                {
-                    return null;
-                }
+                if (culture is null) throw new ArgumentNullException(nameof(culture));
 
-                if (vocabulary.TryGetValue(resourceKey, out var value) && !string.IsNullOrEmpty(value))
-                {
-                    return value;
-                }
-
-                NotifyMissingTerm(vocabulary, resourceKey);
-                return null;
+                return resourceKey is null || resourceKey.Length == 0 ? null : Lookup(GetVocabulary(culture), resourceKey);
             }
         }
 
@@ -144,6 +169,39 @@ namespace Mafesoft.Localization
         /// <param name="defaultValue"></param>
         /// <returns></returns>
         public static string Translate(string? key, string? defaultValue = null) => Instance[key] ?? defaultValue ?? key ?? string.Empty;
+
+        /// <summary>
+        /// Returns the value of the key in the vocabulary of the culture. When the key is not in the vocabulary,
+        /// the default value (or the key itself) is returned.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="culture">The culture of the vocabulary.</param>
+        /// <param name="defaultValue">The value returned when the key is not in the vocabulary.</param>
+        public static string Translate(string? key, CultureInfo culture, string? defaultValue = null) => Instance[key, culture] ?? defaultValue ?? key ?? string.Empty;
+
+        /// <summary>
+        /// Returns the vocabulary of the culture. It is loaded from the provider only the first time (concurrent callers
+        /// share the same load) and then cached until the manager is initialized again; <see cref="SetCulture"/> reloads it.
+        /// Use it at startup to preload the supported cultures.
+        /// </summary>
+        /// <param name="culture">The culture of the vocabulary.</param>
+        /// <param name="cancellationToken">Token to stop waiting: the shared load is not canceled.</param>
+        public async Task<IVocabulary> GetVocabularyAsync(CultureInfo culture, CancellationToken cancellationToken = default)
+        {
+            if (culture is null) throw new ArgumentNullException(nameof(culture));
+
+            var load = GetOrLoadVocabulary(culture);
+            if (cancellationToken.CanBeCanceled && !load.IsCompleted)
+            {
+                var canceled = new TaskCompletionSource<bool>();
+                using (cancellationToken.Register(() => canceled.TrySetResult(true)))
+                {
+                    await Task.WhenAny(load, canceled.Task).ConfigureAwait(false);
+                }
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            return await load.ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Initializes the LocalizationManager with the default culture.
@@ -162,6 +220,7 @@ namespace Mafesoft.Localization
 
             RunSync(async () => { await provider.InitializeAsync().ConfigureAwait(false); return true; });
             Instance.ServiceProvider = provider;
+            Instance.vocabularies.Clear();
             Instance.SetCulture(culture ?? CurrentCulture);
         }
 
@@ -185,6 +244,7 @@ namespace Mafesoft.Localization
 
             await provider.InitializeAsync(cancellationToken);
             Instance.ServiceProvider = provider;
+            Instance.vocabularies.Clear();
             await Instance.SetCultureAsync(culture ?? CurrentCulture, cancellationToken);
         }
 
@@ -244,6 +304,10 @@ namespace Mafesoft.Localization
 
         private void ApplyCulture(int request, CultureInfo culture, IVocabulary vocabulary)
         {
+            // The reloaded vocabulary replaces the cached one, also when a newer request wins below.
+            var loaded = Task.FromResult(vocabulary);
+            vocabularies[culture.Name] = new Lazy<Task<IVocabulary>>(() => loaded);
+
             lock (syncRoot)
             {
                 // A newer SetCulture request has been issued meanwhile: ignore the stale result.
@@ -255,6 +319,56 @@ namespace Mafesoft.Localization
                 CurrentVocabulary = vocabulary;
             }
             OnCultureChanged();
+        }
+
+        private string? Lookup(IVocabulary? vocabulary, string? resourceKey)
+        {
+            // string.IsNullOrEmpty has no nullable annotations on netstandard2.0 and net462
+            if (vocabulary is null || resourceKey is null || resourceKey.Length == 0)
+            {
+                return null;
+            }
+
+            if (vocabulary.TryGetValue(resourceKey, out var value) && !string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            NotifyMissingTerm(vocabulary, resourceKey);
+            return null;
+        }
+
+        private IVocabulary GetVocabulary(CultureInfo culture)
+        {
+            var load = GetOrLoadVocabulary(culture);
+            return load.Status == TaskStatus.RanToCompletion ? load.Result : RunSync(() => load);
+        }
+
+        /// <summary>
+        /// Returns the cached load of the vocabulary of the culture, starting it the first time.
+        /// The load runs on the thread pool, so a caller that blocks on it from a SynchronizationContext does not deadlock.
+        /// A failed or canceled load is removed from the cache, so the next call tries again.
+        /// </summary>
+        private Task<IVocabulary> GetOrLoadVocabulary(CultureInfo culture)
+        {
+            var key = culture.Name;
+            if (vocabularies.TryGetValue(key, out var cached))
+            {
+                return cached.Value;
+            }
+
+            Lazy<Task<IVocabulary>>? entry = null;
+            entry = new Lazy<Task<IVocabulary>>(() =>
+            {
+                var load = Task.Run(() => ServiceProvider.LoadVocabularyAsync(culture));
+                load.ContinueWith(
+                    _ => ((ICollection<KeyValuePair<string, Lazy<Task<IVocabulary>>>>)vocabularies).Remove(new KeyValuePair<string, Lazy<Task<IVocabulary>>>(key, entry!)),
+                    CancellationToken.None,
+                    TaskContinuationOptions.NotOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Default);
+                return load;
+            });
+            return vocabularies.GetOrAdd(key, entry).Value;
         }
 
         private void NotifyMissingTerm(IVocabulary vocabulary, string resourceKey)

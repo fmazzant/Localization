@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Globalization;
 
-namespace Localization.Tests
+namespace Mafesoft.Localization.Tests
 {
     public class LocalizationManagerTests
     {

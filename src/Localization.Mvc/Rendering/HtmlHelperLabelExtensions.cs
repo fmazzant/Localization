@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Mvc.Rendering
+namespace Mafesoft.Localization.Mvc.Rendering
 {
     using Microsoft.AspNetCore.Html;
     using Microsoft.AspNetCore.Mvc.Rendering;

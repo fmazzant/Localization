@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Mvc.Extensions
+namespace Mafesoft.Localization.Mvc.Extensions
 {
     using System.Globalization;
 

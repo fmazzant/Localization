@@ -5,6 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{5C3E20F2-029D-4183-A7FE-F018C03303F4}</ProjectGuid>
+    <LangVersion>latest</LangVersion>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Localization.Samples.AppXamarin.UWP</RootNamespace>
@@ -150,18 +151,23 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mafe.Localization.Xamarin">
-      <Version>2.2.0-rc1</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
     <PackageReference Include="Xamarin.Essentials">
       <Version>1.8.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>5.0.0.2622</Version>
+      <Version>5.0.0.2662</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Localization\Localization.csproj">
+      <Project>{AED5262C-DD44-4476-B5FA-6200EFE8C429}</Project>
+      <Name>Localization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\Localization.Xamarin\Localization.Xamarin.csproj">
+      <Project>{CC5CCB7A-3663-4972-910F-6294906E89BC}</Project>
+      <Name>Localization.Xamarin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Localization.Samples.AppXamarin\Localization.Samples.AppXamarin.csproj">
       <Project>{30CE436A-E49E-46F7-8E7A-42929AE3B830}</Project>
       <Name>Localization.Samples.AppXamarin</Name>

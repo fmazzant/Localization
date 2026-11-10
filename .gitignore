@@ -12,8 +12,8 @@
 /src/Localization.Xamarin/bin/Debug
 /src/Localization.Xamarin/obj
 /src/Localization/.vs/Localization/DesignTimeBuild
-/src/Localization.Windows/bin
-/src/Localization.Windows/obj
+/src/Localization.Wpf/bin
+/src/Localization.Wpf/obj
 /samples/.vs/Localization.Samples/v16/.suo
 /src/Localization/bin/Release
 /src/Localization.Xamarin/bin/Release

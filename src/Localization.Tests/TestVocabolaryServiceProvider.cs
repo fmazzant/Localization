@@ -4,7 +4,7 @@ using System.Globalization;
 // LocalizationManager is a process-wide singleton: tests must not run in parallel.
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
-namespace Localization.Tests
+namespace Mafesoft.Localization.Tests
 {
     internal sealed class TestVocabolaryServiceProvider : IVocabolaryServiceProvider
     {

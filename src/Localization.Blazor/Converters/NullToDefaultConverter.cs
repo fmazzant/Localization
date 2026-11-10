@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Blazor.Converters
+namespace Mafesoft.Localization.Blazor.Converters
 {
     using System;
     using System.Globalization;

@@ -1,4 +1,4 @@
-using Localization.Mvc.Extensions;
+using Mafesoft.Localization.Mvc.Extensions;
 using Localization.Samples.VocabolaryServiceProvider;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

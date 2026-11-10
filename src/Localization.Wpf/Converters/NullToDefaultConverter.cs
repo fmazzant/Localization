@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Windows.Converters
+namespace Mafesoft.Localization.Wpf.Converters
 {
     using System;
     using System.Globalization;

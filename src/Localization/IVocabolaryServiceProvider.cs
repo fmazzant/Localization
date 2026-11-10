@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization
+namespace Mafesoft.Localization
 {
     using System.Globalization;
     using System.Threading.Tasks;

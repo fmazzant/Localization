@@ -6,6 +6,6 @@
   </PropertyGroup>
   <Import Project="..\Localization.Samples.VocabolaryServiceProvider\Localization.Samples.VocabolaryServiceProvider.projitems" Label="Shared" />
   <ItemGroup>
-    <ProjectReference Include="../../src/Localization.Windows/Localization.Windows.csproj" />
+    <ProjectReference Include="../../src/Localization.Wpf/Localization.Wpf.csproj" />
   </ItemGroup>
 </Project>

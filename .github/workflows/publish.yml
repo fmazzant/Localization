@@ -27,10 +27,11 @@ jobs:
       matrix:
         project:
           - Localization
-          - Localization.Windows
+          - Localization.Wpf
           - Localization.Mvc
           - Localization.Blazor
           - Localization.Maui
+          # 4.0.0 only: last Xamarin release, remove after publishing (Xamarin.Forms is out of support)
           - Localization.Xamarin
 
     steps:

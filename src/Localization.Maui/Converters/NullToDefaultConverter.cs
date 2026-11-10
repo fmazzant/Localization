@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Maui.Converts
+namespace Mafesoft.Localization.Maui.Converters
 {
     using Microsoft.Maui.Controls;
     using System;

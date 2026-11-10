@@ -27,9 +27,9 @@
 // 
 //
 
-namespace Localization.Windows
+namespace Mafesoft.Localization.Wpf
 {
-    using Localization.Windows.Converters;
+    using Mafesoft.Localization.Wpf.Converters;
     using System;
     using System.Windows;
     using System.Windows.Data;
@@ -42,12 +42,12 @@ namespace Localization.Windows
     public class TranslateExtension : MarkupExtension
     {
         /// <summary>
-        /// Initializes a new instance of the Localization.Windows.TranslateExtension class.
+        /// Initializes a new instance of the Mafesoft.Localization.Wpf.TranslateExtension class.
         /// </summary>
         public TranslateExtension() { }
 
         /// <summary>
-        /// Initializes a new instance of the Localization.Windows.TranslateExtension class.
+        /// Initializes a new instance of the Mafesoft.Localization.Wpf.TranslateExtension class.
         /// </summary>
         /// <param name="resourceKey">ResourceKey</param>
         public TranslateExtension(string resourceKey)

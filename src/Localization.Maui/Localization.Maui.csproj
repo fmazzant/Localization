@@ -2,17 +2,18 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <AssemblyName>Mafesoft.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Mafesoft.$(MSBuildProjectName)</RootNamespace>
   </PropertyGroup>
 
   <!-- NuGet package -->
   <PropertyGroup>
-    <PackageId>Mafe.Localization.Maui</PackageId>
-    <Version>3.0.0</Version>
+    <PackageId>Mafesoft.Localization.Maui</PackageId>
+    <Version>4.0.0</Version>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
     <Copyright>Copyright (c) 2024-2026 Federico Mazzanti</Copyright>
-    <Description>A .NET MAUI library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
+    <Description>A .NET MAUI library for .net that can help you to manage the localization in your application. The library uses Mafesoft.Localization</Description>
     <PackageTags>localization;i18n;c-sharp;dotnet-core;maui</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>

@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Mvc.Metadata
+namespace Mafesoft.Localization.Mvc.Metadata
 {
     using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
     using System.Linq;

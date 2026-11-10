@@ -1,6 +1,8 @@
 ﻿using Localization.Samples.VocabolaryServiceProvider;
 using System.Windows;
 
+using Mafesoft.Localization;
+
 namespace Localization.Samples.AppWpf
 {
     /// <summary>

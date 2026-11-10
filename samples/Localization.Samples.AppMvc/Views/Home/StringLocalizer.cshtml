@@ -1,0 +1,49 @@
+@model LocalizerModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer ViewLocalizer
+
+@{
+    ViewData["Title"] = "IStringLocalizer";
+
+    // IViewLocalizer: the strings are read by the IStringLocalizerFactory registered in Program.cs
+    var viewStrings = new[]
+    {
+        ViewLocalizer.GetString("LocalizerIntro"),
+        ViewLocalizer.GetString("LocalizerGreeting", Model.Name, DateTime.Today)
+    };
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>@ViewLocalizer["LocalizerIntro"]</p>
+
+<p>
+    <a asp-action="StringLocalizer" asp-route-lang="it-IT">Italiano</a> |
+    <a asp-action="StringLocalizer" asp-route-lang="en-US">English</a>
+</p>
+
+<h4>appsettings.json</h4>
+<table class="table table-sm">
+    <tr><th>Registration</th><td>@Model.Settings.Registration</td></tr>
+    <tr><th>Culture</th><td>@Model.Settings.Culture</td></tr>
+    <tr><th>SupportedCultures</th><td>@string.Join(", ", Model.Settings.SupportedCultures)</td></tr>
+    <tr><th>FollowCurrentUICulture</th><td>@Model.Settings.FollowCurrentUICulture</td></tr>
+    <tr><th>UseTypeNamePrefix</th><td>@Model.Settings.UseTypeNamePrefix</td></tr>
+    <tr><th>CultureInfo.CurrentUICulture</th><td>@Model.CurrentUICulture</td></tr>
+    <tr><th>LocalizationManager.CurrentCulture</th><td>@Mafesoft.Localization.LocalizationManager.CurrentCulture.Name</td></tr>
+</table>
+
+<h4>IStringLocalizer&lt;HomeController&gt; (controller)</h4>
+@await Html.PartialAsync("_LocalizedStrings", Model.ControllerStrings)
+
+<h4>IViewLocalizer (view)</h4>
+@await Html.PartialAsync("_LocalizedStrings", viewStrings)
+
+<h4>DataAnnotations [Display(Name = ...)]</h4>
+<dl class="row">
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Name)</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.LastName)</dt>
+    <dd class="col-sm-9">@Model.LastName</dd>
+</dl>

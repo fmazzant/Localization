@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.8.34511.84
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.12002.237 oobstable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Localization.Samples.SharedLayer", "Localization.Samples.VocabularyServiceProvider\Localization.Samples.SharedLayer.shproj", "{E0D66FD1-B3EA-41F2-AF2F-0582B1049EEF}"
 EndProject
@@ -310,6 +310,7 @@ Global
 		Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems*{af93e074-f586-49c4-b4ed-ecc9ca81d507}*SharedItemsImports = 5
 		Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems*{c768b165-2002-414c-ae16-a88b9d4c5de8}*SharedItemsImports = 5
 		Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems*{cc5b8aa9-30bb-463d-92f7-ee9dd72f6736}*SharedItemsImports = 4
+		Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems*{d57c8eae-9a0c-4b7b-8d19-e2e424337de3}*SharedItemsImports = 5
 		Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems*{e0d66fd1-b3ea-41f2-af2f-0582b1049eef}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

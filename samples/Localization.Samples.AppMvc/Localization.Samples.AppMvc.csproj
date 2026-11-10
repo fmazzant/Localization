@@ -6,5 +6,6 @@
   <Import Project="..\Localization.Samples.VocabularyServiceProvider\Localization.Samples.VocabularyServiceProvider.projitems" Label="Shared" />
   <ItemGroup>
     <ProjectReference Include="../../src/Localization.Mvc/Localization.Mvc.csproj" />
+    <ProjectReference Include="../../src/Localization.Extensions/Localization.Extensions.csproj" />
   </ItemGroup>
 </Project>

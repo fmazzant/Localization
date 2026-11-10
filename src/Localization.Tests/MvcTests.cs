@@ -1,14 +1,14 @@
 using System.Globalization;
-using Localization.Mvc;
-using Localization.Mvc.Extensions;
-using Localization.Mvc.Metadata;
+using Mafesoft.Localization.Mvc;
+using Mafesoft.Localization.Mvc.Extensions;
+using Mafesoft.Localization.Mvc.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Localization.Tests
+namespace Mafesoft.Localization.Tests
 {
     public class MvcTests
     {

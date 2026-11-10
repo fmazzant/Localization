@@ -1,10 +1,10 @@
 using System.ComponentModel;
 using System.Globalization;
-using Localization.Blazor.Bindings;
-using Localization.Blazor.Extensions;
+using Mafesoft.Localization.Blazor.Bindings;
+using Mafesoft.Localization.Blazor.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Localization.Tests
+namespace Mafesoft.Localization.Tests
 {
     public class BlazorBindingTests
     {

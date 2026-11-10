@@ -48,6 +48,7 @@ namespace Mafesoft.Localization
         private IVocabolaryServiceProvider serviceProvider;
         private IVocabolary currentVocabolary;
         private int cultureRequest;
+        private int version;
 
         /// <summary>
         /// Handler to notificate when a property value is changed.
@@ -81,6 +82,13 @@ namespace Mafesoft.Localization
             get => Volatile.Read(ref serviceProvider);
             private set => Volatile.Write(ref serviceProvider, value);
         }
+
+        /// <summary>
+        /// A number that is incremented every time the culture changes.
+        /// Bind to this property to refresh a value on every culture change:
+        /// unlike the indexer it never notifies the provider of a missing term.
+        /// </summary>
+        public int Version => Volatile.Read(ref version);
 
         /// <summary>
         /// Current Vocabolary
@@ -220,6 +228,7 @@ namespace Mafesoft.Localization
         /// </summary>
         protected void OnCultureChanged()
         {
+            Interlocked.Increment(ref version);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             CultureChanged?.Invoke(this, EventArgs.Empty);
         }

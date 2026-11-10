@@ -1,5 +1,5 @@
 ﻿using Localization.Samples.VocabolaryServiceProvider;
-using Localization.Maui.Extensions;
+using Mafesoft.Localization.Maui.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Localization.Samples.AppMaui

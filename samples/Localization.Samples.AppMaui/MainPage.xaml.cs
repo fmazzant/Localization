@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 
+using Mafesoft.Localization;
+
 namespace Localization.Samples.AppMaui
 {
     public partial class MainPage : ContentPage

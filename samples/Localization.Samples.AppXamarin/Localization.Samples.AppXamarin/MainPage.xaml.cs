@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
+using Mafesoft.Localization;
+
 namespace Localization.Samples.AppXamarin
 {
     public partial class MainPage : ContentPage

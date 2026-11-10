@@ -3,6 +3,8 @@ using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using Mafesoft.Localization;
+
 namespace Localization.Samples.AppXamarin
 {
     public partial class App : Application
@@ -16,7 +18,7 @@ namespace Localization.Samples.AppXamarin
 
         protected override void OnStart()
         {
-            Localization.LocalizationManager.Init(new MockVocabolaryServiceProvider { });
+            LocalizationManager.Init(new MockVocabolaryServiceProvider { });
         }
 
         protected override void OnSleep()

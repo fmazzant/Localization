@@ -1,4 +1,4 @@
-using Localization.Blazor.Extensions;
+using Mafesoft.Localization.Blazor.Extensions;
 using Localization.Samples.AppBlazor.Data;
 using Localization.Samples.VocabolaryServiceProvider;
 using Microsoft.AspNetCore.Builder;

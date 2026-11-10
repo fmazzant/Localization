@@ -34,6 +34,7 @@ namespace Localization.Samples.VocabolaryServiceProvider
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading.Tasks;
+    using Mafesoft.Localization;
 
     /// <summary>
     /// Mock Vocabolary Service Provider

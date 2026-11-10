@@ -8,6 +8,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Mafesoft.Localization;
+
 namespace Localization.Samples.AppMvc.Controllers
 {
     public class HomeController : Controller

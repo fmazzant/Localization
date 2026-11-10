@@ -2,7 +2,7 @@
 
 namespace Localization.Samples.AppMvc.Models
 {
-    using Localization.Mvc;
+    using Mafesoft.Localization.Mvc;
 
     public class MyModel
     {

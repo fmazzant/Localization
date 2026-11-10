@@ -1,0 +1,20 @@
+<Project>
+
+  <!--
+    Package validation baseline (imported after each .csproj, so a project can set PackageFirstVersion).
+
+    Every pack checks the API compatibility between the target frameworks of the package and, inside a major version,
+    against the first release of that major version (4.1.0 is compared with 4.0.0): a breaking change in a minor or
+    patch version fails the pack. The x.0.0 releases have no baseline (4.0.0 changes the package IDs).
+
+    A package first published in a minor version sets <PackageFirstVersion> (for example 4.1.0) in its .csproj:
+    that version is its baseline, and it has no baseline until then.
+  -->
+  <PropertyGroup Condition="'$(IsPackable)' != 'false'">
+    <_MajorBaselineVersion>$([System.Version]::Parse('$(VersionPrefix)').Major).0.0</_MajorBaselineVersion>
+    <_PackageBaselineVersion>$(_MajorBaselineVersion)</_PackageBaselineVersion>
+    <_PackageBaselineVersion Condition="'$(PackageFirstVersion)' != '' and $([MSBuild]::VersionGreaterThan('$(PackageFirstVersion)', '$(_MajorBaselineVersion)'))">$(PackageFirstVersion)</_PackageBaselineVersion>
+    <PackageValidationBaselineVersion Condition="'$(PackageValidationBaselineVersion)' == '' and $([MSBuild]::VersionGreaterThan('$(VersionPrefix)', '$(_PackageBaselineVersion)'))">$(_PackageBaselineVersion)</PackageValidationBaselineVersion>
+  </PropertyGroup>
+
+</Project>

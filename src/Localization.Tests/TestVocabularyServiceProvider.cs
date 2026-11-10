@@ -10,7 +10,7 @@ namespace Mafesoft.Localization.Tests
     {
         private readonly Dictionary<string, Vocabulary> vocabularies = new()
         {
-            ["it-IT"] = new Vocabulary { ["Hello"] = "Ciao", ["Format"] = "Valore {0}", ["Empty"] = "" },
+            ["it-IT"] = new Vocabulary { ["Hello"] = "Ciao", ["Format"] = "Valore {0}", ["Empty"] = "", ["StringLocalizerTests.Title"] = "Titolo" },
             ["en-US"] = new Vocabulary { ["Hello"] = "Hello", ["Format"] = "Value {0}" },
         };
 

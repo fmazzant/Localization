@@ -22,6 +22,7 @@ Then install the package for your technology:
 |---|---|---|
 | WPF | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | `dotnet add package Mafesoft.Localization.Wpf` |
 | ASP.NET Core MVC | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | `dotnet add package Mafesoft.Localization.Mvc` |
+| `IStringLocalizer` / dependency injection | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | `dotnet add package Mafesoft.Localization.Extensions` |
 | Blazor | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Blazor) | `dotnet add package Mafesoft.Localization.Blazor` |
 | .NET MAUI | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | `dotnet add package Mafesoft.Localization.Maui` |
 | Xamarin.Forms (**deprecated**) | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Xamarin?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin) | `dotnet add package Mafesoft.Localization.Xamarin` |
@@ -448,6 +449,40 @@ It is possible using the TranslateLabel directly, like this:
      @Html.TranslateLabel("LabelTitle", "ResourceKey", "#Default Value of Label")
 </p>
 ```
+# IStringLocalizer
+
+The `Mafesoft.Localization.Extensions` package plugs the vocabularies into `Microsoft.Extensions.Localization`:
+`IStringLocalizer`, `IStringLocalizer<T>` and `IStringLocalizerFactory` read the vocabulary of the current culture,
+so DataAnnotations, `IViewLocalizer`, Blazor components and third-party libraries use the same translations.
+
+```c#
+using Mafesoft.Localization.Extensions;
+...
+builder.Services.AddLocalizationManager(options =>
+{
+    options.ServiceProvider = new MockVocabularyServiceProvider();
+    options.Culture = new CultureInfo("it-IT");
+})
+.AddStringLocalizer();
+
+// ASP.NET Core MVC: [Display(Name = "...")] and the validation messages are translated too
+builder.Services.AddControllersWithViews().AddDataAnnotationsLocalization();
+```
+
+```c#
+public class HomeController(IStringLocalizer<HomeController> localizer) : Controller
+{
+    public IActionResult Index() => View(model: localizer["Welcome"].Value);
+}
+```
+
+* A missing key returns the key itself with `ResourceNotFound = true`, and the provider is notified
+  (`AddOrUpdateTermAsync`), like `LocalizationManager.Instance[key]`.
+* `localizer["Format", arg]` formats the value with the current culture; `GetAllStrings()` returns the current vocabulary.
+* By default every localizer reads the same keys. With `.AddStringLocalizer(o => o.UseTypeNamePrefix = true)` the keys
+  are prefixed with the type name: `IStringLocalizer<HomeController>["Title"]` reads `HomeController.Title`.
+* `AddStringLocalizer()` replaces an `IStringLocalizerFactory` registered before, for example by `AddLocalization()`.
+
 # Blazor
 
 The Blazor has a specific library to manage the culture inside the project. 
@@ -534,7 +569,8 @@ packs and publishes all the packages with the same version. Merging to `master` 
 
 Every `dotnet pack` runs the [package validation](https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview):
 inside a major version the package is compared with the first release of that version (4.1.0 with 4.0.0), so a
-breaking API change in a minor or patch version fails the pack.
+breaking API change in a minor or patch version fails the pack. A package first published in a minor version sets
+`<PackageFirstVersion>` in its `.csproj` (see `src/Directory.Build.targets`).
 
 The workflow publishes with [NuGet trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing)
 when the repository variable `NUGET_USER` is set (and the trusted publishing policy exists on nuget.org); otherwise

@@ -1,6 +1,13 @@
 # Localization
 
-A library for .net that can help you to manage the localization in your application.
+[![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization)
+[![CI](https://github.com/fmazzant/Localization/actions/workflows/ci.yml/badge.svg)](https://github.com/fmazzant/Localization/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE.md)
+
+**Mafesoft.Localization** is a .NET library to translate your application from **vocabularies you load from any
+source** — a database, JSON files, a web API — through a small provider you write. The culture can be **changed at
+runtime**: every bound text (XAML, Razor, Blazor) is refreshed immediately, without restarting the application.
+The same API works in WPF, .NET MAUI, ASP.NET Core MVC and Blazor.
 
 > **Version 4.0.0: the packages are now published as `Mafesoft.*`** and all the namespaces start with `Mafesoft.`.
 > If you are using the `Mafe.Localization*` packages, read [Migrating from `Mafe.Localization`](#migrating-from-mafelocalization).
@@ -8,521 +15,464 @@ A library for .net that can help you to manage the localization in your applicat
 The changes of every release are listed in the [CHANGELOG](CHANGELOG.md). To report a security problem, read the
 [security policy](SECURITY.md).
 
-To use it in your project, the Mafesoft.Localization NuGet package represents the base library:
+## Table of contents
 
-[![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization)
+- [Why Localization](#why-localization)
+- [Features](#features)
+- [Packages](#packages)
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [How it works](#how-it-works)
+- [Vocabulary service provider](#vocabulary-service-provider)
+- [LocalizationManager API](#localizationmanager-api)
+- [WPF](#wpf)
+- [.NET MAUI](#net-maui)
+- [ASP.NET Core MVC](#aspnet-core-mvc)
+- [Blazor](#blazor)
+- [Migrating from `Mafe.Localization`](#migrating-from-mafelocalization)
+- [Legacy: Xamarin.Forms](#legacy-xamarinforms)
+- [Build and test](#build-and-test)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Why Localization
+
+`.resx` files and `IStringLocalizer` are compiled into the application: changing a translation means a new build and
+a new deploy, and switching language usually means reloading the UI. Mafesoft.Localization is built for the other case:
+
+- **Vocabularies from any source.** You write an `IVocabularyServiceProvider` that loads the terms of a culture from
+  wherever they live: a database edited by your translators, JSON files, a remote API, a cache.
+- **Culture change at runtime.** `SetCulture` loads the new vocabulary and notifies the bindings: XAML labels, Razor
+  views and Blazor components show the new language immediately.
+- **The same API everywhere.** `LocalizationManager`, `Translate("key", "default")` and the `{culture:Translate}`
+  markup extension work the same way in WPF, .NET MAUI, ASP.NET Core MVC and Blazor.
+- **Missing terms are reported.** When a key is not in the vocabulary, the provider is notified
+  (`AddOrUpdateTermAsync`), so it can store the new key and your translators see what is missing.
+
+## Features
+
+- Pluggable vocabulary provider (`IVocabularyServiceProvider`), synchronous or asynchronous initialization.
+- Runtime culture switch with `SetCulture` / `SetCultureAsync` and the `CultureChanged` event.
+- Default values: `Translate("key", "#Default")` never returns null.
+- XAML markup extension `{culture:Translate Key, DefaultValue=..., StringFormat=...}` for WPF and .NET MAUI.
+- ASP.NET Core MVC: `[Translate]` attribute, used by `Html.LabelFor`, `<label asp-for>`, `Html.DisplayNameFor` and the
+  validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers.
+- Blazor Server and Blazor WebAssembly: `Binding.Translate` with default value and `StringFormat`.
+- Nullable reference types annotations, XML documentation, Source Link and symbols.
+
+## Packages
+
+| Package | Platform | Target frameworks | NuGet |
+|---|---|---|---|
+| `Mafesoft.Localization` | Core (any .NET application) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization) |
+| `Mafesoft.Localization.Wpf` | WPF | `net10.0-windows`, `net8.0-windows` | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) |
+| `Mafesoft.Localization.Maui` | .NET MAUI | .NET 10 (MAUI 10), .NET 8 (MAUI 8) | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) |
+| `Mafesoft.Localization.Mvc` | ASP.NET Core MVC | .NET 10, .NET 8 | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) |
+| `Mafesoft.Localization.Blazor` | Blazor Server, Blazor WebAssembly | .NET 10, .NET 8 | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Blazor) |
+| `Mafesoft.Localization.Xamarin` | Xamarin.Forms (**deprecated**, see [Legacy](#legacy-xamarinforms)) | .NET Standard 2.0 / 2.1 | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Xamarin?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin) |
+
+- **.NET 10** (LTS, supported until November 2028) is the main target.
+- **.NET 9** is not targeted: it reached end of support on 10 November 2026. .NET 9 applications use the .NET 8 build.
+- **.NET 8 is out of support** and is kept **only for compatibility**, so that existing .NET 8 applications can move to
+  the `Mafesoft.*` packages without upgrading the runtime at the same time. It will be removed in a future major version.
+
+## Installation
+
+Install the core package and the package for your technology:
 
 ```
 dotnet add package Mafesoft.Localization
+dotnet add package Mafesoft.Localization.Wpf      # or .Maui, .Mvc, .Blazor
 ```
 
-Then install the package for your technology:
+The technology packages depend on `Mafesoft.Localization`, so for them the second command is enough.
 
-| Technology | Package | Install |
-|---|---|---|
-| WPF | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | `dotnet add package Mafesoft.Localization.Wpf` |
-| ASP.NET Core MVC | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | `dotnet add package Mafesoft.Localization.Mvc` |
-| Blazor | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Blazor) | `dotnet add package Mafesoft.Localization.Blazor` |
-| .NET MAUI | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | `dotnet add package Mafesoft.Localization.Maui` |
-| Xamarin.Forms (**deprecated**) | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Xamarin?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin) | `dotnet add package Mafesoft.Localization.Xamarin` |
+## Quick start
 
-> ⚠️ **Xamarin.Forms:** `Mafesoft.Localization.Xamarin` 4.0.0 is the **last release** of the Xamarin package and it is
-> **deprecated**: Xamarin.Forms has been out of support since May 1, 2024. It will receive no further updates or fixes.
-> Use it only to align with the `Mafesoft.*` packages while you migrate to .NET MAUI and `Mafesoft.Localization.Maui`
-> (see [Migration Xamarin to .NET MAUI](#migration-xamarin-to-net-maui)).
+1. Write a provider that loads the vocabularies (here from memory, see [Vocabulary service provider](#vocabulary-service-provider)
+   for JSON files):
 
-# Version 4.0.0
+   ```c#
+   using System.Globalization;
+   using Mafesoft.Localization;
 
-Version 4.0.0 renames the packages, the assemblies and the namespaces to `Mafesoft.*`
-(scheme `Mafesoft.<Product>.<Technology>`). `Localization.Windows` becomes `Localization.Wpf`.
-It also fixes the naming of the public API (`Vocabolary` → `Vocabulary`, `Async` suffix and `CancellationToken`
-on the provider interface), so that the consumers migrate only once.
+   public class InMemoryVocabularyServiceProvider : IVocabularyServiceProvider
+   {
+       private readonly Dictionary<string, Vocabulary> vocabularies = new()
+       {
+           ["it-IT"] = new Vocabulary { ["Hello"] = "Ciao", ["Welcome"] = "Benvenuto, {0}!" },
+           ["en-US"] = new Vocabulary { ["Hello"] = "Hello", ["Welcome"] = "Welcome, {0}!" },
+       };
 
-The public API is annotated for nullable reference types: for example the indexer
-`LocalizationManager.Instance[key]` returns `string?` (null when the key does not exist), while
-`LocalizationManager.Translate(key, defaultValue)` always returns a non-null `string`.
+       public Task InitializeAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-## Supported platforms
+       public Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default)
+           => Task.FromResult<IVocabulary>(vocabularies.TryGetValue(cultureInfo.Name, out var vocabulary) ? vocabulary : new Vocabulary());
 
-| Package | Target frameworks |
-|---|---|
-| Mafesoft.Localization | .NET Standard 2.0, .NET Framework 4.6.2, .NET 8, .NET 10 |
-| Mafesoft.Localization.Wpf | net8.0-windows, net10.0-windows |
-| Mafesoft.Localization.Mvc | .NET 8, .NET 10 |
-| Mafesoft.Localization.Blazor | .NET 8, .NET 10 |
-| Mafesoft.Localization.Maui | .NET 8, .NET 10 (MAUI 8 / 10) |
-| Mafesoft.Localization.Xamarin | .NET Standard 2.0 / 2.1 (**deprecated**, last release) |
+       public Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-* **.NET 10** (LTS, supported until November 2028) is the main target.
-* **.NET 9** is no longer targeted: it reached end of support on 10 November 2026.
-  .NET 9 applications use the .NET 8 build.
-* **.NET 8 is out of support** (since 10 November 2026, .NET MAUI 8 even earlier) and is kept **only for compatibility**,
-  so that existing .NET 8 applications can move to the `Mafesoft.*` packages without upgrading the runtime at the same time.
-  The `net8.0` targets will be removed in a future major version.
-* The .NET Framework 4.7.2 / 4.8 and .NET Standard 2.1 builds of the core have been removed: they were identical to the
-  .NET Framework 4.6.2 and .NET Standard 2.0 builds, which those applications now use.
-
-## Migrating from `Mafe.Localization`
-
-This is a **breaking change** for every consumer.
-
-1. Replace the package references:
-
-   | 3.x package | 4.0.0 package |
-   |---|---|
-   | `Mafe.Localization` | `Mafesoft.Localization` |
-   | `Mafe.Localization.Maui` | `Mafesoft.Localization.Maui` |
-   | `Mafe.Localization.Mvc` | `Mafesoft.Localization.Mvc` |
-   | `Mafe.Localization.Blazor` | `Mafesoft.Localization.Blazor` |
-   | **`Mafe.Localization.Windows`** | **`Mafesoft.Localization.Wpf`** |
-   | `Mafe.Localization.Xamarin` | `Mafesoft.Localization.Xamarin` (last release, deprecated) |
-
-2. Update the `using` directives (in Razor, update `_ViewImports.cshtml` and `_Imports.razor` too):
-
-   | 3.x namespace | 4.0.0 namespace |
-   |---|---|
-   | `Localization` | `Mafesoft.Localization` |
-   | `Localization.Providers` | `Mafesoft.Localization.Providers` |
-   | `Localization.Maui.*` | `Mafesoft.Localization.Maui.*` |
-   | `Localization.Maui.Converts` | `Mafesoft.Localization.Maui.Converters` |
-   | `Localization.Mvc.*` | `Mafesoft.Localization.Mvc.*` |
-   | `Localization.Blazor.*` | `Mafesoft.Localization.Blazor.*` |
-   | `Localization.Windows.*` | `Mafesoft.Localization.Wpf.*` |
-   | `Localization.Xamarin.*` | `Mafesoft.Localization.Xamarin.*` |
-   | `Localization.Xamarin.Converts` | `Mafesoft.Localization.Xamarin.Converters` |
-
-3. Rename the types and members of the public API:
-
-   | 3.x | 4.0.0 |
-   |---|---|
-   | `IVocabolary`, `Vocabolary` | `IVocabulary`, `Vocabulary` |
-   | `IVocabolaryServiceProvider` | `IVocabularyServiceProvider` |
-   | `IVocabolaryServiceProvider.Initialize()` | `InitializeAsync(CancellationToken cancellationToken = default)` |
-   | `IVocabolaryServiceProvider.LoadVocabolaryAsync(CultureInfo)` | `LoadVocabularyAsync(CultureInfo, CancellationToken cancellationToken = default)` |
-   | `IVocabolaryServiceProvider.SaveAsync(IVocabolary)` | `SaveAsync(IVocabulary, CancellationToken cancellationToken = default)` |
-   | `IVocabolaryServiceProvider.AddOrUpdateTermAsync(vocabolary, key, defaultValue)` | `AddOrUpdateTermAsync(vocabulary, key, defaultValue, CancellationToken cancellationToken = default)` |
-   | `IBinding.ConverterParamenter` (Blazor) | `IBinding.ConverterParameter` |
-
-   A custom provider must rename `Initialize` to `InitializeAsync` and add the `CancellationToken` parameter to every method.
-   `LocalizationManager.InitAsync`, `SetCultureAsync`, `LoadOrUpdateCultureAsync` and `SaveCultureAsync` also accept an
-   optional `CancellationToken`, which is passed to the provider.
-
-4. Update the XAML namespaces:
-
-   ```xml
-   <!-- MAUI -->
-   xmlns:culture="clr-namespace:Localization.Maui;assembly=Mafe.Localization.Maui"
-   xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui"
-
-   <!-- WPF -->
-   xmlns:culture="clr-namespace:Localization.Windows;assembly=Mafe.Localization.Windows"
-   xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf"
-
-   <!-- Xamarin.Forms -->
-   xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
-   xmlns:culture="clr-namespace:Mafesoft.Localization.Xamarin;assembly=Mafesoft.Localization.Xamarin"
+       public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string? defaultValue = null, CancellationToken cancellationToken = default)
+       {
+           Console.WriteLine($"Missing term: {key}");
+           return Task.CompletedTask;
+       }
+   }
    ```
 
-5. **Xamarin.Forms apps:** `Mafesoft.Localization.Xamarin` 4.0.0 is the **last update** of the Xamarin package and is
-   deprecated as soon as it is released. Plan the migration to .NET MAUI and `Mafesoft.Localization.Maui`.
+2. Initialize the manager, translate and change the culture:
 
-The `Mafe.Localization*` packages are deprecated on NuGet.org and point to the new `Mafesoft.*` packages.
+   ```c#
+   await LocalizationManager.InitAsync(new InMemoryVocabularyServiceProvider(), new CultureInfo("it-IT"));
 
-# Version 3.0.0
+   Console.WriteLine(LocalizationManager.Translate("Hello"));                    // Ciao
+   Console.WriteLine(LocalizationManager.Translate("Goodbye", "#Goodbye"));      // #Goodbye (and "Missing term: Goodbye")
 
-Version 3.0.0 adds .NET 10 support and removes the frameworks that are out of support.
+   await LocalizationManager.Instance.SetCultureAsync(new CultureInfo("en-US"));
+   Console.WriteLine(LocalizationManager.Translate("Hello"));                    // Hello
+   ```
 
-| Package | Target frameworks |
+3. Bind the texts of your UI: [WPF](#wpf), [.NET MAUI](#net-maui), [ASP.NET Core MVC](#aspnet-core-mvc), [Blazor](#blazor).
+
+## How it works
+
+![Localization Manager diagram](art/diagram.png)
+
+`LocalizationManager.Instance` is a process-wide singleton. It asks the provider for the vocabulary of the current
+culture and keeps it in memory. The platform packages bind the UI to the manager: when the culture changes, the manager
+raises `PropertyChanged` and `CultureChanged`, and every bound text is read again from the new vocabulary.
+
+> **Server applications:** because the manager is a singleton, in ASP.NET Core MVC and Blazor Server the selected
+> culture is shared by all the users of the application. In Blazor WebAssembly each user has their own.
+
+## Vocabulary service provider
+
+A provider implements `IVocabularyServiceProvider`. Every method accepts a `CancellationToken`.
+
+| Method | When it is called |
 |---|---|
-| Mafe.Localization | .NET Framework 4.6.2 / 4.7.2 / 4.8, .NET Standard 2.0 / 2.1, .NET 8, .NET 9, .NET 10 |
-| Mafe.Localization.Windows | net8.0-windows, net9.0-windows, net10.0-windows |
-| Mafe.Localization.Mvc | .NET 8, .NET 9, .NET 10 |
-| Mafe.Localization.Blazor | .NET 8, .NET 9, .NET 10 |
-| Mafe.Localization.Maui | .NET 8, .NET 9, .NET 10 (MAUI 8 / 9 / 10) |
-| Mafe.Localization.Xamarin | .NET Standard 2.0 / 2.1 (**deprecated**: Xamarin.Forms is out of support, migrate to Mafe.Localization.Maui) |
+| `InitializeAsync` | once, by `Init` / `InitAsync` (open a connection, read an index, warm a cache...) |
+| `LoadVocabularyAsync(culture)` | at initialization and at every culture change |
+| `SaveAsync(vocabulary)` | when you call `LocalizationManager.Instance.SaveCultureAsync()` |
+| `AddOrUpdateTermAsync(vocabulary, key)` | when a key is not in the vocabulary (for example to store it for the translators) |
 
-Breaking changes:
-
-* removed .NET Framework 4.5.2 - 4.6.1, .NET Core 3.1, .NET 6 and .NET 7 specific builds
-  (.NET 6/7 applications using Mafe.Localization get the .NET Standard 2.1 build);
-* `AddMvcLocalizationManager` and `AddBlazorLocalizationManager` now return `IServiceCollection` (recompile needed)
-  and throw if `options.ServiceProvider` is not set;
-* the exceptions thrown by the provider during `Init`/`SetCulture` are no longer wrapped in an `AggregateException`.
-
-What's new:
-
-* `LocalizationManager.InitAsync(...)` and `LocalizationManager.Instance.SetCultureAsync(...)`;
-* `SetCulture`/`Init` no longer deadlock when called from a UI thread (WPF, MAUI...) with an asynchronous provider;
-* `LocalizationManager.Instance.CultureChanged` event;
-* if `options.Culture` is not set the current UI culture is used (before a null culture was passed to the provider);
-* MVC: the `[Translate]` attribute is also used by the standard helpers (`Html.LabelFor`, `Html.DisplayNameFor`,
-  `<label asp-for="...">`, validation messages) and `TranslateLabelFor` no longer fails on properties without `[Translate]`;
-* Blazor: `Binding` no longer leaks memory (it listens to the culture change only while someone subscribes
-  `BindingValueChanged`) and now applies `StringFormat`;
-* packages include README, XML documentation, Source Link and symbols (.snupkg).
-
-# Architecture
-The following image represets a localization manager diagram:
-
-![alt Localization Manager Diagram](art/diagram.png)
-
-Actually there are two extenesion of library: Wpf Window and Xamarin App. 
-The library can be used without extentions but using the Localization Manager 
-Instance directly.
-
-# LocalizationManager
-
-LocalizationManager is more important component of this library. The library manages
-the current culture and it provides to load a vocabulary in culture.
-
-### Init
-
-The Init provides to initialize the LocalizationManager. There two kind: Initializing
-without culture (takes the culture from main thread) and with a specific culture.
-
-The initializing without culture like this:
+A provider that reads one JSON file per culture (`vocabularies/it-IT.json`, `vocabularies/en-US.json`):
 
 ```c#
-LocalizationManager.Init(new MockVocabularyServiceProvider { });
-```
+using System.Globalization;
+using System.Text.Json;
+using Mafesoft.Localization;
 
-The inizializing with the culture like this:
-
-```c#
-LocalizationManager.Init(new MockVocabularyServiceProvider { }, new CultureInfo("en-US"));
-```
-
-The inizializing library is necessary to load and configure the vocabulary.
-
-### SetCulture
-
-The SetCulture changes the current culture, like this:
-
-```c#
-LocalizationManager.Instance.SetCulture(new CultureInfo("en-US"));
-
-// or, without blocking the caller:
-await LocalizationManager.Instance.SetCultureAsync(new CultureInfo("en-US"));
-```
-
-### Translate without default value
-
-Get the resource's value we are using the following code:
-
-```c#
-var label = LocalizationManager.Instance["resourceKey"];
-```
-
-The result can be null.
-
-### Translate with default value
-
-It is possible get the resource's value with a Translate method, like this:
-
-```c#
-var label = LocalizationManager.Translate("resourceKey", "#Default value");
-```
-
-If resource's value doesn't exests the function returns the Default value 
-passed as argument.
-
-# Vocabulary Service Provider
-
-The following code defines the vocabulary service provider where all vocabularies 
-are defined or where the vocabularies are loaded. 
-
-Inside the Provider is possbile to manage a cache.
-
-A sample is represented into following code:
-
-```c# xaml
-public class MockVocabularyServiceProvider : IVocabularyServiceProvider
+public class JsonVocabularyServiceProvider(string folder) : IVocabularyServiceProvider
 {
-    Dictionary<string, Vocabulary> all = null;
+    public Task InitializeAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-    public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string defaultValue = null, CancellationToken cancellationToken = default)
-        => Task.CompletedTask;
-
-    public Task InitializeAsync(CancellationToken cancellationToken = default)
+    public async Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default)
     {
-        all = new Dictionary<string, Vocabulary>
+        var path = Path.Combine(folder, $"{cultureInfo.Name}.json");
+        if (!File.Exists(path))
         {
-            {"it-IT", new Vocabulary {
-                    { "MainWindow","Main Window in italian language" }
-                }
-            },
-            {"en-US", new Vocabulary {
-                    { "MainWindow","Main Window in english language" } 
-                } 
-            }
-        };
-        return Task.FromResult(all);
+            return new Vocabulary();
+        }
+
+        await using var stream = File.OpenRead(path);
+        var terms = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(stream, cancellationToken: cancellationToken);
+        return new Vocabulary(terms ?? new Dictionary<string, string>());
     }
 
-    public Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default)
+    public async Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default)
     {
-        string cultureDefault = "it-IT";
-        if (all.ContainsKey(cultureInfo.ToString()))
-            cultureDefault = cultureInfo.ToString();
-        return Task.FromResult<IVocabulary>(all[cultureDefault]);
+        var path = Path.Combine(folder, $"{LocalizationManager.CurrentCulture.Name}.json");
+        await using var stream = File.Create(path);
+        await JsonSerializer.SerializeAsync(stream, vocabulary, cancellationToken: cancellationToken);
     }
 
-    public Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default)
-        => Task.CompletedTask;
+    public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string? defaultValue = null, CancellationToken cancellationToken = default)
+    {
+        // Add the missing key with an empty value: SaveCultureAsync() writes it to the file for the translators.
+        vocabulary.TryAdd(key, string.Empty);
+        return Task.CompletedTask;
+    }
 }
 ```
 
-# Xamarin
+A term with an empty value counts as missing: `Translate` returns the default value.
 
-The Xamarin has a specific library to manage the culture inside the project. 
+## LocalizationManager API
 
-In first time is necessary initializing the LocalizationManager. Like this:
 ```c#
-LocalizationManager.Init(new MockVocabularyServiceProvider { });
-```
-Inside your xaml file is necessary include the Mafesoft.Localization.Xamarin library, like this:
-```c# xaml
- xmlns:culture="clr-namespace:Mafesoft.Localization.Xamarin;assembly=Mafesoft.Localization.Xamarin"
-```
-In the following code is displayed how the Label's text works:
-```c# xaml
-<Label Text="{culture:Translate MainWindow, DefaultValue='Main Window'}"></Label>
-```
-In this case, when the culture changed, the LocalizationManager changing the
-Label's Text value with the current culture value.
+// Initialization (once, at startup). Without a culture the current UI culture is used.
+LocalizationManager.Init(provider);
+LocalizationManager.Init(provider, new CultureInfo("it-IT"));
+await LocalizationManager.InitAsync(provider, new CultureInfo("it-IT"));
 
-Using this code to invoke a func when the culture is changed, like this:
-```c# xaml
-label.Translate(Label.TextProperty, () =>
+// Change the culture: the bindings are refreshed.
+LocalizationManager.Instance.SetCulture(new CultureInfo("en-US"));
+await LocalizationManager.Instance.SetCultureAsync(new CultureInfo("en-US"));
+CultureInfo culture = LocalizationManager.CurrentCulture;
+
+// Translate.
+string text = LocalizationManager.Translate("Hello", "#Hello");   // never null: value, default value or key
+string? value = LocalizationManager.Instance["Hello"];            // null when the key does not exist
+
+// React to the culture change.
+LocalizationManager.Instance.CultureChanged += (sender, e) => Console.WriteLine(LocalizationManager.CurrentCulture);
+```
+
+`SetCultureAsync` does not block the caller: use it from a UI thread (WPF, MAUI) when the provider is asynchronous.
+
+## WPF
+
+```
+dotnet add package Mafesoft.Localization.Wpf
+```
+
+Initialize the manager at startup (`App.xaml.cs`):
+
+```c#
+protected override void OnStartup(StartupEventArgs e)
 {
-    string val = doSomething();
-    return val;
-});
+    LocalizationManager.Init(new JsonVocabularyServiceProvider("vocabularies"), new CultureInfo("it-IT"));
+    base.OnStartup(e);
+}
 ```
-where label is a BindableObject.
 
-# .NET MAUI
+Translate in XAML:
 
-The .NET MAUI has a specific library to manage the culture inside the project. 
+```xml
+xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf"
 
-In first time is necessary initializing the LocalizationManager. Like this:
+<Label Content="{culture:Translate MainWindow, DefaultValue='Main Window'}" />
+<TextBlock Text="{culture:Translate ChangedTimesTemplate, StringFormat='({0})'}" />
+```
+
+Or compute a value in code every time the culture changes (`label` is any `FrameworkElement`):
+
+```c#
+label.Translate(Label.ContentProperty, () => $"{LocalizationManager.Translate("Hello")} - {DateTime.Now:t}");
+```
+
+## .NET MAUI
+
+```
+dotnet add package Mafesoft.Localization.Maui
+```
+
+Configure the manager in `MauiProgram.cs`:
+
 ```c#
 var builder = MauiApp.CreateBuilder();
 builder
-    .UseMauiApp<...>()
-    .ConfigureLocalization(new MockVocabularyServiceProvider { })
-    ...;
-```
-or you can initializing the LocalizationManager like Xamarin:
-```c#
-LocalizationManager.Init(new MockVocabularyServiceProvider { });
-```
-Inside your xaml file is necessary include the Mafesoft.Localization.Maui library, like this:
-```c# xaml
- xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui"
-```
-In the following code is displayed how the Label's text works:
-```c# xaml
-<Label Text="{culture:Translate MainWindow, DefaultValue='Main Window'}"></Label>
-```
-In this case, when the culture changed, the LocalizationManager changing the
-Label's Text value with the current culture value.
-
-Using this code to invoke a func when the culture is changed, like this:
-```c# xaml
-label.Translate(Label.TextProperty, () =>
-{
-    string val = doSomething();
-    return val;
-});
-```
-where label is a BindableObject.
-
-# Migration Xamarin to .NET MAUI
-
-To migrate from Xamarin to .NET MAUI is very easy. It's necessary to rename within Xaml file the include definition, 
-like this.
-
-from
-
-```c# xaml
- xmlns:culture="clr-namespace:Mafesoft.Localization.Xamarin;assembly=Mafesoft.Localization.Xamarin"
+    .UseMauiApp<App>()
+    .ConfigureLocalization(new JsonVocabularyServiceProvider(FileSystem.AppDataDirectory), new CultureInfo("it-IT"));
 ```
 
-to
+Translate in XAML:
 
-```c# xaml
- xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui"
+```xml
+xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui"
+
+<Label Text="{culture:Translate MainWindow, DefaultValue='Main Window'}" />
 ```
 
-After you can build and run again your app. Clearly you need to install the package Mafesoft.Localization.Maui and remove
-Mafesoft.Localization.Xamarin from your project.
-
-# WPF
-
-The WPF has a specific library to manage the culture inside the project. 
-
-In first time is necessary initializing the LocalizationManager. Like this:
+Or compute a value in code every time the culture changes (`label` is any `BindableObject`):
 
 ```c#
-LocalizationManager.Init(new MockVocabularyServiceProvider { });
+label.Translate(Label.TextProperty, () => LocalizationManager.Translate("Hello"));
 ```
 
-Inside your xaml file is necessary include the Mafesoft.Localization.Wpf library, like this:
+## ASP.NET Core MVC
 
-```c# xaml
-xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf"
+```
+dotnet add package Mafesoft.Localization.Mvc
 ```
 
-In the following code is displayed how the Label's text works:
-
-```c# xaml
-<Label Content="{culture:Translate MainWindow, DefaultValue='Main Window'}"></Label>
-```
-
-In this case, when the culture changed, the LocalizationManager changing the
-Label's Text value with the current culture value.
-
-Using this code to invoke a func when the culture is changed, like this:
-```c# xaml
-label.Translate(Label.TextProperty, () =>
-{
-    string val = doSomething();
-    return val;
-});
-```
-where label is a FrameworkElement.
-
-# ASP.NET MVC
-
-The ASP.NET MVC has a specific library to manage the culture inside the project. 
-
-In first time we configure the localizationManager inside the Program.cs:
+Register the manager in `Program.cs`:
 
 ```c#
 using Mafesoft.Localization.Mvc.Extensions;
-...
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvcLocalizationManager(options =>
 {
-    options.ServiceProvider = new MockVocabularyServiceProvider();
-    options.Culture = new CultureInfo("it-IT");
+    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.Culture = new CultureInfo("it-IT");   // optional: the current UI culture by default
 });
 ```
-The "options.Culture" value represents the initialized culture.
 
-Then we define the ViewModel using the TranslateAttribute, like this:
+Annotate the view model with `[Translate]`:
 
 ```c#
-public class MyViewModel
+using Mafesoft.Localization.Mvc;
+
+public class PersonViewModel
 {
     [Translate(ResourceKey = "NameText", DefaultValue = "#Name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
 
-    [Translate(ResourceKey = "LastNameText", DefaultValue = "#LastName")]
-    public string LastName { get; set; }
-
-    [Translate(ResourceKey = "AddressText", DefaultValue = "#Address")]
-    public string Address { get; set; }
+    [Translate("AddressText", "#Address")]
+    public string Address { get; set; } = "";
 }
 ```
-Now we using the ViewModel inside the view, like this:
-```c#
-<p>
-    @Html.TranslateLabelFor(m => m.Name)
-    @Html.Label("Name", Model.Name)
-</p>
-<p>
-    @Html.TranslateLabelFor(m => m.LastName)
-    @Html.Label("LastName", Model.LastName)
-</p>
-<p>
-    @Html.TranslateLabelFor(m => m.Address)
-    @Html.Label("Address", Model.Address)
-</p>
-```
-It is possible using the TranslateLabel directly, like this:
-```c#
-<p>
-     @Html.TranslateLabel("LabelTitle", "ResourceKey", "#Default Value of Label")
-</p>
-```
-# Blazor
 
-The Blazor has a specific library to manage the culture inside the project. 
+The standard helpers use the translation (`Html.LabelFor`, `<label asp-for>`, `Html.DisplayNameFor`, validation
+messages), and the library adds two helpers:
 
-In first time we configure the localizationManager inside the Program.cs of a Blazor Web App:
+```razor
+@Html.TranslateLabelFor(m => m.Name)
+@Html.TranslateLabel("Title", "TitleKey", "#Default title")
+```
+
+Change the culture from a controller with `LocalizationManager.Instance.SetCulture(new CultureInfo(lang))`
+(remember that on a server the culture is shared by all the users).
+
+## Blazor
+
+```
+dotnet add package Mafesoft.Localization.Blazor
+```
+
+**Blazor Web App (interactive server):** register the manager in `Program.cs`.
 
 ```c#
 using Mafesoft.Localization.Blazor.Extensions;
-...
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddBlazorLocalizationManager(options =>
 {
-    options.ServiceProvider = new MockVocabularyServiceProvider();
+    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
     options.Culture = new CultureInfo("it-IT");
 });
 ```
-The "options.Culture" value represents the initialized culture.
 
-Inside a component the text is translated with `Binding.Translate`:
-
-```razor
-@using Mafesoft.Localization.Blazor.Bindings
-
-<h1>@Binding.Translate("BlazorCounter")</h1>
-<p>@Binding.Translate("ChangedTimesTemplate", stringFormat: "({0})")</p>
-```
-
-To refresh a component when the culture changes, subscribe the `CultureChanged` event:
-
-```razor
-@implements IDisposable
-
-@code {
-    protected override void OnInitialized() => LocalizationManager.Instance.CultureChanged += OnCultureChanged;
-    private void OnCultureChanged(object sender, EventArgs e) => InvokeAsync(StateHasChanged);
-    public void Dispose() => LocalizationManager.Instance.CultureChanged -= OnCultureChanged;
-}
-```
-
-> **Note**: `LocalizationManager` is a process-wide singleton. In server applications (ASP.NET MVC, Blazor Server)
-> the selected culture is shared by all users.
-
-### Blazor WebAssembly
-
-`Mafesoft.Localization.Blazor` does not depend on the ASP.NET Core shared framework, so it works in Blazor WebAssembly
-too (and in the WebAssembly / Auto render modes of a Blazor Web App). In the browser initialize the manager
-asynchronously in `Program.cs`: a provider that loads the vocabularies with `HttpClient` cannot be waited
+**Blazor WebAssembly:** the package does not depend on the ASP.NET Core shared framework, so it runs in the browser
+too. Initialize the manager asynchronously: a provider that loads the vocabularies with `HttpClient` cannot be waited
 synchronously on the single WebAssembly thread.
 
 ```c#
-using Mafesoft.Localization;
-...
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 
-await LocalizationManager.InitAsync(new MockVocabularyServiceProvider(), new CultureInfo("it-IT"));
+await LocalizationManager.InitAsync(new InMemoryVocabularyServiceProvider(), new CultureInfo("it-IT"));
 builder.Services.AddSingleton(LocalizationManager.Instance);
 
 await builder.Build().RunAsync();
 ```
 
-In the browser each user has their own `LocalizationManager`, so the culture is not shared.
-See the `samples/Localization.Samples.AppBlazorWasm` sample.
+Translate in a component with `Binding.Translate`, and refresh the component when the culture changes:
 
-# Build and test
+```razor
+@using Mafesoft.Localization.Blazor.Bindings
+@implements IDisposable
+
+<h1>@Binding.Translate("BlazorCounter", "#Counter")</h1>
+<p>@Binding.Translate("ChangedTimesTemplate", stringFormat: "({0})")</p>
+
+@code {
+    protected override void OnInitialized() => LocalizationManager.Instance.CultureChanged += OnCultureChanged;
+    private void OnCultureChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+    public void Dispose() => LocalizationManager.Instance.CultureChanged -= OnCultureChanged;
+}
+```
+
+The samples `samples/Localization.Samples.AppBlazor` (Blazor Web App) and `samples/Localization.Samples.AppBlazorWasm`
+(Blazor WebAssembly) show both models.
+
+## Migrating from `Mafe.Localization`
+
+4.0.0 is a **breaking release** for every consumer: it renames the packages and the namespaces, and fixes the naming of
+the public API in the same release, so that you migrate only once. The `Mafe.Localization*` packages are deprecated on
+NuGet.org and point to the new `Mafesoft.*` packages.
+
+**1. Packages** ([#12](https://github.com/fmazzant/Localization/issues/12))
+
+| 3.x package | 4.0.0 package |
+|---|---|
+| `Mafe.Localization` | `Mafesoft.Localization` |
+| `Mafe.Localization.Maui` | `Mafesoft.Localization.Maui` |
+| `Mafe.Localization.Mvc` | `Mafesoft.Localization.Mvc` |
+| `Mafe.Localization.Blazor` | `Mafesoft.Localization.Blazor` |
+| **`Mafe.Localization.Windows`** | **`Mafesoft.Localization.Wpf`** |
+| `Mafe.Localization.Xamarin` | `Mafesoft.Localization.Xamarin` (last release, deprecated) |
+
+**2. Namespaces** (in Razor, update `_ViewImports.cshtml` and `_Imports.razor` too)
+
+| 3.x namespace | 4.0.0 namespace |
+|---|---|
+| `Localization` | `Mafesoft.Localization` |
+| `Localization.Providers` | `Mafesoft.Localization.Providers` |
+| `Localization.Maui.*` | `Mafesoft.Localization.Maui.*` |
+| `Localization.Maui.Converts` | `Mafesoft.Localization.Maui.Converters` |
+| `Localization.Mvc.*` | `Mafesoft.Localization.Mvc.*` |
+| `Localization.Blazor.*` | `Mafesoft.Localization.Blazor.*` |
+| `Localization.Windows.*` | `Mafesoft.Localization.Wpf.*` |
+| `Localization.Xamarin.*` | `Mafesoft.Localization.Xamarin.*` |
+| `Localization.Xamarin.Converts` | `Mafesoft.Localization.Xamarin.Converters` |
+
+**3. XAML namespaces**
+
+```xml
+<!-- MAUI -->
+xmlns:culture="clr-namespace:Localization.Maui;assembly=Mafe.Localization.Maui"                 <!-- 3.x -->
+xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui"    <!-- 4.0 -->
+
+<!-- WPF -->
+xmlns:culture="clr-namespace:Localization.Windows;assembly=Mafe.Localization.Windows"           <!-- 3.x -->
+xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf"      <!-- 4.0 -->
+```
+
+**4. Public API** ([#15](https://github.com/fmazzant/Localization/issues/15))
+
+| 3.x | 4.0.0 |
+|---|---|
+| `IVocabolary`, `Vocabolary` | `IVocabulary`, `Vocabulary` |
+| `IVocabolaryServiceProvider` | `IVocabularyServiceProvider` |
+| `Initialize()` | `InitializeAsync(CancellationToken cancellationToken = default)` |
+| `LoadVocabolaryAsync(CultureInfo)` | `LoadVocabularyAsync(CultureInfo, CancellationToken cancellationToken = default)` |
+| `SaveAsync(IVocabolary)` | `SaveAsync(IVocabulary, CancellationToken cancellationToken = default)` |
+| `AddOrUpdateTermAsync(vocabolary, key, defaultValue)` | `AddOrUpdateTermAsync(vocabulary, key, defaultValue, CancellationToken cancellationToken = default)` |
+| `IBinding.ConverterParamenter` (Blazor) | `IBinding.ConverterParameter` |
+
+A custom provider must rename `Initialize` to `InitializeAsync` and add the `CancellationToken` parameter to every
+method. `LocalizationManager.InitAsync`, `SetCultureAsync`, `LoadOrUpdateCultureAsync` and `SaveCultureAsync` also
+accept an optional `CancellationToken`, which is passed to the provider.
+
+The API is annotated for nullable reference types: the indexer `LocalizationManager.Instance[key]` returns `string?`,
+`Translate` returns `string` ([#17](https://github.com/fmazzant/Localization/issues/17)).
+
+**5. Target frameworks** ([#14](https://github.com/fmazzant/Localization/issues/14))
+
+- .NET 9 targets removed: .NET 9 applications use the .NET 8 build.
+- Core: the .NET Framework 4.7.2 / 4.8 and .NET Standard 2.1 builds are removed; those applications use the
+  .NET Framework 4.6.2 and .NET Standard 2.0 builds.
+
+The full list of changes is in the [CHANGELOG](CHANGELOG.md).
+
+## Legacy: Xamarin.Forms
+
+> ⚠️ `Mafesoft.Localization.Xamarin` 4.0.0 is the **last release** of the Xamarin package and it is **deprecated**:
+> Xamarin.Forms has been out of support since May 1, 2024. It will receive no further updates or fixes.
+> Use it only to align with the `Mafesoft.*` packages while you migrate to .NET MAUI.
+
+It works like the MAUI package (`LocalizationManager.Init(...)` at startup, then `{culture:Translate ...}` in XAML with
+`xmlns:culture="clr-namespace:Mafesoft.Localization.Xamarin;assembly=Mafesoft.Localization.Xamarin"`).
+
+To migrate to .NET MAUI, replace the package with `Mafesoft.Localization.Maui`, configure it with
+`ConfigureLocalization(...)` and change the XAML namespace to
+`clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui`: the markup extension is the same.
+
+## Build and test
 
 ```
 dotnet build src/Localization.sln
 dotnet test src/Localization.Tests
 ```
 
-The samples (`samples/Localization.Samples.sln`) reference the projects inside `src`, so they always run with the current code.
+The tests run on .NET 8 and .NET 10. The samples (`samples/Localization.Samples.sln`: WPF, MAUI, MVC, Blazor Web App,
+Blazor WebAssembly, Xamarin) reference the projects inside `src`, so they always run with the current code.
 
-## Release
+### Release
 
 All the packages share one version, `<VersionPrefix>` in `src/Directory.Build.props`. To publish a release:
 
@@ -539,3 +489,20 @@ breaking API change in a minor or patch version fails the pack.
 The workflow publishes with [NuGet trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing)
 when the repository variable `NUGET_USER` is set (and the trusted publishing policy exists on nuget.org); otherwise
 it uses the `NUGET_API_KEY` secret.
+
+## Contributing
+
+Bug reports, ideas and pull requests are welcome.
+
+1. Open an [issue](https://github.com/fmazzant/Localization/issues) that describes the bug or the change.
+2. Create a branch from `master` named after the issue (for example `features/42-short-description`).
+3. Keep the change focused, add or update the tests, and make sure `dotnet build` (no warnings: nullable warnings are
+   errors) and `dotnet test` pass.
+4. Update the README and add an entry to the `Unreleased` section of the [CHANGELOG](CHANGELOG.md).
+5. Open a pull request that references the issue (`Fixes #42`).
+
+Security problems must not be reported in public issues: see the [security policy](SECURITY.md).
+
+## License
+
+Mafesoft.Localization is released under the [MIT License](LICENSE.md).

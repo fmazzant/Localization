@@ -397,20 +397,18 @@ where label is a FrameworkElement.
 
 The ASP.NET MVC has a specific library to manage the culture inside the project. 
 
-In first time we configure the localizationManager inside the Startup.cs:
+In first time we configure the localizationManager inside the Program.cs:
 
 ```c#
 using Mafesoft.Localization.Mvc.Extensions;
 ...
-public void ConfigureServices(IServiceCollection services)
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllersWithViews();
+builder.Services.AddMvcLocalizationManager(options =>
 {
-    ... 
-    services.AddMvcLocalizationManager(options => {
-        options.ServiceProvider = new MockVocabularyServiceProvider { };
-        options.Culture = new CultureInfo("it-IT");
-    });
-    ...
-}
+    options.ServiceProvider = new MockVocabularyServiceProvider();
+    options.Culture = new CultureInfo("it-IT");
+});
 ```
 The "options.Culture" value represents the initialized culture.
 
@@ -454,20 +452,18 @@ It is possible using the TranslateLabel directly, like this:
 
 The Blazor has a specific library to manage the culture inside the project. 
 
-In first time we configure the localizationManager inside the Startup.cs:
+In first time we configure the localizationManager inside the Program.cs of a Blazor Web App:
 
 ```c#
 using Mafesoft.Localization.Blazor.Extensions;
 ...
-public void ConfigureServices(IServiceCollection services)
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+builder.Services.AddBlazorLocalizationManager(options =>
 {
-    ... 
-    services.AddBlazorLocalizationManager(options => {
-        options.ServiceProvider = new MockVocabularyServiceProvider { };
-        options.Culture = new CultureInfo("it-IT");
-    });
-    ...
-}
+    options.ServiceProvider = new MockVocabularyServiceProvider();
+    options.Culture = new CultureInfo("it-IT");
+});
 ```
 The "options.Culture" value represents the initialized culture.
 

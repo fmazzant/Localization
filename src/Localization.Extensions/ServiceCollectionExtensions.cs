@@ -58,6 +58,7 @@ namespace Mafesoft.Localization.Extensions
                 throw new InvalidOperationException($"{nameof(LocalizationManagerOptions)}.{nameof(LocalizationManagerOptions.ServiceProvider)} must be set.");
             }
 
+            LocalizationManager.Instance.FollowCurrentUICulture = options.FollowCurrentUICulture;
             LocalizationManager.Init(options.ServiceProvider, options.Culture);
             services.TryAddSingleton(LocalizationManager.Instance);
             return new LocalizationManagerBuilder(services);

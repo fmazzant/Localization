@@ -38,7 +38,19 @@ Use it in the view (the standard helpers such as `Html.LabelFor` and `<label asp
 @Html.TranslateLabel("Title", "TitleKey", "#Default title")
 ```
 
-> `LocalizationManager` is a process-wide singleton: in a server application the selected culture is shared by all users.
+By default the culture is shared by all users (`LocalizationManager` is a process-wide singleton). Since 4.1.0 every
+request can have its own language: set `options.FollowCurrentUICulture = true` and add the request localization
+middleware, then the translations follow `CultureInfo.CurrentUICulture` of the request.
+
+```c#
+builder.Services.AddMvcLocalizationManager(options =>
+{
+    options.ServiceProvider = new MyVocabularyServiceProvider();
+    options.FollowCurrentUICulture = true;
+});
+
+app.UseRequestLocalization(o => o.AddSupportedCultures("it-IT", "en-US").AddSupportedUICultures("it-IT", "en-US"));
+```
 
 ## Links
 

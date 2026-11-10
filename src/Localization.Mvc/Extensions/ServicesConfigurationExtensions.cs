@@ -60,6 +60,7 @@ namespace Mafesoft.Localization.Mvc.Extensions
                 throw new InvalidOperationException($"{nameof(MvcLocalizationManagerOptions)}.{nameof(MvcLocalizationManagerOptions.ServiceProvider)} must be set.");
             }
 
+            LocalizationManager.Instance.FollowCurrentUICulture = localizationManagerOptions.FollowCurrentUICulture;
             LocalizationManager.Init(localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
             services.AddSingleton(LocalizationManager.Instance);
             services.Configure<MvcOptions>(mvc => mvc.ModelMetadataDetailsProviders.Add(new TranslateDisplayMetadataProvider()));

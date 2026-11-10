@@ -25,6 +25,7 @@ The changes of every release are listed in the [CHANGELOG](CHANGELOG.md). To rep
 - [How it works](#how-it-works)
 - [Vocabulary service provider](#vocabulary-service-provider)
 - [LocalizationManager API](#localizationmanager-api)
+- [Per-request culture on the server](#per-request-culture-on-the-server)
 - [WPF](#wpf)
 - [.NET MAUI](#net-maui)
 - [ASP.NET Core MVC](#aspnet-core-mvc)
@@ -61,6 +62,8 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 - Blazor Server and Blazor WebAssembly: `Binding.Translate` with default value and `StringFormat`.
 - `IStringLocalizer` / `IStringLocalizerFactory` backed by the vocabularies, for DataAnnotations and the other
   consumers of `Microsoft.Extensions.Localization` (since 4.1.0).
+- Per-request culture on the server (`FollowCurrentUICulture`, with `UseRequestLocalization()`) and vocabularies
+  cached per culture (since 4.1.0).
 - Nullable reference types annotations, XML documentation, Source Link and symbols.
 
 ## Packages
@@ -224,6 +227,61 @@ LocalizationManager.Instance.CultureChanged += (sender, e) => Console.WriteLine(
 
 `SetCultureAsync` does not block the caller: use it from a UI thread (WPF, MAUI) when the provider is asynchronous.
 
+```c#
+// Since 4.1.0: read the vocabulary of a given culture, whatever the current culture is.
+string english = LocalizationManager.Translate("Hello", new CultureInfo("en-US"), "#Hello");
+string? value = LocalizationManager.Instance["Hello", new CultureInfo("en-US")];
+IVocabulary vocabulary = await LocalizationManager.Instance.GetVocabularyAsync(new CultureInfo("en-US"));
+```
+
+The vocabularies are cached per culture: each culture is loaded from the provider once, also when many callers ask
+for it at the same time. `SetCulture` reloads the vocabulary of its culture, and `Init` clears the cache.
+
+## Per-request culture on the server
+
+*Since 4.1.0.* By default `LocalizationManager` has **one culture for the whole application**: right for WPF, MAUI
+and Blazor WebAssembly, wrong on a server, where `SetCulture` would change the language of every user. On ASP.NET Core
+and Blazor Server set `FollowCurrentUICulture`: every lookup then uses `CultureInfo.CurrentUICulture` of the caller,
+which the request localization middleware sets for each request (and Blazor Server keeps for each circuit).
+
+```c#
+builder.Services.AddMvcLocalizationManager(options =>   // or AddBlazorLocalizationManager / AddLocalizationManager
+{
+    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.Culture = new CultureInfo("it-IT");          // loaded at startup
+    options.FollowCurrentUICulture = true;
+});
+
+var app = builder.Build();
+
+var cultures = new[] { "it-IT", "en-US" };
+app.UseRequestLocalization(options => options
+    .SetDefaultCulture(cultures[0])
+    .AddSupportedCultures(cultures)
+    .AddSupportedUICultures(cultures));   // before the endpoints that translate
+```
+
+- `Translate`, the indexer, `CurrentCulture`, `CurrentVocabulary`, `[Translate]`, the MVC helpers, `Binding.Translate`
+  and `IStringLocalizer` follow the culture of the request.
+- The language is chosen by the request culture providers: query string (`?culture=en-US&ui-culture=en-US`), the
+  culture cookie and `Accept-Language`. To let the user choose, write the cookie and redirect:
+
+  ```c#
+  app.MapGet("/culture/{culture}", (string culture, string redirectUri, HttpContext context) =>
+  {
+      context.Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName,
+          CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)));
+      return Results.LocalRedirect(redirectUri);
+  });
+  ```
+
+  In Blazor Server the circuit keeps the culture of the request that opened it: after the redirect the page reloads
+  and a new circuit starts with the new language.
+- Do not call `SetCulture` to switch the language of a user: with `FollowCurrentUICulture` it only reloads the
+  vocabulary of that culture.
+- The first request in a culture loads its vocabulary. To load them at startup:
+  `foreach (var c in cultures) await LocalizationManager.Instance.GetVocabularyAsync(new CultureInfo(c));`
+
 ## WPF
 
 ```
@@ -327,8 +385,9 @@ messages), and the library adds two helpers:
 @Html.TranslateLabel("Title", "TitleKey", "#Default title")
 ```
 
-Change the culture from a controller with `LocalizationManager.Instance.SetCulture(new CultureInfo(lang))`
-(remember that on a server the culture is shared by all the users).
+By default the culture is shared by all the users and changed with `LocalizationManager.Instance.SetCulture(...)`.
+To give every user their own language set `options.FollowCurrentUICulture = true` and add `app.UseRequestLocalization(...)`:
+see [Per-request culture on the server](#per-request-culture-on-the-server).
 
 ## Blazor
 
@@ -347,8 +406,13 @@ builder.Services.AddBlazorLocalizationManager(options =>
 {
     options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
     options.Culture = new CultureInfo("it-IT");
+    options.FollowCurrentUICulture = true;   // since 4.1.0: one language per circuit, with app.UseRequestLocalization(...)
 });
 ```
+
+With `FollowCurrentUICulture` every circuit uses the culture of the request that opened it (see
+[Per-request culture on the server](#per-request-culture-on-the-server)); without it the culture is shared by all
+the users and changed with `SetCulture`.
 
 **Blazor WebAssembly:** the package does not depend on the ASP.NET Core shared framework, so it runs in the browser
 too. Initialize the manager asynchronously: a provider that loads the vocabularies with `HttpClient` cannot be waited
@@ -421,6 +485,10 @@ public class HomeController(IStringLocalizer<HomeController> localizer) : Contro
 - By default every localizer reads the same keys. With `.AddStringLocalizer(o => o.UseTypeNamePrefix = true)` the keys
   are prefixed with the type name: `IStringLocalizer<HomeController>["Title"]` reads `HomeController.Title`.
 - `AddStringLocalizer()` replaces an `IStringLocalizerFactory` registered before, for example by `AddLocalization()`.
+- On a server set `options.FollowCurrentUICulture = true` and add `app.UseRequestLocalization(...)`, so the localizers
+  follow the culture of each request (see [Per-request culture on the server](#per-request-culture-on-the-server)).
+  The [package README](src/Localization.Extensions/README.md#differences-from-the-resx-localizer) lists the
+  differences from the resx localizer.
 
 ## Migrating from `Mafe.Localization`
 

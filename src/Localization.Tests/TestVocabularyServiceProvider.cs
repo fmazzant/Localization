@@ -30,10 +30,24 @@ namespace Mafesoft.Localization.Tests
             Initialized = true;
         }
 
+        /// <summary>Number of LoadVocabularyAsync calls per culture name.</summary>
+        public ConcurrentDictionary<string, int> LoadCount { get; } = new();
+
+        /// <summary>Delay of every LoadVocabularyAsync call, to make the concurrent callers overlap.</summary>
+        public TimeSpan LoadDelay { get; init; }
+
+        private int failingLoads;
+
+        /// <summary>The next LoadVocabularyAsync calls that throw.</summary>
+        public int FailingLoads { get => failingLoads; set => failingLoads = value; }
+
         public async Task<IVocabulary> LoadVocabularyAsync(CultureInfo cultureInfo, CancellationToken cancellationToken = default)
         {
             LastLoadToken = cancellationToken;
+            LoadCount.AddOrUpdate(cultureInfo.Name, 1, (_, n) => n + 1);
             if (AsyncLoading) await Task.Delay(10);
+            if (LoadDelay > TimeSpan.Zero) await Task.Delay(LoadDelay);
+            if (Interlocked.Decrement(ref failingLoads) >= 0) throw new InvalidOperationException("load failed");
             return vocabularies.TryGetValue(cultureInfo.Name, out var vocabulary) ? vocabulary : new Vocabulary();
         }
 

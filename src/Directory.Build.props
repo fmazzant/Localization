@@ -9,6 +9,26 @@
     <IsPackable Condition="'$(IsTestProject)' == 'true'">false</IsPackable>
   </PropertyGroup>
 
+  <!--
+    Single version source for every package. The publish workflow checks that the release tag (v4.1.0) matches it.
+    A prerelease is published with a suffix: dotnet pack -p:VersionSuffix=beta.1
+  -->
+  <PropertyGroup>
+    <VersionPrefix>4.0.0</VersionPrefix>
+  </PropertyGroup>
+
+  <!--
+    Package validation: every pack checks the API compatibility between the target frameworks of the package and,
+    inside a major version, against the first release of that major version (4.1.0 is compared with 4.0.0).
+    A breaking change in a minor or patch version fails the pack. The x.0.0 releases have no baseline
+    (4.0.0 changes the package IDs).
+  -->
+  <PropertyGroup Condition="'$(IsPackable)' != 'false'">
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <_MajorBaselineVersion>$([System.Version]::Parse('$(VersionPrefix)').Major).0.0</_MajorBaselineVersion>
+    <PackageValidationBaselineVersion Condition="'$(VersionPrefix)' != '$(_MajorBaselineVersion)'">$(_MajorBaselineVersion)</PackageValidationBaselineVersion>
+  </PropertyGroup>
+
   <!-- Libraries: nullable reference types, every nullable warning is an error -->
   <PropertyGroup Condition="'$(IsTestProject)' != 'true'">
     <Nullable>enable</Nullable>

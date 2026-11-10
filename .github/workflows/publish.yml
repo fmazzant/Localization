@@ -1,11 +1,18 @@
 name: Publish NuGet
 
-# Publishes only from a release tag (v4.1.0, v4.1.0-beta.1): merging to master publishes nothing.
-# A manual run (workflow_dispatch) from a branch is a dry run: it tests and packs, but does not push.
+# Publishes from a release tag (v4.1.0, v4.1.0-beta.1) or from a manual run on master with the version
+# input filled in. Merging to master publishes nothing. A manual run with an empty version is a dry run:
+# it tests and packs, but does not push.
 on:
   push:
     tags: [ 'v*' ]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g. 4.0.0 or 4.1.0-beta.1). Leave empty for a dry run (test and pack only).'
+        type: string
+        required: false
+        default: ''
 
 jobs:
   test:
@@ -25,6 +32,9 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     environment: production
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      publish: ${{ steps.version.outputs.publish }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,24 +45,50 @@ jobs:
             8.0.x
             10.0.x
 
-      # The version comes from <VersionPrefix> in src/Directory.Build.props: the tag must match it.
-      - name: Check the tag version
+      # The version comes from the tag (push) or from the version input (manual run). Its prefix must match
+      # <VersionPrefix> in src/Directory.Build.props; the part after "-" becomes the VersionSuffix.
+      - name: Resolve the version
         id: version
         shell: bash
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
           PREFIX=$(dotnet msbuild src/Localization/Localization.csproj -getProperty:VersionPrefix)
-          SUFFIX=""
+          VERSION=""
+          PUBLISH=false
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            TAG_VERSION="${GITHUB_REF_NAME#v}"
-            TAG_PREFIX="${TAG_VERSION%%-*}"
-            [[ "$TAG_VERSION" == *-* ]] && SUFFIX="${TAG_VERSION#*-}"
-            if [[ "$TAG_PREFIX" != "$PREFIX" ]]; then
-              echo "::error::Tag $GITHUB_REF_NAME does not match VersionPrefix $PREFIX in src/Directory.Build.props"
+            VERSION="${GITHUB_REF_NAME#v}"
+            PUBLISH=true
+          elif [[ -n "${INPUT_VERSION// /}" ]]; then
+            if [[ "$GITHUB_REF" != refs/heads/master ]]; then
+              echo "::error::A manual publish must run on master (this run is on $GITHUB_REF_NAME). Leave the version empty for a dry run."
               exit 1
             fi
+            VERSION="${INPUT_VERSION// /}"
+            VERSION="${VERSION#v}"
+            PUBLISH=true
           fi
+
+          SUFFIX=""
+          if [[ -n "$VERSION" ]]; then
+            if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+              echo "::error::'$VERSION' is not a valid version (expected 4.1.0 or 4.1.0-beta.1)"
+              exit 1
+            fi
+            [[ "$VERSION" == *-* ]] && SUFFIX="${VERSION#*-}"
+            if [[ "${VERSION%%-*}" != "$PREFIX" ]]; then
+              echo "::error::Version $VERSION does not match VersionPrefix $PREFIX in src/Directory.Build.props"
+              exit 1
+            fi
+          else
+            VERSION="$PREFIX"
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "suffix=$SUFFIX" >> "$GITHUB_OUTPUT"
-          echo "Version: $PREFIX${SUFFIX:+-$SUFFIX}"
+          echo "publish=$PUBLISH" >> "$GITHUB_OUTPUT"
+          echo "Version: $VERSION (publish: $PUBLISH)"
+          echo "### Version $VERSION, publish: $PUBLISH" >> "$GITHUB_STEP_SUMMARY"
 
       # Every package gets the same version. Package validation (Directory.Build.props) fails the pack
       # when a minor or patch version breaks the API of the first release of the major version.
@@ -71,7 +107,7 @@ jobs:
 
   publish:
     needs: pack
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: needs.pack.outputs.publish == 'true'
     runs-on: ubuntu-latest
     environment: production
     permissions:

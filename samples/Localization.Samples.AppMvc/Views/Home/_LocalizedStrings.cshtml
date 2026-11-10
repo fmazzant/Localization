@@ -1,0 +1,21 @@
+@model IEnumerable<Microsoft.Extensions.Localization.LocalizedString>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Name (key)</th>
+            <th>Value</th>
+            <th>ResourceNotFound</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><code>@item.Name</code></td>
+                <td>@item.Value</td>
+                <td>@item.ResourceNotFound</td>
+            </tr>
+        }
+    </tbody>
+</table>

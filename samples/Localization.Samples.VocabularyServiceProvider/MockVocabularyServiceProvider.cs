@@ -66,6 +66,12 @@ namespace Localization.Samples.VocabularyServiceProvider
                         { "Title","Esempio di Localizzazione" },
                          { "ChangedTimesTemplate","cambiato {0} volte." },
                         { "AbstractText","Usa questa pagina di dettaglio per la localizzazione di esempio" },
+
+                        //MVC IStringLocalizer (the "HomeController." keys are read with UseTypeNamePrefix = true)
+                        { "LocalizerIntro","Questi testi sono letti con IStringLocalizer, IViewLocalizer e DataAnnotations dai vocabolari del LocalizationManager." },
+                        { "LocalizerGreeting","Ciao {0}, oggi è {1:D}." },
+                        { "HomeController.Title","Esempio di Localizzazione (HomeController)" },
+                        { "HomeController.LocalizerGreeting","Ciao {0}, oggi è {1:D} (HomeController)." },
                         
                         //XAMARIN
                         { "Welcome","Benvenuto in Xamarin.Forms!" },
@@ -115,6 +121,12 @@ namespace Localization.Samples.VocabularyServiceProvider
                         { "Title","Culture Example" },
                         { "ChangedTimesTemplate","changed {0} times." },
                         { "AbstractText","Use this page to detail your site's culture example." },
+
+                        //MVC IStringLocalizer (the "HomeController." keys are read with UseTypeNamePrefix = true)
+                        { "LocalizerIntro","These texts are read with IStringLocalizer, IViewLocalizer and DataAnnotations from the vocabularies of the LocalizationManager." },
+                        { "LocalizerGreeting","Hello {0}, today is {1:D}." },
+                        { "HomeController.Title","Culture Example (HomeController)" },
+                        { "HomeController.LocalizerGreeting","Hello {0}, today is {1:D} (HomeController)." },
                         
                         //XAMARIN
                         { "Welcome","Welcome to Xamarin.Forms!" },

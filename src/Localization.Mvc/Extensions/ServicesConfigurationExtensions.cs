@@ -27,9 +27,9 @@
 // 
 //
 
-namespace Localization.Mvc.Extensions
+namespace Mafesoft.Localization.Mvc.Extensions
 {
-    using Localization.Mvc.Metadata;
+    using Mafesoft.Localization.Mvc.Metadata;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
     using System;

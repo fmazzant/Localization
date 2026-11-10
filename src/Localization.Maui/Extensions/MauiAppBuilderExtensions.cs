@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Maui.Extensions
+namespace Mafesoft.Localization.Maui.Extensions
 {
     using Microsoft.Maui.Hosting;
     using System.Globalization;

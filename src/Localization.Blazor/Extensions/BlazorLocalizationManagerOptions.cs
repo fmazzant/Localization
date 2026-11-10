@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Blazor.Extensions
+namespace Mafesoft.Localization.Blazor.Extensions
 {
     using System.Globalization;
 

@@ -27,9 +27,9 @@
 // 
 //
 
-namespace Localization.Blazor.Bindings
+namespace Mafesoft.Localization.Blazor.Bindings
 {
-    using Localization.Blazor.Converters;
+    using Mafesoft.Localization.Blazor.Converters;
 
     /// <summary>
     /// 

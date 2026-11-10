@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Windows.Extensions
+namespace Mafesoft.Localization.Wpf.Extensions
 {
     using System;
     using System.Globalization;

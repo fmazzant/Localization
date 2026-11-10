@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Xamarin.Converts
+namespace Mafesoft.Localization.Xamarin.Converters
 {
     using global::Xamarin.Forms;
     using System;

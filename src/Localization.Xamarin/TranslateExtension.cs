@@ -27,10 +27,10 @@
 // 
 //
 
-namespace Localization.Xamarin
+namespace Mafesoft.Localization.Xamarin
 {
-    using Localization;
-    using Localization.Xamarin.Converts;
+    using Mafesoft.Localization;
+    using Mafesoft.Localization.Xamarin.Converters;
     using global::Xamarin.Forms;
     using global::Xamarin.Forms.Xaml;
     using System;

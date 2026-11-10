@@ -27,9 +27,9 @@
 // 
 //
 
-namespace Localization
+namespace Mafesoft.Localization
 {
-    using Localization.Providers;
+    using Mafesoft.Localization.Providers;
     using System;
     using System.ComponentModel;
     using System.Diagnostics;

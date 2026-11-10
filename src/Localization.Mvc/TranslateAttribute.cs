@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Mvc
+namespace Mafesoft.Localization.Mvc
 {
     using System;
 

@@ -2,15 +2,16 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;net472;net48;netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0</TargetFrameworks>
-    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <AssemblyName>Mafesoft.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Mafesoft.$(MSBuildProjectName)</RootNamespace>
     <Product>Localization</Product>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <!-- NuGet package -->
   <PropertyGroup>
-    <PackageId>Mafe.Localization</PackageId>
-    <Version>3.0.0</Version>
+    <PackageId>Mafesoft.Localization</PackageId>
+    <Version>4.0.0</Version>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
     <Copyright>Copyright (c) 2020-2026 Federico Mazzanti</Copyright>

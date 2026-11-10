@@ -2,23 +2,24 @@
 
   <!--
     Xamarin.Forms reached end of support on May 1, 2024.
-    This package is kept for existing applications only: please migrate to Mafe.Localization.Maui.
+    4.0.0 is the LAST release of this package, which is deprecated right after publishing: please migrate to Mafesoft.Localization.Maui.
   -->
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-    <AssemblyName>Mafe.$(MSBuildProjectName)</AssemblyName>
+    <AssemblyName>Mafesoft.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Mafesoft.$(MSBuildProjectName)</RootNamespace>
     <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
 
   <!-- NuGet package -->
   <PropertyGroup>
-    <PackageId>Mafe.Localization.Xamarin</PackageId>
-    <Version>3.0.0</Version>
+    <PackageId>Mafesoft.Localization.Xamarin</PackageId>
+    <Version>4.0.0</Version>
     <Authors>Federico Mazzanti</Authors>
     <Company>Federico Mazzanti</Company>
     <Copyright>Copyright (c) 2020-2026 Federico Mazzanti</Copyright>
-    <Description>[Deprecated: Xamarin.Forms is out of support, use Mafe.Localization.Maui] A Xamarin library for .net that can help you to manage the localization in your application. The library uses Mafe.Localization</Description>
-    <PackageTags>localization;i18n;c-sharp;dotnet-standard;xamarin</PackageTags>
+    <Description>[Deprecated: last release, Xamarin.Forms is out of support. Use Mafesoft.Localization.Maui] A Xamarin library for .net that can help you to manage the localization in your application. The library uses Mafesoft.Localization</Description>
+    <PackageTags>localization;i18n;c-sharp;dotnet-standard;xamarin;deprecated</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

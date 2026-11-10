@@ -27,10 +27,10 @@
 // 
 //
 
-namespace Localization.Maui
+namespace Mafesoft.Localization.Maui
 {
-    using Localization;
-    using Localization.Maui.Converts;
+    using Mafesoft.Localization;
+    using Mafesoft.Localization.Maui.Converters;
     using Microsoft.Maui.Controls;
     using Microsoft.Maui.Controls.Xaml;
     using System;

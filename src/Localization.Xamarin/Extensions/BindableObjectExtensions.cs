@@ -27,7 +27,7 @@
 // 
 //
 
-namespace Localization.Xamarin.Extensions
+namespace Mafesoft.Localization.Xamarin.Extensions
 {
     using global::Xamarin.Forms;
     using System;

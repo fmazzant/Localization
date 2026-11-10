@@ -29,6 +29,7 @@ The changes of every release are listed in the [CHANGELOG](CHANGELOG.md). To rep
 - [.NET MAUI](#net-maui)
 - [ASP.NET Core MVC](#aspnet-core-mvc)
 - [Blazor](#blazor)
+- [IStringLocalizer](#istringlocalizer)
 - [Migrating from `Mafe.Localization`](#migrating-from-mafelocalization)
 - [Legacy: Xamarin.Forms](#legacy-xamarinforms)
 - [Build and test](#build-and-test)
@@ -58,6 +59,8 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 - ASP.NET Core MVC: `[Translate]` attribute, used by `Html.LabelFor`, `<label asp-for>`, `Html.DisplayNameFor` and the
   validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers.
 - Blazor Server and Blazor WebAssembly: `Binding.Translate` with default value and `StringFormat`.
+- `IStringLocalizer` / `IStringLocalizerFactory` backed by the vocabularies, for DataAnnotations and the other
+  consumers of `Microsoft.Extensions.Localization` (since 4.1.0).
 - Nullable reference types annotations, XML documentation, Source Link and symbols.
 
 ## Packages
@@ -65,6 +68,7 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 | Package | Platform | Target frameworks | NuGet |
 |---|---|---|---|
 | `Mafesoft.Localization` | Core (any .NET application) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization) |
+| `Mafesoft.Localization.Extensions` | `IStringLocalizer`, dependency injection (since 4.1.0, see [IStringLocalizer](#istringlocalizer)) | .NET 10, .NET 8, .NET Standard 2.0 | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) |
 | `Mafesoft.Localization.Wpf` | WPF | `net10.0-windows`, `net8.0-windows` | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) |
 | `Mafesoft.Localization.Maui` | .NET MAUI | .NET 10 (MAUI 10), .NET 8 (MAUI 8) | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) |
 | `Mafesoft.Localization.Mvc` | ASP.NET Core MVC | .NET 10, .NET 8 | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) |
@@ -331,43 +335,6 @@ Change the culture from a controller with `LocalizationManager.Instance.SetCultu
 ```
 dotnet add package Mafesoft.Localization.Blazor
 ```
-# IStringLocalizer
-
-The `Mafesoft.Localization.Extensions` package plugs the vocabularies into `Microsoft.Extensions.Localization`:
-`IStringLocalizer`, `IStringLocalizer<T>` and `IStringLocalizerFactory` read the vocabulary of the current culture,
-so DataAnnotations, `IViewLocalizer`, Blazor components and third-party libraries use the same translations.
-
-```c#
-using Mafesoft.Localization.Extensions;
-...
-builder.Services.AddLocalizationManager(options =>
-{
-    options.ServiceProvider = new MockVocabularyServiceProvider();
-    options.Culture = new CultureInfo("it-IT");
-})
-.AddStringLocalizer();
-
-// ASP.NET Core MVC: [Display(Name = "...")] and the validation messages are translated too
-builder.Services.AddControllersWithViews().AddDataAnnotationsLocalization();
-```
-
-```c#
-public class HomeController(IStringLocalizer<HomeController> localizer) : Controller
-{
-    public IActionResult Index() => View(model: localizer["Welcome"].Value);
-}
-```
-
-* A missing key returns the key itself with `ResourceNotFound = true`, and the provider is notified
-  (`AddOrUpdateTermAsync`), like `LocalizationManager.Instance[key]`.
-* `localizer["Format", arg]` formats the value with the current culture; `GetAllStrings()` returns the current vocabulary.
-* By default every localizer reads the same keys. With `.AddStringLocalizer(o => o.UseTypeNamePrefix = true)` the keys
-  are prefixed with the type name: `IStringLocalizer<HomeController>["Title"]` reads `HomeController.Title`.
-* `AddStringLocalizer()` replaces an `IStringLocalizerFactory` registered before, for example by `AddLocalization()`.
-
-# Blazor
-
-The Blazor has a specific library to manage the culture inside the project. 
 
 **Blazor Web App (interactive server):** register the manager in `Program.cs`.
 
@@ -415,6 +382,45 @@ Translate in a component with `Binding.Translate`, and refresh the component whe
 
 The samples `samples/Localization.Samples.AppBlazor` (Blazor Web App) and `samples/Localization.Samples.AppBlazorWasm`
 (Blazor WebAssembly) show both models.
+
+## IStringLocalizer
+
+```
+dotnet add package Mafesoft.Localization.Extensions
+```
+
+*Since 4.1.0.* The `Mafesoft.Localization.Extensions` package plugs the vocabularies into
+`Microsoft.Extensions.Localization`: `IStringLocalizer`, `IStringLocalizer<T>` and `IStringLocalizerFactory` read the
+vocabulary of the current culture, so DataAnnotations, `IViewLocalizer`, Blazor components and third-party libraries
+use the same translations.
+
+```c#
+using Mafesoft.Localization.Extensions;
+
+builder.Services.AddLocalizationManager(options =>
+{
+    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.Culture = new CultureInfo("it-IT");
+})
+.AddStringLocalizer();
+
+// ASP.NET Core MVC: [Display(Name = "...")] and the validation messages are translated too
+builder.Services.AddControllersWithViews().AddDataAnnotationsLocalization();
+```
+
+```c#
+public class HomeController(IStringLocalizer<HomeController> localizer) : Controller
+{
+    public IActionResult Index() => View(model: localizer["Welcome"].Value);
+}
+```
+
+- A missing key returns the key itself with `ResourceNotFound = true`, and the provider is notified
+  (`AddOrUpdateTermAsync`), like `LocalizationManager.Instance[key]`.
+- `localizer["Format", arg]` formats the value with the current culture; `GetAllStrings()` returns the current vocabulary.
+- By default every localizer reads the same keys. With `.AddStringLocalizer(o => o.UseTypeNamePrefix = true)` the keys
+  are prefixed with the type name: `IStringLocalizer<HomeController>["Title"]` reads `HomeController.Title`.
+- `AddStringLocalizer()` replaces an `IStringLocalizerFactory` registered before, for example by `AddLocalization()`.
 
 ## Migrating from `Mafe.Localization`
 

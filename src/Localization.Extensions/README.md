@@ -42,6 +42,28 @@ public class HomeController(IStringLocalizer<HomeController> localizer) : Contro
 With ASP.NET Core MVC, `AddDataAnnotationsLocalization()` uses it to translate `[Display(Name = "...")]` and the
 validation messages.
 
+## Differences from the resx localizer
+
+Replacing `AddLocalization()` with `AddLocalizationManager(...).AddStringLocalizer()` keeps the code that uses
+`IStringLocalizer<T>`, `IViewLocalizer`, `IHtmlLocalizer<T>` and DataAnnotations unchanged, but the behaviour is not
+the same as the resx-based `ResourceManagerStringLocalizer`:
+
+| | resx (`AddLocalization()`) | Mafesoft.Localization |
+|---|---|---|
+| Culture | `CultureInfo.CurrentUICulture`, per request with `UseRequestLocalization()` | `LocalizationManager.CurrentCulture`, one culture for the whole application, changed with `SetCulture` |
+| Keys | One resource file per type or view (`Controllers.HomeController.it.resx`) | One vocabulary per culture, shared by every localizer. With `UseTypeNamePrefix` the key is `TypeName.Key` (`Type.Name`, without namespace) or `baseName.Key` for the views |
+| Parent cultures | `it-IT` falls back to `it` and then to the neutral resources | No fallback, `includeParentCultures` is ignored |
+| Missing key | Returns the key, `ResourceNotFound = true` | Same, and the provider is notified (`AddOrUpdateTermAsync`) |
+| Source of the strings | `.resx` files embedded in the assembly | The `IVocabularyServiceProvider` (the resx strings must be moved there) |
+
+* **One culture per application.** The localizer does not read `CultureInfo.CurrentUICulture`, so
+  `UseRequestLocalization()`, the culture cookie and `Accept-Language` have no effect: on a server every user sees
+  the same language. It fits apps with one language at a time (desktop, Blazor WebAssembly, a site that switches the
+  language globally).
+* **Shared keys.** Two resx files that translate the same key differently collide in the vocabulary: rename the keys
+  or enable `UseTypeNamePrefix`.
+* The default validation messages of DataAnnotations (without `ErrorMessage`) are not translated, as with resx.
+
 ## Links
 
 - [Documentation](https://github.com/fmazzant/Localization#readme)

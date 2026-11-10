@@ -47,7 +47,7 @@ namespace Mafesoft.Localization.Mvc
         /// </summary>
         /// <param name="resourceKey">The key of resource.</param>
         /// <param name="defaultValue">The value used when the resource key does not exist inside the vocabulary.</param>
-        public TranslateAttribute(string resourceKey, string defaultValue = null)
+        public TranslateAttribute(string resourceKey, string? defaultValue = null)
         {
             ResourceKey = resourceKey;
             DefaultValue = defaultValue;
@@ -56,11 +56,11 @@ namespace Mafesoft.Localization.Mvc
         /// <summary>
         /// The key of resource
         /// </summary>
-        public string ResourceKey { get; set; }
+        public string? ResourceKey { get; set; }
 
         /// <summary>
         /// The default value string that specifies when the value is null or the resource key not exists inside vocabulary.
         /// </summary>
-        public string DefaultValue { get; set; }
+        public string? DefaultValue { get; set; }
     }
 }

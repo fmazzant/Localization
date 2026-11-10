@@ -45,7 +45,7 @@ namespace Mafesoft.Localization.Blazor.Converters
         /// <param name="parameter"></param>
         /// <param name="culture"></param>
         /// <returns></returns>
-        object Convert(object value, Type targetType, object parameter, CultureInfo culture);
+        object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture);
 
         /// <summary>
         /// Converts to back value.
@@ -55,6 +55,6 @@ namespace Mafesoft.Localization.Blazor.Converters
         /// <param name="parameter"></param>
         /// <param name="culture"></param>
         /// <returns></returns>
-        object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture);
+        object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture);
     }
 }

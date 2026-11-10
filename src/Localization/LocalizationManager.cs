@@ -46,19 +46,19 @@ namespace Mafesoft.Localization
 
         private readonly object syncRoot = new object();
         private IVocabularyServiceProvider serviceProvider;
-        private IVocabulary currentVocabulary;
+        private IVocabulary? currentVocabulary;
         private int cultureRequest;
         private int version;
 
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Occurs after the current culture (and its vocabulary) has been changed.
         /// </summary>
-        public event EventHandler CultureChanged;
+        public event EventHandler? CultureChanged;
 
         /// <summary>
         /// Current Culture selected.
@@ -93,7 +93,7 @@ namespace Mafesoft.Localization
         /// <summary>
         /// Current Vocabulary
         /// </summary>
-        private IVocabulary CurrentVocabulary
+        private IVocabulary? CurrentVocabulary
         {
             get => Volatile.Read(ref currentVocabulary);
             set => Volatile.Write(ref currentVocabulary, value);
@@ -105,7 +105,7 @@ namespace Mafesoft.Localization
         /// <param name="provider"></param>
         protected LocalizationManager(IVocabularyServiceProvider provider)
         {
-            ServiceProvider = provider ?? throw new ArgumentNullException(nameof(provider));
+            serviceProvider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
         /// <summary>
@@ -115,12 +115,13 @@ namespace Mafesoft.Localization
         /// </summary>
         /// <param name="resourceKey"></param>
         /// <returns></returns>
-        public string this[string resourceKey]
+        public string? this[string? resourceKey]
         {
             get
             {
                 var vocabulary = CurrentVocabulary;
-                if (vocabulary is null || string.IsNullOrEmpty(resourceKey))
+                // string.IsNullOrEmpty has no nullable annotations on netstandard2.0 and net462
+                if (vocabulary is null || resourceKey is null || resourceKey.Length == 0)
                 {
                     return null;
                 }
@@ -141,7 +142,7 @@ namespace Mafesoft.Localization
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static string Translate(string key, string defaultValue = null) => Instance[key] ?? defaultValue ?? key ?? string.Empty;
+        public static string Translate(string? key, string? defaultValue = null) => Instance[key] ?? defaultValue ?? key ?? string.Empty;
 
         /// <summary>
         /// Initializes the LocalizationManager with the default culture.
@@ -154,7 +155,7 @@ namespace Mafesoft.Localization
         /// </summary>
         /// <param name="provider">Service provider</param>
         /// <param name="culture">Culture to set. When null the current culture is used.</param>
-        public static void Init(IVocabularyServiceProvider provider, CultureInfo culture)
+        public static void Init(IVocabularyServiceProvider provider, CultureInfo? culture)
         {
             if (provider is null) throw new ArgumentNullException(nameof(provider));
 
@@ -177,7 +178,7 @@ namespace Mafesoft.Localization
         /// <param name="provider">Service provider</param>
         /// <param name="culture">Culture to set. When null the current culture is used.</param>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
-        public static async Task InitAsync(IVocabularyServiceProvider provider, CultureInfo culture, CancellationToken cancellationToken = default)
+        public static async Task InitAsync(IVocabularyServiceProvider provider, CultureInfo? culture, CancellationToken cancellationToken = default)
         {
             if (provider is null) throw new ArgumentNullException(nameof(provider));
 
@@ -199,7 +200,7 @@ namespace Mafesoft.Localization
         /// </summary>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
         public Task SaveCultureAsync(CancellationToken cancellationToken = default)
-            => ServiceProvider.SaveAsync(CurrentVocabulary, cancellationToken);
+            => CurrentVocabulary is { } vocabulary ? ServiceProvider.SaveAsync(vocabulary, cancellationToken) : Task.FromResult(true);
 
         /// <summary>
         /// Set the new culture and invalidate the old values.
@@ -271,7 +272,7 @@ namespace Mafesoft.Localization
             }
         }
 
-        private static void TraceMissingTermError(string resourceKey, Exception ex)
+        private static void TraceMissingTermError(string resourceKey, Exception? ex)
             => Trace.TraceWarning("Localization: AddOrUpdateTermAsync failed for key \"{0}\": {1}", resourceKey, ex?.Message);
 
         /// <summary>

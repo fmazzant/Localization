@@ -45,7 +45,7 @@ namespace Mafesoft.Localization.Wpf.Extensions
         /// <param name="bindableObject"></param>
         /// <param name="bindableProperty"></param>
         /// <param name="onCultureChanged">The function that returns the value to assign every time the culture changes.</param>
-        public static void Translate(this FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<object> onCultureChanged)
+        public static void Translate(this FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<object?> onCultureChanged)
         {
             if (onCultureChanged is null) throw new ArgumentNullException(nameof(onCultureChanged));
 
@@ -58,7 +58,7 @@ namespace Mafesoft.Localization.Wpf.Extensions
         /// <param name="bindableObject"></param>
         /// <param name="bindableProperty"></param>
         /// <param name="onCultureChanged">The function that returns the value to assign every time the culture changes.</param>
-        public static void Translate(this FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<LocalizationManager, object> onCultureChanged)
+        public static void Translate(this FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<LocalizationManager, object?> onCultureChanged)
         {
             if (onCultureChanged is null) throw new ArgumentNullException(nameof(onCultureChanged));
 
@@ -69,7 +69,7 @@ namespace Mafesoft.Localization.Wpf.Extensions
         /// Binds the property to <see cref="LocalizationManager.Version"/>, which changes on every culture change
         /// and, unlike the indexer, never notifies the provider of a missing term.
         /// </summary>
-        private static void SetTranslateBinding(FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<object> onCultureChanged)
+        private static void SetTranslateBinding(FrameworkElement bindableObject, DependencyProperty bindableProperty, Func<object?> onCultureChanged)
         {
             Binding binding = new Binding()
             {
@@ -99,9 +99,9 @@ namespace Mafesoft.Localization.Wpf.Extensions
             /// <param name="parameter"></param>
             /// <param name="culture"></param>
             /// <returns></returns>
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
             {
-                return (parameter as Func<object>)?.Invoke();
+                return (parameter as Func<object?>)?.Invoke();
             }
 
             /// <summary>
@@ -112,7 +112,7 @@ namespace Mafesoft.Localization.Wpf.Extensions
             /// <param name="parameter"></param>
             /// <param name="culture"></param>
             /// <returns></returns>
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
             {
                 return null;
             }

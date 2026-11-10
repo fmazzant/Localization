@@ -9,4 +9,10 @@
     <IsPackable Condition="'$(IsTestProject)' == 'true'">false</IsPackable>
   </PropertyGroup>
 
+  <!-- Libraries: nullable reference types, every nullable warning is an error -->
+  <PropertyGroup Condition="'$(IsTestProject)' != 'true'">
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>
+  </PropertyGroup>
+
 </Project>

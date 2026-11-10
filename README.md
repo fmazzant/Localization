@@ -35,6 +35,10 @@ Version 4.0.0 renames the packages, the assemblies and the namespaces to `Mafeso
 It also fixes the naming of the public API (`Vocabolary` → `Vocabulary`, `Async` suffix and `CancellationToken`
 on the provider interface), so that the consumers migrate only once.
 
+The public API is annotated for nullable reference types: for example the indexer
+`LocalizationManager.Instance[key]` returns `string?` (null when the key does not exist), while
+`LocalizationManager.Translate(key, defaultValue)` always returns a non-null `string`.
+
 ## Supported platforms
 
 | Package | Target frameworks |

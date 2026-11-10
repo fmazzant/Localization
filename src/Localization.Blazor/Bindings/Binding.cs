@@ -39,7 +39,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
     public class Binding : IBinding
     {
         private readonly object eventLock = new object();
-        private PropertyChangedEventHandler bindingValueChanged;
+        private PropertyChangedEventHandler? bindingValueChanged;
 
         /// <summary>
         /// The localization manager used to resolve the resource key.
@@ -49,12 +49,12 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <summary>
         /// The key of the resource.
         /// </summary>
-        public string ResourceKey { get; private set; }
+        public string? ResourceKey { get; private set; }
 
         /// <summary>
         /// The value used when the resource key does not exist inside the vocabulary.
         /// </summary>
-        public string DefaultValue { get; private set; }
+        public string? DefaultValue { get; private set; }
 
         /// <summary>
         /// The converter applied to the translated value.
@@ -64,19 +64,19 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <summary>
         /// The parameter passed to the <see cref="Converter"/>.
         /// </summary>
-        public object ConverterParameter { get; private set; }
+        public object? ConverterParameter { get; private set; }
 
         /// <summary>
         /// A composite format string (e.g. "Title: {0}") or a standard format (e.g. "N2") applied to the translated value.
         /// </summary>
-        public string StringFormat { get; private set; }
+        public string? StringFormat { get; private set; }
 
         /// <summary>
         /// Occurs when the culture changes and the value must be read again.
         /// The binding listens to the <see cref="LocalizationManager"/> only while there is at least one subscriber,
         /// so unused bindings can be garbage collected.
         /// </summary>
-        public event PropertyChangedEventHandler BindingValueChanged
+        public event PropertyChangedEventHandler? BindingValueChanged
         {
             add
             {
@@ -116,7 +116,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <param name="defaultValue">The value used when the resource key does not exist inside the vocabulary.</param>
         /// <param name="stringFormat">A format applied to the translated value.</param>
         /// <returns></returns>
-        public static Binding Translate(string resourceKey, string defaultValue = null, string stringFormat = null)
+        public static Binding Translate(string resourceKey, string? defaultValue = null, string? stringFormat = null)
         {
             return new Binding
             {
@@ -131,13 +131,13 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// Returns the translated value.
         /// </summary>
         /// <param name="binding"></param>
-        public static implicit operator string(Binding binding) => binding?.GetValue() as string;
+        public static implicit operator string?(Binding? binding) => binding?.GetValue() as string;
 
         /// <summary>
         /// Returns the translated value for the current culture.
         /// </summary>
         /// <returns></returns>
-        public object GetValue()
+        public object? GetValue()
         {
             var culture = LocalizationManager.CurrentCulture;
             var value = Converter.Convert(Source[ResourceKey], typeof(string), ConverterParameter, culture) as string;
@@ -156,7 +156,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// </summary>
         public override string ToString() => GetValue() as string ?? string.Empty;
 
-        private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSourcePropertyChanged(object? sender, PropertyChangedEventArgs e)
             => bindingValueChanged?.Invoke(this, e);
     }
 }

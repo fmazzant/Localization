@@ -65,6 +65,6 @@ namespace Mafesoft.Localization
         /// <param name="key">Resource key.</param>
         /// <param name="defaultValue">Default value of the resource key.</param>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
-        Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string defaultValue = null, CancellationToken cancellationToken = default);
+        Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string? defaultValue = null, CancellationToken cancellationToken = default);
     }
 }

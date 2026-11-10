@@ -46,14 +46,9 @@ namespace Mafesoft.Localization.Xamarin.Extensions
         /// <param name="onCultureChanged">The function that returns the value to assign every time the culture changes.</param>
         public static void Translate(this BindableObject bindableObject, BindableProperty bindableProperty, Func<object> onCultureChanged)
         {
-            Binding binding = new Binding()
-            {
-                Source = LocalizationManager.Instance,
-                Path = $"[{Guid.NewGuid()}]",
-                Converter = new BindableTranslateConverter(onCultureChanged),
-                ConverterParameter = LocalizationManager.Instance
-            };
-            bindableObject.SetBinding(bindableProperty, binding);
+            if (onCultureChanged is null) throw new ArgumentNullException(nameof(onCultureChanged));
+
+            SetTranslateBinding(bindableObject, bindableProperty, onCultureChanged);
         }
 
         /// <summary>
@@ -64,28 +59,36 @@ namespace Mafesoft.Localization.Xamarin.Extensions
         /// <param name="onCultureChanged">The function that returns the value to assign every time the culture changes.</param>
         public static void Translate(this BindableObject bindableObject, BindableProperty bindableProperty, Func<LocalizationManager, object> onCultureChanged)
         {
+            if (onCultureChanged is null) throw new ArgumentNullException(nameof(onCultureChanged));
+
+            SetTranslateBinding(bindableObject, bindableProperty, () => onCultureChanged(LocalizationManager.Instance));
+        }
+
+        /// <summary>
+        /// Binds the property to <see cref="LocalizationManager.Version"/>, which changes on every culture change
+        /// and, unlike the indexer, never notifies the provider of a missing term.
+        /// </summary>
+        private static void SetTranslateBinding(BindableObject bindableObject, BindableProperty bindableProperty, Func<object> onCultureChanged)
+        {
             Binding binding = new Binding()
             {
                 Source = LocalizationManager.Instance,
-                Path = $"[{Guid.NewGuid()}]",
-                Converter = new BindableTranslateWithLocalizationManagerConverter(onCultureChanged),
-                ConverterParameter = LocalizationManager.Instance
+                Path = nameof(LocalizationManager.Version),
+                Converter = TranslateConverter.Instance,
+                ConverterParameter = onCultureChanged
             };
             bindableObject.SetBinding(bindableProperty, binding);
         }
 
         /// <summary>
-        /// Defining methods for two-way value conversion between types.
+        /// Stateless converter: ignores the bound value and returns the result of the function passed as parameter.
         /// </summary>
-        class BindableTranslateConverter : IValueConverter
+        sealed class TranslateConverter : IValueConverter
         {
-            Func<object> DoSomethings = null;
-
             /// <summary>
-            /// Defining methods for two-way value conversion between types.
+            /// Shared instance.
             /// </summary>
-            /// <param name="doSomethings"></param>
-            public BindableTranslateConverter(Func<object> doSomethings) { DoSomethings = doSomethings; }
+            public static readonly TranslateConverter Instance = new TranslateConverter();
 
             /// <summary>
             /// Implement this method to convert value to targetType by using parameter and culture.
@@ -97,47 +100,7 @@ namespace Mafesoft.Localization.Xamarin.Extensions
             /// <returns></returns>
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
-                return DoSomethings();
-            }
-
-            /// <summary>
-            /// Implement this method to convert value back from targetType by using parameter and culture.
-            /// </summary>
-            /// <param name="value"></param>
-            /// <param name="targetType"></param>
-            /// <param name="parameter"></param>
-            /// <param name="culture"></param>
-            /// <returns></returns>
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Defining methods for two-way value conversion between types.
-        /// </summary>
-        class BindableTranslateWithLocalizationManagerConverter : IValueConverter
-        {
-            Func<LocalizationManager, object> DoSomethings = null;
-
-            /// <summary>
-            /// Defining methods for two-way value conversion between types.
-            /// </summary>
-            /// <param name="doSomethings"></param>
-            public BindableTranslateWithLocalizationManagerConverter(Func<LocalizationManager, object> doSomethings) { DoSomethings = doSomethings; }
-
-            /// <summary>
-            /// Implement this method to convert value to targetType by using parameter and culture.
-            /// </summary>
-            /// <param name="value"></param>
-            /// <param name="targetType"></param>
-            /// <param name="parameter"></param>
-            /// <param name="culture"></param>
-            /// <returns></returns>
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                return DoSomethings(parameter as LocalizationManager);
+                return (parameter as Func<object>)?.Invoke();
             }
 
             /// <summary>

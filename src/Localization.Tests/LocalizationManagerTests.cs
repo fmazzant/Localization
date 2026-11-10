@@ -148,5 +148,54 @@ namespace Mafesoft.Localization.Tests
 
             Assert.Equal("#Fallback", LocalizationManager.Translate("NotThere", "#Fallback"));
         }
+
+        [Fact]
+        public void Version_ChangesOnEveryCultureChange()
+        {
+            LocalizationManager.Init(new TestVocabolaryServiceProvider(), Italian);
+            var initial = LocalizationManager.Instance.Version;
+
+            LocalizationManager.Instance.SetCulture(English);
+            var afterEnglish = LocalizationManager.Instance.Version;
+            LocalizationManager.Instance.SetCulture(English);
+            var afterSameCulture = LocalizationManager.Instance.Version;
+
+            Assert.NotEqual(initial, afterEnglish);
+            Assert.NotEqual(afterEnglish, afterSameCulture);
+        }
+
+        [Fact]
+        public void BindingToVersion_RefreshesOnCultureChange_WithoutNotifyingMissingTerms()
+        {
+            // Simulates what the Translate() extensions of MAUI, WPF and Xamarin do:
+            // a binding on the "Version" path that is re-read on every PropertyChanged.
+            var provider = new TestVocabolaryServiceProvider();
+            LocalizationManager.Init(provider, Italian);
+            var manager = LocalizationManager.Instance;
+            var path = typeof(LocalizationManager).GetProperty(nameof(LocalizationManager.Version));
+            var refreshed = new List<string>();
+            PropertyChangedEventHandler binding = (s, e) =>
+            {
+                if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == path.Name)
+                {
+                    path.GetValue(s);
+                    refreshed.Add(LocalizationManager.Translate("Hello"));
+                }
+            };
+            manager.PropertyChanged += binding;
+
+            try
+            {
+                manager.SetCulture(English);
+                manager.SetCulture(Italian);
+            }
+            finally
+            {
+                manager.PropertyChanged -= binding;
+            }
+
+            Assert.Equal(new[] { "Hello", "Ciao" }, refreshed);
+            Assert.Empty(provider.MissingTerms);
+        }
     }
 }

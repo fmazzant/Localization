@@ -488,6 +488,28 @@ To refresh a component when the culture changes, subscribe the `CultureChanged` 
 > **Note**: `LocalizationManager` is a process-wide singleton. In server applications (ASP.NET MVC, Blazor Server)
 > the selected culture is shared by all users.
 
+### Blazor WebAssembly
+
+`Mafesoft.Localization.Blazor` does not depend on the ASP.NET Core shared framework, so it works in Blazor WebAssembly
+too (and in the WebAssembly / Auto render modes of a Blazor Web App). In the browser initialize the manager
+asynchronously in `Program.cs`: a provider that loads the vocabularies with `HttpClient` cannot be waited
+synchronously on the single WebAssembly thread.
+
+```c#
+using Mafesoft.Localization;
+...
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+
+await LocalizationManager.InitAsync(new MockVocabularyServiceProvider(), new CultureInfo("it-IT"));
+builder.Services.AddSingleton(LocalizationManager.Instance);
+
+await builder.Build().RunAsync();
+```
+
+In the browser each user has their own `LocalizationManager`, so the culture is not shared.
+See the `samples/Localization.Samples.AppBlazorWasm` sample.
+
 # Build and test
 
 ```

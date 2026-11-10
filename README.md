@@ -34,6 +34,26 @@ Version 4.0.0 renames the packages, the assemblies and the namespaces to `Mafeso
 (scheme `Mafesoft.<Product>.<Technology>`). `Localization.Windows` becomes `Localization.Wpf`.
 Apart from the namespaces and the package names, the public API does not change.
 
+## Supported platforms
+
+| Package | Target frameworks |
+|---|---|
+| Mafesoft.Localization | .NET Standard 2.0, .NET Framework 4.6.2, .NET 8, .NET 10 |
+| Mafesoft.Localization.Wpf | net8.0-windows, net10.0-windows |
+| Mafesoft.Localization.Mvc | .NET 8, .NET 10 |
+| Mafesoft.Localization.Blazor | .NET 8, .NET 10 |
+| Mafesoft.Localization.Maui | .NET 8, .NET 10 (MAUI 8 / 10) |
+| Mafesoft.Localization.Xamarin | .NET Standard 2.0 / 2.1 (**deprecated**, last release) |
+
+* **.NET 10** (LTS, supported until November 2028) is the main target.
+* **.NET 9** is no longer targeted: it reached end of support on 10 November 2026.
+  .NET 9 applications use the .NET 8 build.
+* **.NET 8 is out of support** (since 10 November 2026, .NET MAUI 8 even earlier) and is kept **only for compatibility**,
+  so that existing .NET 8 applications can move to the `Mafesoft.*` packages without upgrading the runtime at the same time.
+  The `net8.0` targets will be removed in a future major version.
+* The .NET Framework 4.7.2 / 4.8 and .NET Standard 2.1 builds of the core have been removed: they were identical to the
+  .NET Framework 4.6.2 and .NET Standard 2.0 builds, which those applications now use.
+
 ## Migrating from `Mafe.Localization`
 
 This is a **breaking change** for every consumer.

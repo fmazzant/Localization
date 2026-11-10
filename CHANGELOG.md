@@ -22,6 +22,7 @@ Read [Migrating from `Mafe.Localization`](README.md#migrating-from-mafelocalizat
   for the core. .NET 8 is out of support and kept only for compatibility. ([#14](https://github.com/fmazzant/Localization/issues/14))
 - **Nullable reference types:** the public API is annotated (the indexer returns `string?`, `Translate` returns `string`). ([#17](https://github.com/fmazzant/Localization/issues/17))
 - **Packages:** each package ships its own short readme and links to this changelog. ([#18](https://github.com/fmazzant/Localization/issues/18))
+  All the packages show the Mafesoft icon. ([#40](https://github.com/fmazzant/Localization/issues/40))
 
 ### Added
 

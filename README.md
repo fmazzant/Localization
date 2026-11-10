@@ -2,30 +2,87 @@
 
 A library for .net that can help you to manage the localization in your application.
 
-To use it in your project, Mafe.Localization NuGet package represents a base library.
+> **Version 4.0.0: the packages are now published as `Mafesoft.*`** and all the namespaces start with `Mafesoft.`.
+> If you are using the `Mafe.Localization*` packages, read [Migrating from `Mafe.Localization`](#migrating-from-mafelocalization).
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization)
+To use it in your project, the Mafesoft.Localization NuGet package represents the base library:
 
-Using Wpf Windows it is necesary installing the Mafe.Localization.Windows library:
+[![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization)
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Windows?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Windows)
+```
+dotnet add package Mafesoft.Localization
+```
 
-Using Xamarin it is possible installing the Mafe.Localization.Xamarin library:
+Then install the package for your technology:
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Xamarin?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
+| Technology | Package | Install |
+|---|---|---|
+| WPF | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | `dotnet add package Mafesoft.Localization.Wpf` |
+| ASP.NET Core MVC | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | `dotnet add package Mafesoft.Localization.Mvc` |
+| Blazor | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Blazor) | `dotnet add package Mafesoft.Localization.Blazor` |
+| .NET MAUI | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | `dotnet add package Mafesoft.Localization.Maui` |
+| Xamarin.Forms (**deprecated**) | [![Nuget](https://img.shields.io/nuget/v/Mafesoft.Localization.Xamarin?style=flat-square)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin) | `dotnet add package Mafesoft.Localization.Xamarin` |
 
-Using ASP.NET MVC it is possible installing the Mafe.Localization.Mvc library:
+> ⚠️ **Xamarin.Forms:** `Mafesoft.Localization.Xamarin` 4.0.0 is the **last release** of the Xamarin package and it is
+> **deprecated**: Xamarin.Forms has been out of support since May 1, 2024. It will receive no further updates or fixes.
+> Use it only to align with the `Mafesoft.*` packages while you migrate to .NET MAUI and `Mafesoft.Localization.Maui`
+> (see [Migration Xamarin to .NET MAUI](#migration-xamarin-to-net-maui)).
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Mvc?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Mvc)
+# Version 4.0.0
 
-Using Blazor it is possible installing the Mafe.Localization.Blazor library:
+Version 4.0.0 renames the packages, the assemblies and the namespaces to `Mafesoft.*`
+(scheme `Mafesoft.<Product>.<Technology>`). `Localization.Windows` becomes `Localization.Wpf`.
+Apart from the namespaces and the package names, the public API does not change.
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Blazor?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
+## Migrating from `Mafe.Localization`
 
-Using .NET MAUI it is possible installing the Mafe.Localization.Maui library:
+This is a **breaking change** for every consumer.
 
-[![Nuget](https://img.shields.io/nuget/v/Mafe.Localization.Maui?style=flat-square)](https://www.nuget.org/packages/Mafe.Localization.Maui)
+1. Replace the package references:
 
+   | 3.x package | 4.0.0 package |
+   |---|---|
+   | `Mafe.Localization` | `Mafesoft.Localization` |
+   | `Mafe.Localization.Maui` | `Mafesoft.Localization.Maui` |
+   | `Mafe.Localization.Mvc` | `Mafesoft.Localization.Mvc` |
+   | `Mafe.Localization.Blazor` | `Mafesoft.Localization.Blazor` |
+   | **`Mafe.Localization.Windows`** | **`Mafesoft.Localization.Wpf`** |
+   | `Mafe.Localization.Xamarin` | `Mafesoft.Localization.Xamarin` (last release, deprecated) |
+
+2. Update the `using` directives (in Razor, update `_ViewImports.cshtml` and `_Imports.razor` too):
+
+   | 3.x namespace | 4.0.0 namespace |
+   |---|---|
+   | `Localization` | `Mafesoft.Localization` |
+   | `Localization.Providers` | `Mafesoft.Localization.Providers` |
+   | `Localization.Maui.*` | `Mafesoft.Localization.Maui.*` |
+   | `Localization.Maui.Converts` | `Mafesoft.Localization.Maui.Converters` |
+   | `Localization.Mvc.*` | `Mafesoft.Localization.Mvc.*` |
+   | `Localization.Blazor.*` | `Mafesoft.Localization.Blazor.*` |
+   | `Localization.Windows.*` | `Mafesoft.Localization.Wpf.*` |
+   | `Localization.Xamarin.*` | `Mafesoft.Localization.Xamarin.*` |
+   | `Localization.Xamarin.Converts` | `Mafesoft.Localization.Xamarin.Converters` |
+
+3. Update the XAML namespaces:
+
+   ```xml
+   <!-- MAUI -->
+   xmlns:culture="clr-namespace:Localization.Maui;assembly=Mafe.Localization.Maui"
+   xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui"
+
+   <!-- WPF -->
+   xmlns:culture="clr-namespace:Localization.Windows;assembly=Mafe.Localization.Windows"
+   xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf"
+
+   <!-- Xamarin.Forms -->
+   xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
+   xmlns:culture="clr-namespace:Mafesoft.Localization.Xamarin;assembly=Mafesoft.Localization.Xamarin"
+   ```
+
+4. **Xamarin.Forms apps:** `Mafesoft.Localization.Xamarin` 4.0.0 is the **last update** of the Xamarin package and is
+   deprecated as soon as it is released. Plan the migration to .NET MAUI and `Mafesoft.Localization.Maui`.
+
+The `Mafe.Localization*` packages are deprecated on NuGet.org and point to the new `Mafesoft.*` packages.
 
 # Version 3.0.0
 
@@ -59,20 +116,6 @@ What's new:
 * Blazor: `Binding` no longer leaks memory (it listens to the culture change only while someone subscribes
   `BindingValueChanged`) and now applies `StringFormat`;
 * packages include README, XML documentation, Source Link and symbols (.snupkg).
-
-# Version >= 2.0.0
-The version 2.0.0 changed the Assembly's name. So is necessary adding "Mafe." where is necessary.
-
-Xamarin project and WPF proejct needs this upgrade.
-
-To Xamarin:
-```c# xaml
- xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
-```
-To WPF:
-```c# xaml
-xmlns:culture="clr-namespace:Localization.Windows;assembly=Mafe.Localization.Windows"
-```
 
 # Architecture
 The following image represets a localization manager diagram:
@@ -193,9 +236,9 @@ In first time is necessary initializing the LocalizationManager. Like this:
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 ```
-Inside your xaml file is necessary include the Localization.Xamarin library, like this:
+Inside your xaml file is necessary include the Mafesoft.Localization.Xamarin library, like this:
 ```c# xaml
- xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
+ xmlns:culture="clr-namespace:Mafesoft.Localization.Xamarin;assembly=Mafesoft.Localization.Xamarin"
 ```
 In the following code is displayed how the Label's text works:
 ```c# xaml
@@ -230,9 +273,9 @@ or you can initializing the LocalizationManager like Xamarin:
 ```c#
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 ```
-Inside your xaml file is necessary include the Localization.Maui library, like this:
+Inside your xaml file is necessary include the Mafesoft.Localization.Maui library, like this:
 ```c# xaml
- xmlns:culture="clr-namespace:Localization.Maui;assembly=Mafe.Localization.Maui"
+ xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui"
 ```
 In the following code is displayed how the Label's text works:
 ```c# xaml
@@ -259,21 +302,21 @@ like this.
 from
 
 ```c# xaml
- xmlns:culture="clr-namespace:Localization.Xamarin;assembly=Mafe.Localization.Xamarin"
+ xmlns:culture="clr-namespace:Mafesoft.Localization.Xamarin;assembly=Mafesoft.Localization.Xamarin"
 ```
 
 to
 
 ```c# xaml
- xmlns:culture="clr-namespace:Localization.Maui;assembly=Mafe.Localization.Maui"
+ xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui"
 ```
 
-After you can build and run again your app. Clearly you need to install the package Mafe.Localization.Maui and remove
-Mafe.Localization.Xamarin from your project.
+After you can build and run again your app. Clearly you need to install the package Mafesoft.Localization.Maui and remove
+Mafesoft.Localization.Xamarin from your project.
 
-# WPF Windows
+# WPF
 
-The Wpf Windows has a specific library to manage the culture inside the project. 
+The WPF has a specific library to manage the culture inside the project. 
 
 In first time is necessary initializing the LocalizationManager. Like this:
 
@@ -281,10 +324,10 @@ In first time is necessary initializing the LocalizationManager. Like this:
 LocalizationManager.Init(new MockVocabolaryServiceProvider { });
 ```
 
-Inside your xaml file is necessary include the Localization.Windows library, like this:
+Inside your xaml file is necessary include the Mafesoft.Localization.Wpf library, like this:
 
 ```c# xaml
-xmlns:culture="clr-namespace:Localization.Windows;assembly=Mafe.Localization.Windows"
+xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf"
 ```
 
 In the following code is displayed how the Label's text works:
@@ -313,7 +356,7 @@ The ASP.NET MVC has a specific library to manage the culture inside the project.
 In first time we configure the localizationManager inside the Startup.cs:
 
 ```c#
-using Localization.Mvc.Extensions;
+using Mafesoft.Localization.Mvc.Extensions;
 ...
 public void ConfigureServices(IServiceCollection services)
 {
@@ -370,7 +413,7 @@ The Blazor has a specific library to manage the culture inside the project.
 In first time we configure the localizationManager inside the Startup.cs:
 
 ```c#
-using Localization.Blazor.Extensions;
+using Mafesoft.Localization.Blazor.Extensions;
 ...
 public void ConfigureServices(IServiceCollection services)
 {
@@ -387,7 +430,7 @@ The "options.Culture" value represents the initilized culture.
 Inside a component the text is translated with `Binding.Translate`:
 
 ```razor
-@using Localization.Blazor.Bindings
+@using Mafesoft.Localization.Blazor.Bindings
 
 <h1>@Binding.Translate("BlazorCounter")</h1>
 <p>@Binding.Translate("ChangedTimesTemplate", stringFormat: "({0})")</p>

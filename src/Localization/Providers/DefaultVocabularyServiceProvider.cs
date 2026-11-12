@@ -38,17 +38,15 @@ namespace Mafesoft.Localization.Providers
     /// </summary>
     internal sealed class DefaultVocabularyServiceProvider : IVocabularyServiceProvider
     {
-        private static readonly Task CompletedTask = Task.FromResult(true);
-
         /// <summary>
         /// Invoked when a term used by the application does not exist in the vocabulary: does nothing.
         /// </summary>
-        public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string? defaultValue = null, CancellationToken cancellationToken = default) => CompletedTask;
+        public Task AddOrUpdateTermAsync(IVocabulary vocabulary, string key, string? defaultValue = null, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         /// <summary>
         /// Initializes the provider.
         /// </summary>
-        public Task InitializeAsync(CancellationToken cancellationToken = default) => CompletedTask;
+        public Task InitializeAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         /// <summary>
         /// Loads and returns an empty vocabulary for the culture.
@@ -58,6 +56,6 @@ namespace Mafesoft.Localization.Providers
         /// <summary>
         /// Saves the vocabulary: does nothing.
         /// </summary>
-        public Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default) => CompletedTask;
+        public Task SaveAsync(IVocabulary vocabulary, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

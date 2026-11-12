@@ -66,6 +66,15 @@ namespace Mafesoft.Localization.Maui.Tests
         }
 
         [Fact]
+        public void TranslateExtension_SharesOneConverterAcrossBindings()
+        {
+            var first = Assert.IsType<Binding>(new TranslateExtension { ResourceKey = "Hello" }.ProvideValue(null));
+            var second = Assert.IsType<Binding>(new TranslateExtension { ResourceKey = "Missing" }.ProvideValue(null));
+
+            Assert.Same(first.Converter, second.Converter);
+        }
+
+        [Fact]
         public void TranslateExtension_ReturnsAOneWayBindingOnTheManager()
         {
             var binding = Assert.IsType<Binding>(new TranslateExtension { ResourceKey = "Hello" }.ProvideValue(null));

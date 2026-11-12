@@ -38,8 +38,15 @@ namespace Mafesoft.Localization.Blazor.Bindings
     /// </summary>
     public class Binding : IBinding
     {
+        /// <summary>
+        /// Stateless converter shared by every binding.
+        /// </summary>
+        private static readonly IValueConverter DefaultConverter = new NullToDefaultConverter();
+
         private readonly object eventLock = new object();
         private PropertyChangedEventHandler? bindingValueChanged;
+        private string? stringFormat;
+        private string? compositeFormat;
 
         /// <summary>
         /// The localization manager used to resolve the resource key.
@@ -59,7 +66,7 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <summary>
         /// The converter applied to the translated value.
         /// </summary>
-        public IValueConverter Converter { get; private set; } = new NullToDefaultConverter();
+        public IValueConverter Converter { get; private set; } = DefaultConverter;
 
         /// <summary>
         /// The parameter passed to the <see cref="Converter"/>.
@@ -69,7 +76,16 @@ namespace Mafesoft.Localization.Blazor.Bindings
         /// <summary>
         /// A composite format string (e.g. "Title: {0}") or a standard format (e.g. "N2") applied to the translated value.
         /// </summary>
-        public string? StringFormat { get; private set; }
+        public string? StringFormat
+        {
+            get => stringFormat;
+            private set
+            {
+                stringFormat = value;
+                // Built once here instead of on every GetValue(): a standard format such as "N2" becomes "{0:N2}"
+                compositeFormat = string.IsNullOrEmpty(value) ? null : value!.Contains("{") ? value : "{0:" + value + "}";
+            }
+        }
 
         /// <summary>
         /// Occurs when the culture changes and the value must be read again.
@@ -142,12 +158,12 @@ namespace Mafesoft.Localization.Blazor.Bindings
             var culture = LocalizationManager.CurrentCulture;
             var value = Converter.Convert(Source[ResourceKey], typeof(string), ConverterParameter, culture) as string;
 
-            if (value is null || string.IsNullOrEmpty(StringFormat))
+            var format = compositeFormat;
+            if (value is null || format is null)
             {
                 return value;
             }
 
-            var format = StringFormat.Contains("{") ? StringFormat : "{0:" + StringFormat + "}";
             return string.Format(culture ?? CultureInfo.CurrentCulture, format, value);
         }
 

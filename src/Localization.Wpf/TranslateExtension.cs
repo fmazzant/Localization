@@ -42,6 +42,11 @@ namespace Mafesoft.Localization.Wpf
     public class TranslateExtension : MarkupExtension
     {
         /// <summary>
+        /// Stateless converter shared by every binding created by the extension.
+        /// </summary>
+        private static readonly NullToDefaultConverter DefaultConverter = new NullToDefaultConverter();
+
+        /// <summary>
         /// Initializes a new instance of the Mafesoft.Localization.Wpf.TranslateExtension class.
         /// </summary>
         public TranslateExtension() { }
@@ -81,7 +86,7 @@ namespace Mafesoft.Localization.Wpf
             {
                 Source = LocalizationManager.Instance,
                 Path = new PropertyPath($"[{ResourceKey}]"),
-                Converter = new NullToDefaultConverter(),
+                Converter = DefaultConverter,
                 ConverterParameter = DefaultValue ?? ResourceKey,
                 StringFormat = StringFormat
             };

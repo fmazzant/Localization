@@ -629,10 +629,14 @@ dotnet test src/Localization.Maui.Tests
 dotnet test src/Localization.Wpf.Tests     # Windows only
 ```
 
-`Localization.Tests` (core, MVC, Blazor, `IStringLocalizer`) runs on .NET 8 and .NET 10; `Localization.Maui.Tests` runs the MAUI
-controls without a platform head on .NET 10 (Linux, macOS and Windows); `Localization.Wpf.Tests` runs on .NET 10 on Windows
-(the CI has a Windows job for it). The samples (`samples/Localization.Samples.sln`: WPF, MAUI, MVC, Blazor Web App,
-Blazor WebAssembly, Xamarin) reference the projects inside `src`, so they always run with the current code.
+`Localization.Tests` (core, MVC, Blazor, `IStringLocalizer`) runs on .NET 8 and .NET 10, and on Windows also on .NET Framework
+(the core tests against the `net462` build); `Localization.Maui.Tests` runs the MAUI controls without a platform head on
+.NET 10 (Linux, macOS and Windows); `Localization.Wpf.Tests` runs on .NET 10 on Windows. The samples
+(`samples/Localization.Samples.sln`: WPF, MAUI, MVC, Blazor Web App, Blazor WebAssembly, Xamarin) reference the projects
+inside `src`, so they always run with the current code.
+
+The CI (`.github/workflows/ci.yml`) runs on Ubuntu and Windows, publishes the code coverage in the job summary and, on
+Windows, builds the samples (MAUI with `dotnet workload restore`, Windows head only; Xamarin is not built).
 
 ### Release
 

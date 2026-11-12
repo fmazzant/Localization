@@ -3,14 +3,18 @@ name: CI
 on:
   push:
     branches: [ master ]
-    paths: [ 'src/**', '.github/workflows/**' ]
+    paths: [ 'src/**', 'samples/**', '.github/workflows/**' ]
   pull_request:
-    paths: [ 'src/**', '.github/workflows/**' ]
+    paths: [ 'src/**', 'samples/**', '.github/workflows/**' ]
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v7
@@ -28,38 +32,57 @@ jobs:
       - name: Build
         run: dotnet build src/Localization.sln -c Release --no-restore
 
+      # net8.0 and net10.0; on Windows also .NET Framework (net472 test project, net462 library)
       - name: Test
-        run: dotnet test src/Localization.Tests/Localization.Tests.csproj -c Release --no-build --logger "trx" --results-directory TestResults
+        run: dotnet test src/Localization.Tests/Localization.Tests.csproj -c Release --no-build --logger "trx" --collect:"XPlat Code Coverage" --results-directory TestResults
 
-      # MAUI controls without a platform head: they run on Linux
+      # MAUI controls without a platform head: they run on Linux and Windows
       - name: Test MAUI
-        run: dotnet test src/Localization.Maui.Tests/Localization.Maui.Tests.csproj -c Release --no-build --logger "trx" --results-directory TestResults
+        run: dotnet test src/Localization.Maui.Tests/Localization.Maui.Tests.csproj -c Release --no-build --logger "trx" --collect:"XPlat Code Coverage" --results-directory TestResults
 
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: test-results
-          path: TestResults
-
-  # WPF runs only on Windows
-  test-windows:
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v6
-        with:
-          dotnet-version: 10.0.x
-
+      # WPF runs only on Windows
       - name: Test WPF
-        run: dotnet test src/Localization.Wpf.Tests/Localization.Wpf.Tests.csproj -c Release --logger "trx" --results-directory TestResults
+        if: runner.os == 'Windows'
+        run: dotnet test src/Localization.Wpf.Tests/Localization.Wpf.Tests.csproj -c Release --no-build --logger "trx" --collect:"XPlat Code Coverage" --results-directory TestResults
+
+      - name: Code coverage summary
+        if: always()
+        shell: bash
+        run: |
+          if ! compgen -G "TestResults/*/coverage.cobertura.xml" > /dev/null; then
+            echo "No coverage report found"
+            exit 0
+          fi
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.6.0
+          reportgenerator -reports:"TestResults/*/coverage.cobertura.xml" -targetdir:coverage -reporttypes:"MarkdownSummaryGithub;Cobertura"
+          echo "## Code coverage (${{ runner.os }})" >> "$GITHUB_STEP_SUMMARY"
+          cat coverage/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: test-results-windows
-          path: TestResults
+          name: test-results-${{ runner.os }}
+          path: |
+            TestResults
+            coverage
+
+      # The samples use project references: a change in src/ that breaks a sample fails here.
+      # Localization.Samples.AppXamarin is not built: Xamarin is out of support and does not build with the current SDK.
+      - name: Build the samples
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          foreach ($sample in 'AppWpf', 'AppMvc', 'AppBlazor', 'AppBlazorWasm') {
+            dotnet build "samples/Localization.Samples.$sample/Localization.Samples.$sample.csproj" -c Release
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      # The MAUI sample needs the MAUI workload; the Windows head is enough to compile the shared code
+      - name: Restore the MAUI workload
+        if: runner.os == 'Windows'
+        run: dotnet workload restore samples/Localization.Samples.AppMaui/Localization.Samples.AppMaui.csproj
+
+      - name: Build the MAUI sample
+        if: runner.os == 'Windows'
+        run: dotnet build samples/Localization.Samples.AppMaui/Localization.Samples.AppMaui.csproj -c Release -f net10.0-windows10.0.19041.0

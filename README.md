@@ -638,6 +638,10 @@ inside `src`, so they always run with the current code.
 The CI (`.github/workflows/ci.yml`) runs on Ubuntu and Windows, publishes the code coverage in the job summary and, on
 Windows, builds the samples (MAUI with `dotnet workload restore`, Windows head only; Xamarin is not built).
 
+`global.json` pins the .NET 10 SDK (any newer feature band is accepted). The package versions of the projects in `src`
+are defined in one place, `src/Directory.Packages.props` (Central Package Management); `src/nuget.config` restores them from
+nuget.org only. `.editorconfig` holds the code style.
+
 ### Release
 
 All the packages share one version, `<VersionPrefix>` in `src/Directory.Build.props`. To publish a release:

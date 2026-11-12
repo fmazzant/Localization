@@ -588,9 +588,13 @@ To migrate to .NET MAUI, replace the package with `Mafesoft.Localization.Maui`, 
 ```
 dotnet build src/Localization.sln
 dotnet test src/Localization.Tests
+dotnet test src/Localization.Maui.Tests
+dotnet test src/Localization.Wpf.Tests     # Windows only
 ```
 
-The tests run on .NET 8 and .NET 10. The samples (`samples/Localization.Samples.sln`: WPF, MAUI, MVC, Blazor Web App,
+`Localization.Tests` (core, MVC, Blazor, `IStringLocalizer`) runs on .NET 8 and .NET 10; `Localization.Maui.Tests` runs the MAUI
+controls without a platform head on .NET 10 (Linux, macOS and Windows); `Localization.Wpf.Tests` runs on .NET 10 on Windows
+(the CI has a Windows job for it). The samples (`samples/Localization.Samples.sln`: WPF, MAUI, MVC, Blazor Web App,
 Blazor WebAssembly, Xamarin) reference the projects inside `src`, so they always run with the current code.
 
 ### Release

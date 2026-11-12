@@ -1,5 +1,12 @@
 # Mafesoft.Localization
 
+[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization)
+[![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization)
+[![Build](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/ci.yml?branch=master&style=flat-square&label=build)](https://github.com/fmazzant/Localization/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/fmazzant/Localization/blob/master/LICENSE.md)
+
+[![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization%20downloads)](https://www.nuget.org/packages/Mafe.Localization)
+
 A .NET library to manage the localization of your application: it loads the vocabulary of the current culture from
 a provider you write (database, files, web service...) and notifies the UI when the culture changes.
 

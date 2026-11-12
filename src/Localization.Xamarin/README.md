@@ -1,5 +1,12 @@
 # Mafesoft.Localization.Xamarin
 
+[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Xamarin?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin)
+[![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Xamarin?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin)
+[![Build](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/ci.yml?branch=master&style=flat-square&label=build)](https://github.com/fmazzant/Localization/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/fmazzant/Localization/blob/master/LICENSE.md)
+
+[![Mafe.Localization.Xamarin downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Xamarin?style=flat-square&label=Mafe.Localization.Xamarin%20downloads)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
+
 > ⚠️ **Deprecated.** 4.0.0 is the **last release** of this package: Xamarin.Forms has been out of support since
 > May 1, 2024. Migrate to .NET MAUI and [Mafesoft.Localization.Maui](https://www.nuget.org/packages/Mafesoft.Localization.Maui).
 

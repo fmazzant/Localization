@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <!--
+      .NET Framework runs only on Windows: there the net462 build of the core library is tested too. The test project
+      targets net472 (the minimum of xunit.runner.visualstudio 3.x), which picks the net462 assembly of Localization.
+    -->
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net472</TargetFrameworks>
     <RootNamespace>Mafesoft.Localization.Tests</RootNamespace>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -15,6 +20,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageReference Include="coverlet.collector" Version="10.1.0" />
   </ItemGroup>
 
   <!-- In-memory ASP.NET Core server for the per-request culture integration tests -->
@@ -27,9 +33,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Localization\Localization.csproj" />
+  </ItemGroup>
+
+  <!-- Blazor, MVC, ASP.NET Core and NullabilityInfoContext do not exist on .NET Framework -->
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <ProjectReference Include="..\Localization.Blazor\Localization.Blazor.csproj" />
     <ProjectReference Include="..\Localization.Mvc\Localization.Mvc.csproj" />
     <ProjectReference Include="..\Localization.Extensions\Localization.Extensions.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Compile Remove="BlazorBindingTests.cs;MvcTests.cs;NullabilityTests.cs;PerRequestCultureTests.cs;StringLocalizerTests.cs" />
   </ItemGroup>
 
 </Project>

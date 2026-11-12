@@ -24,6 +24,7 @@ The changes of every release are listed in the [CHANGELOG](CHANGELOG.md). To rep
 
 - [Why Localization](#why-localization)
 - [Features](#features)
+- [Comparison with the alternatives](#comparison-with-the-alternatives)
 - [Packages](#packages)
 - [Installation](#installation)
 - [Quick start](#quick-start)
@@ -70,6 +71,42 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 - Per-request culture on the server (`FollowCurrentUICulture`, with `UseRequestLocalization()`) and vocabularies
   cached per culture (since 4.1.0).
 - Nullable reference types annotations, XML documentation, Source Link and symbols.
+
+## Comparison with the alternatives
+
+<!-- markdownlint-disable MD013 -->
+| Feature | Mafesoft.Localization | Microsoft.Extensions.Localization (ResX) | LocalizationResourceManager.Maui | WPFLocalizeExtension | My.Extensions.Localization.Json |
+|---|---|---|---|---|---|
+| Culture change at runtime, bound UI refreshed | ✅ WPF, MAUI, Blazor; per request on the server | ⚠️ per request; Blazor reloads the page | ✅ | ✅ | ⚠️ per request, no UI bindings |
+| Translations from your own store (database, API) | ✅ `IVocabularyServiceProvider` | ⚠️ write your own `IStringLocalizerFactory` | ⚠️ custom `ResourceManager` | ✅ `ILocalizationProvider` | ❌ JSON files only |
+| Missing keys reported | ✅ `AddOrUpdateTermAsync`, the provider can store them | ⚠️ debug log, `ResourceNotFound` | ❌ | ✅ `MissingKeyEvent` | ✅ log or throw |
+| WPF, MAUI, MVC and Blazor with one API | ✅ | ⚠️ MVC and Blazor; no XAML markup | ❌ MAUI only | ❌ WPF only | ❌ ASP.NET Core only |
+| `IStringLocalizer` | ✅ since 4.1.0 | ✅ | ❌ | ❌ | ✅ |
+| `netstandard2.0` / .NET Framework 4.6.2+ | ✅ | ✅ | ❌ `net10.0` only | ⚠️ .NET Framework only | ❌ `net10.0` only |
+| Culture fallback (`it-IT` → `it` → neutral) | ❌ planned ([#23](https://github.com/fmazzant/Localization/issues/23)) | ✅ | ✅ | ✅ | ✅ |
+| Format arguments | ⚠️ `StringFormat` and `IStringLocalizer`; `Translate(key, args)` planned ([#24](https://github.com/fmazzant/Localization/issues/24)) | ✅ | ✅ | ⚠️ converter, not bindable | ✅ |
+| Reuse existing `.resx` files | ❌ planned ([#30](https://github.com/fmazzant/Localization/issues/30)) | ✅ | ✅ | ✅ | ❌ |
+| Pluralization | ❌ to evaluate ([#33](https://github.com/fmazzant/Localization/issues/33)) | ❌ | ⚠️ zero/one only | ❌ | ❌ |
+| Strongly typed keys | ❌ planned ([#31](https://github.com/fmazzant/Localization/issues/31)) | ⚠️ `.resx` designer class, not with `IStringLocalizer` | ❌ | ❌ | ⚠️ `GetString<T>(x => x.Prop)` |
+| Native AOT / trimming | ❌ planned ([#32](https://github.com/fmazzant/Localization/issues/32)) | ⚠️ abstractions only | ⚠️ partly annotated | ❌ | ❌ |
+| Design-time preview, non-string resources (images, sizes) | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Community, documentation, Q&A | ❌ small | ✅ part of .NET | ⚠️ medium | ⚠️ medium, last release 2023 | ⚠️ medium |
+<!-- markdownlint-enable MD013 -->
+
+✅ built in, ⚠️ partial or extra work, ❌ not available. Checked in November 2026 against Microsoft.Extensions.Localization 11.0.0,
+LocalizationResourceManager.Maui 1.2.6, WPFLocalizeExtension 3.10.0 and My.Extensions.Localization.Json 4.1.0.
+The last rows list what the alternatives have and Mafesoft.Localization does not (or only partially), so that the
+comparison is not one-sided.
+
+**When to choose something else**
+
+- **`.resx` + `IStringLocalizer`** (Microsoft.Extensions.Localization) when the translations ship with the build and
+  change only with a new release: satellite assemblies, culture fallback, `IViewLocalizer` and the largest ecosystem.
+- **LocalizationResourceManager.Maui** for a MAUI-only app that already has `.resx` files and wants to switch the language
+  at runtime.
+- **WPFLocalizeExtension** for a WPF-only app that needs the design-time preview or localizes images, sizes and other
+  non-string properties.
+- **My.Extensions.Localization.Json** for an ASP.NET Core app that keeps the translations in JSON files next to the code.
 
 ## Packages
 

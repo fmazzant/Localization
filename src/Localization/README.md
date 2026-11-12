@@ -53,6 +53,7 @@ await LocalizationManager.Instance.SetCultureAsync(new CultureInfo("en-US"));
 ## Links
 
 - [Documentation](https://github.com/fmazzant/Localization#readme)
+- [Comparison with the alternatives](https://github.com/fmazzant/Localization#comparison-with-the-alternatives)
 - [Changelog](https://github.com/fmazzant/Localization/blob/master/CHANGELOG.md)
 - [Migrating from `Mafe.Localization`](https://github.com/fmazzant/Localization#migrating-from-mafelocalization)
 - [Issues](https://github.com/fmazzant/Localization/issues)

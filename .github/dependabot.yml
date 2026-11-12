@@ -1,0 +1,26 @@
+# Dependabot version updates.
+#
+# DISABLED for now: open-pull-requests-limit: 0 stops the version-update PRs
+# (security updates, if enabled in the repository settings, are not affected).
+# To enable: set open-pull-requests-limit to 5 in both entries.
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 0
+    groups:
+      nuget-minor-patch:
+        update-types: [ minor, patch ]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 0
+    groups:
+      github-actions:
+        patterns: [ "*" ]

@@ -68,6 +68,15 @@ namespace Mafesoft.Localization.Wpf.Tests
         });
 
         [Fact]
+        public void TranslateExtension_SharesOneConverterAcrossBindings()
+        {
+            var first = Assert.IsType<Binding>(new TranslateExtension("Hello").ProvideValue(null));
+            var second = Assert.IsType<Binding>(new TranslateExtension("Missing").ProvideValue(null));
+
+            Assert.Same(first.Converter, second.Converter);
+        }
+
+        [Fact]
         public void TranslateExtension_WorksFromXaml() => Sta.Run(() =>
         {
             const string xaml =

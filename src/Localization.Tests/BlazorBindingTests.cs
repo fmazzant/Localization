@@ -38,6 +38,12 @@ namespace Mafesoft.Localization.Tests
         }
 
         [Fact]
+        public void Translate_SharesOneConverterAcrossBindings()
+        {
+            Assert.Same(Binding.Translate("Hello").Converter, Binding.Translate("Missing", "#Default", "[{0}]").Converter);
+        }
+
+        [Fact]
         public void BindingValueChanged_IsRaisedOnlyWhileSubscribed()
         {
             var binding = Binding.Translate("Hello");

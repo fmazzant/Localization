@@ -138,7 +138,7 @@ namespace Mafesoft.Localization
 
         /// <summary>
         /// Returns the value associated to resourceKey inside to the current vocabulary.
-        /// When the key does not exist the provider is notified through
+        /// When the key does not exist or its value is empty, the provider is notified through
         /// <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
         /// </summary>
         /// <param name="resourceKey"></param>
@@ -147,7 +147,7 @@ namespace Mafesoft.Localization
 
         /// <summary>
         /// Returns the value associated to resourceKey inside the vocabulary of the culture, whatever the current culture is.
-        /// The vocabulary is loaded the first time and then cached. When the key does not exist the provider is notified
+        /// The vocabulary is loaded the first time and then cached. When the key does not exist or its value is empty, the provider is notified
         /// through <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
         /// </summary>
         /// <param name="resourceKey">The key of the resource.</param>

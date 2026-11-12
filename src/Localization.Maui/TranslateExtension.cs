@@ -42,6 +42,11 @@ namespace Mafesoft.Localization.Maui
     public class TranslateExtension : IMarkupExtension<BindingBase>
     {
         /// <summary>
+        /// Stateless converter shared by every binding created by the extension.
+        /// </summary>
+        private static readonly NullToDefaultConverter DefaultConverter = new NullToDefaultConverter();
+
+        /// <summary>
         /// Gets and Sets the ResourceKey, it is a key of resource.
         /// </summary>
         public string? ResourceKey { get; set; }
@@ -79,7 +84,7 @@ namespace Mafesoft.Localization.Maui
                 Path = $"[{ResourceKey}]",
                 Source = LocalizationManager.Instance,
                 StringFormat = StringFormat,
-                Converter = new NullToDefaultConverter(),
+                Converter = DefaultConverter,
                 ConverterParameter = DefaultValue ?? ResourceKey,
             };
             return binding;

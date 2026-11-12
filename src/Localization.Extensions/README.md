@@ -1,5 +1,10 @@
 # Mafesoft.Localization.Extensions
 
+[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions)
+[![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Extensions?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions)
+[![Build](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/ci.yml?branch=master&style=flat-square&label=build)](https://github.com/fmazzant/Localization/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/fmazzant/Localization/blob/master/LICENSE.md)
+
 `Microsoft.Extensions` integration of [Mafesoft.Localization](https://www.nuget.org/packages/Mafesoft.Localization):
 registers the `LocalizationManager` in the dependency injection and provides `IStringLocalizer`,
 `IStringLocalizer<T>` and `IStringLocalizerFactory` backed by its vocabularies. Every consumer of

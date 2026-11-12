@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- The MAUI controls without a platform head: the tests run on Linux, macOS and Windows -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Mafesoft.Localization.Maui.Tests</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+
+  <!-- Same test vocabulary as Localization.Tests (it also disables the parallel tests: LocalizationManager is a singleton) -->
+  <ItemGroup>
+    <Compile Include="..\Localization.Tests\TestVocabularyServiceProvider.cs" Link="TestVocabularyServiceProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Localization.Maui\Localization.Maui.csproj" />
+  </ItemGroup>
+
+</Project>

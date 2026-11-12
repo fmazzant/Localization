@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- WPF runs only on Windows: the project builds everywhere (EnableWindowsTargeting), the tests run on the Windows CI job -->
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <RootNamespace>Mafesoft.Localization.Wpf.Tests</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+
+  <!-- Same test vocabulary as Localization.Tests (it also disables the parallel tests: LocalizationManager is a singleton) -->
+  <ItemGroup>
+    <Compile Include="..\Localization.Tests\TestVocabularyServiceProvider.cs" Link="TestVocabularyServiceProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Localization.Wpf\Localization.Wpf.csproj" />
+  </ItemGroup>
+
+</Project>

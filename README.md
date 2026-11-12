@@ -590,7 +590,7 @@ All the packages share one version, `<VersionPrefix>` in `src/Directory.Build.pr
 1. update `<VersionPrefix>` and the [CHANGELOG](CHANGELOG.md);
 2. create a GitHub release with the tag `v<version>` (e.g. `v4.1.0`, or `v4.1.0-beta.1` for a prerelease).
 
-The `Publish NuGet` workflow runs only for `v*` tags: it fails if the tag does not match `<VersionPrefix>`, then tests,
+The `NuGet` workflow (`.github/workflows/nuget.yml`) runs only for `v*` tags: it fails if the tag does not match `<VersionPrefix>`, then tests,
 packs and publishes all the packages with the same version. Merging to `master` publishes nothing.
 
 Every `dotnet pack` runs the [package validation](https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview):
@@ -598,9 +598,10 @@ inside a major version the package is compared with the first release of that ve
 breaking API change in a minor or patch version fails the pack. A package first published in a minor version sets
 `<PackageFirstVersion>` in its `.csproj` (see `src/Directory.Build.targets`).
 
-The workflow publishes with [NuGet trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing)
-when the repository variable `NUGET_USER` is set (and the trusted publishing policy exists on nuget.org); otherwise
-it uses the `NUGET_API_KEY` secret.
+The workflow publishes with [NuGet trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing),
+with no long-lived API key: the publish job runs in the `production` environment, the `NUGET_USER` secret holds the
+nuget.org user name and nuget.org has a trusted publishing policy for owner `fmazzant`, repository `Localization`,
+workflow file `nuget.yml` and environment `production` (renaming the file breaks publishing).
 
 ## Contributing
 

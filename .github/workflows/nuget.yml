@@ -1,4 +1,4 @@
-name: Publish NuGet
+name: NuGet
 
 # Publishes from a release tag (v4.1.0, v4.1.0-beta.1) or from a manual run on master with the version
 # input filled in. Merging to master publishes nothing. A manual run with an empty version is a dry run:
@@ -123,7 +123,8 @@ jobs:
           dotnet-version: 10.0.x
 
       # Trusted publishing: the NUGET_USER secret (production environment) holds the nuget.org user name, and
-      # nuget.org has a trusted publishing policy for this repository and workflow. The login exchanges the
+      # nuget.org has a trusted publishing policy for this repository, workflow file "nuget.yml" (renaming this file
+      # breaks publishing) and environment "production". The login exchanges the
       # GitHub OIDC token for a short-lived API key.
       - name: NuGet login (trusted publishing)
         id: login

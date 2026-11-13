@@ -5,7 +5,22 @@ All notable changes to the `Mafesoft.Localization*` packages are documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.1.0] - Unreleased
+## [4.1.1] - Unreleased
+
+No API changes: the package dependencies are the same as in 4.1.0.
+
+### Changed
+
+- Fewer allocations: the WPF and MAUI `{Translate}` extensions and the Blazor bindings share one
+  `NullToDefaultConverter`, and a Blazor binding builds its composite format once instead of on every `GetValue()`.
+  ([#38](https://github.com/fmazzant/Localization/issues/38))
+- Package READMEs: badges and a link to the comparison with the alternatives. ([#39](https://github.com/fmazzant/Localization/issues/39))
+- Build: Central Package Management (`src/Directory.Packages.props`), `global.json` pinning the .NET 10 SDK,
+  `.editorconfig`. ([#37](https://github.com/fmazzant/Localization/issues/37))
+- Tests for the WPF and MAUI extensions; the CI runs on Ubuntu and Windows, tests on .NET Framework and builds the
+  samples. ([#35](https://github.com/fmazzant/Localization/issues/35), [#36](https://github.com/fmazzant/Localization/issues/36))
+
+## [4.1.0] - 2026-11-11
 
 ### Added
 
@@ -26,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `LocalizationManager.Translate(key, culture, defaultValue)` and the indexer `this[key, culture]` read the vocabulary of
   a given culture. ([#22](https://github.com/fmazzant/Localization/issues/22))
 
-## [4.0.0] - Unreleased
+## [4.0.0] - 2026-11-10
 
 The `Mafesoft.*` release. It breaks every consumer once, so all the naming problems are fixed together.
 Read [Migrating from `Mafe.Localization`](README.md#migrating-from-mafelocalization).
@@ -81,5 +96,6 @@ The releases published as `Mafe.Localization*` are described in the [GitHub rele
 - [2.0.0](https://github.com/fmazzant/Localization/releases/tag/v2.0.0) - 2022-04-28
 - [1.0.0](https://github.com/fmazzant/Localization/releases/tag/1.0.0) - 2020-11-13
 
-[4.1.0]: https://github.com/fmazzant/Localization/compare/v4.0.0...HEAD
+[4.1.1]: https://github.com/fmazzant/Localization/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/fmazzant/Localization/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/fmazzant/Localization/compare/v3.0.0...v4.0.0

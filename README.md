@@ -43,7 +43,6 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 - [Legacy: Xamarin.Forms](#legacy-xamarinforms)
 - [Build and test](#build-and-test)
 - [Contributing](#contributing)
-- [Support](#support)
 - [License](#license)
 
 ## Why Localization

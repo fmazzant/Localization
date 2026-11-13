@@ -20,6 +20,8 @@ The same API works in WPF, .NET MAUI, ASP.NET Core MVC and Blazor.
 The changes of every release are listed in the [CHANGELOG](CHANGELOG.md). To report a security problem, read the
 [security policy](SECURITY.md).
 
+If Mafesoft.Localization is useful to you, consider [supporting the project](#support). ☕
+
 ## Table of contents
 
 - [Why Localization](#why-localization)
@@ -674,6 +676,14 @@ Bug reports, ideas and pull requests are welcome.
 5. Open a pull request that references the issue (`Fixes #42`).
 
 Security problems must not be reported in public issues: see the [security policy](SECURITY.md).
+
+## Support
+
+If Mafesoft.Localization saves you time, you can say thanks with a small donation. It is never required, but it helps me keep the project maintained and up to date.
+
+[![Donate](https://img.shields.io/badge/donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://paypal.me/fmazzant)
+
+A star on GitHub, a bug report or a pull request help too. Thank you!
 
 ## License
 

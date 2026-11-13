@@ -675,6 +675,14 @@ Bug reports, ideas and pull requests are welcome.
 
 Security problems must not be reported in public issues: see the [security policy](SECURITY.md).
 
+## Support
+
+If Mafesoft.Localization saves you time, you can say thanks with a small donation. It is never required, but it helps me keep the project maintained and up to date.
+
+[![Donate](https://img.shields.io/badge/donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://paypal.me/fmazzant)
+
+A star on GitHub, a bug report or a pull request help too. Thank you!
+
 ## License
 
 Mafesoft.Localization is released under the [MIT License](LICENSE.md).

@@ -5,6 +5,14 @@ All notable changes to the `Mafesoft.Localization*` packages are documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.1.1] - 2026-11-14
+
+README only: not published on NuGet, the packages stay at 4.1.1.
+
+### Changed
+
+- README: Support section with a PayPal donation link.
+
 ## [4.1.1] - 2026-11-13
 
 No API changes: the package dependencies are the same as in 4.1.0.
@@ -96,6 +104,6 @@ The releases published as `Mafe.Localization*` are described in the [GitHub rele
 - [2.0.0](https://github.com/fmazzant/Localization/releases/tag/v2.0.0) - 2022-04-28
 - [1.0.0](https://github.com/fmazzant/Localization/releases/tag/1.0.0) - 2020-11-13
 
-[4.1.1]: https://github.com/fmazzant/Localization/compare/v4.1.0...HEAD
+[4.1.1]: https://github.com/fmazzant/Localization/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/fmazzant/Localization/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/fmazzant/Localization/compare/v3.0.0...v4.0.0

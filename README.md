@@ -20,6 +20,8 @@ The same API works in WPF, .NET MAUI, ASP.NET Core MVC and Blazor.
 The changes of every release are listed in the [CHANGELOG](CHANGELOG.md). To report a security problem, read the
 [security policy](SECURITY.md).
 
+If Mafesoft.Localization is useful to you, consider [supporting the project](#support). ☕
+
 ## Table of contents
 
 - [Why Localization](#why-localization)
@@ -41,6 +43,7 @@ The changes of every release are listed in the [CHANGELOG](CHANGELOG.md). To rep
 - [Legacy: Xamarin.Forms](#legacy-xamarinforms)
 - [Build and test](#build-and-test)
 - [Contributing](#contributing)
+- [Support](#support)
 - [License](#license)
 
 ## Why Localization

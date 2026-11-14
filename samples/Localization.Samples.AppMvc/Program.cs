@@ -43,7 +43,8 @@ switch (settings.Registration)
 
 builder.Services.AddControllersWithViews()
     .AddViewLocalization()
-    .AddDataAnnotationsLocalization();
+    .AddDataAnnotationsLocalization()
+    .AddValidationMessageTranslation();   // [Required], [StringLength]... messages from the vocabulary (server and client side)
 
 var app = builder.Build();
 

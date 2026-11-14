@@ -23,7 +23,7 @@
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageReleaseNotes>https://github.com/fmazzant/Localization/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/fmazzant/Localization/blob/main/CHANGELOG.md</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/fmazzant/Localization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/fmazzant/Localization</RepositoryUrl>

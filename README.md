@@ -2,9 +2,9 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization)
 [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization)
-[![Build](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/ci.yml?branch=master&style=flat-square&label=build)](https://github.com/fmazzant/Localization/actions/workflows/ci.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/ci.yml?branch=main&style=flat-square&label=build)](https://github.com/fmazzant/Localization/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE.md)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/codeql.yml?branch=master&style=flat-square&label=codeql)](https://github.com/fmazzant/Localization/actions/workflows/codeql.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/codeql.yml?branch=main&style=flat-square&label=codeql)](https://github.com/fmazzant/Localization/actions/workflows/codeql.yml)
 [![.NET](https://img.shields.io/badge/.NET-10%20%7C%208%20%7C%20Standard%202.0%20%7C%20Framework%204.6.2-512BD4?style=flat-square)](#packages)
 
 [![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization%20downloads)](https://www.nuget.org/packages/Mafe.Localization)
@@ -806,7 +806,7 @@ All the packages share one version, `<VersionPrefix>` in `src/Directory.Build.pr
 2. create a GitHub release with the tag `v<version>` (e.g. `v4.1.0`, or `v4.1.0-beta.1` for a prerelease).
 
 The `NuGet` workflow (`.github/workflows/nuget.yml`) runs only for `v*` tags: it fails if the tag does not match `<VersionPrefix>`, then tests,
-packs and publishes all the packages with the same version. Merging to `master` publishes nothing.
+packs and publishes all the packages with the same version. Merging to `main` publishes nothing.
 
 Every `dotnet pack` runs the [package validation](https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview):
 inside a major version the package is compared with the first release of that version (4.1.0 with 4.0.0), so a
@@ -823,7 +823,7 @@ workflow file `nuget.yml` and environment `production` (renaming the file breaks
 Bug reports, ideas and pull requests are welcome.
 
 1. Open an [issue](https://github.com/fmazzant/Localization/issues) that describes the bug or the change.
-2. Create a branch from `master` named after the issue (for example `features/42-short-description`).
+2. Create a branch from `main` named after the issue (for example `features/42-short-description`).
 3. Keep the change focused, add or update the tests, and make sure `dotnet build` (no warnings: nullable warnings are
    errors) and `dotnet test` pass.
 4. Update the README and add an entry to the `Unreleased` section of the [CHANGELOG](CHANGELOG.md).

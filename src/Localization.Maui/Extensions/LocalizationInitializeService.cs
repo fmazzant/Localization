@@ -29,6 +29,7 @@
 
 namespace Mafesoft.Localization.Maui.Extensions
 {
+    using Microsoft.Extensions.Logging;
     using Microsoft.Maui.Hosting;
     using System;
     using System.Diagnostics;
@@ -58,6 +59,11 @@ namespace Mafesoft.Localization.Maui.Extensions
 
         public void Initialize(IServiceProvider services)
         {
+            if (services?.GetService(typeof(ILoggerFactory)) is ILoggerFactory loggerFactory)
+            {
+                LocalizationManager.Instance.Logger = loggerFactory.CreateLogger<LocalizationManager>();
+            }
+
             Task initialization;
             try
             {

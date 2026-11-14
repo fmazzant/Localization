@@ -74,6 +74,7 @@ namespace Mafesoft.Localization.Extensions
             else
             {
                 LocalizationManager.Init(options.ServiceProvider, options.Culture);
+                LocalizationManagerInitializer.RegisterLogger(services);
             }
             services.TryAddSingleton(LocalizationManager.Instance);
             return new LocalizationManagerBuilder(services);

@@ -33,6 +33,7 @@ namespace Mafesoft.Localization.Hosting
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Diagnostics;
     using System.Globalization;
@@ -47,13 +48,19 @@ namespace Mafesoft.Localization.Hosting
     /// </summary>
     internal sealed class LocalizationManagerInitializer : IHostedLifecycleService
     {
-        private readonly IVocabularyServiceProvider provider;
+        private readonly IVocabularyServiceProvider? provider;
         private readonly CultureInfo? culture;
+        private readonly ILoggerFactory? loggerFactory;
+        private ILogger? logger;
 
-        public LocalizationManagerInitializer(IVocabularyServiceProvider provider, CultureInfo? culture)
+        /// <param name="provider">The provider to initialize, or null to set only the logger.</param>
+        /// <param name="culture">The initial culture.</param>
+        /// <param name="loggerFactory">The logger factory of the application: it creates <see cref="LocalizationManager.Logger"/>.</param>
+        public LocalizationManagerInitializer(IVocabularyServiceProvider? provider, CultureInfo? culture, ILoggerFactory? loggerFactory)
         {
-            this.provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            this.provider = provider;
             this.culture = culture;
+            this.loggerFactory = loggerFactory;
         }
 
         /// <summary>
@@ -68,8 +75,15 @@ namespace Mafesoft.Localization.Hosting
                 return;
             }
 
-            services.AddSingleton<IHostedService>(new LocalizationManagerInitializer(provider, culture));
+            services.AddSingleton<IHostedService>(sp => new LocalizationManagerInitializer(provider, culture, sp.GetService<ILoggerFactory>()));
         }
+
+        /// <summary>
+        /// Registers a hosted service that only sets <see cref="LocalizationManager.Logger"/> when the host starts (the manager
+        /// is initialized elsewhere).
+        /// </summary>
+        public static void RegisterLogger(IServiceCollection services)
+            => services.AddSingleton<IHostedService>(sp => new LocalizationManagerInitializer(null, null, sp.GetService<ILoggerFactory>()));
 
         /// <summary>
         /// Starts the initialization without waiting for it: the default (empty) vocabulary is used until it is loaded, then
@@ -95,7 +109,16 @@ namespace Mafesoft.Localization.Hosting
             return initialization;
         }
 
-        public Task StartingAsync(CancellationToken cancellationToken) => LocalizationManager.InitAsync(provider, culture, cancellationToken);
+        public Task StartingAsync(CancellationToken cancellationToken)
+        {
+            if (loggerFactory is not null)
+            {
+                logger = loggerFactory.CreateLogger<LocalizationManager>();
+                LocalizationManager.Instance.Logger = logger;
+            }
+
+            return provider is null ? Task.CompletedTask : LocalizationManager.InitAsync(provider, culture, cancellationToken);
+        }
 
         public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
@@ -105,6 +128,15 @@ namespace Mafesoft.Localization.Hosting
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task StoppedAsync(CancellationToken cancellationToken)
+        {
+            // The logger of a stopped host must not be used any more.
+            if (logger is not null && ReferenceEquals(LocalizationManager.Instance.Logger, logger))
+            {
+                LocalizationManager.Instance.Logger = null;
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }

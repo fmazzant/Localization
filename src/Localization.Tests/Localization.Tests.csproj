@@ -26,6 +26,7 @@
   <!-- In-memory ASP.NET Core server for the per-request culture integration tests -->
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+    <PackageReference Include="bunit" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +40,7 @@
     <ProjectReference Include="..\Localization.Extensions\Localization.Extensions.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-    <Compile Remove="AsyncInitializationTests.cs;BlazorBindingTests.cs;MvcTests.cs;NullabilityTests.cs;PerRequestCultureTests.cs;StringLocalizerTests.cs" />
+    <Compile Remove="AsyncInitializationTests.cs;TranslateComponentAndTagHelperTests.cs;BlazorBindingTests.cs;MvcTests.cs;NullabilityTests.cs;PerRequestCultureTests.cs;StringLocalizerTests.cs" />
   </ItemGroup>
 
 </Project>

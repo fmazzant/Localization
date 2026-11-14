@@ -59,6 +59,8 @@ namespace Mafesoft.Localization.Extensions
             }
 
             LocalizationManager.Instance.FollowCurrentUICulture = options.FollowCurrentUICulture;
+            LocalizationManager.Instance.UseParentCultureFallback = options.UseParentCultureFallback;
+            LocalizationManager.Instance.FallbackCulture = options.FallbackCulture;
             LocalizationManager.Init(options.ServiceProvider, options.Culture);
             services.TryAddSingleton(LocalizationManager.Instance);
             return new LocalizationManagerBuilder(services);

@@ -69,7 +69,7 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 - Culture fallback `it-IT` → `it` → invariant → fallback culture, opt-in (`UseParentCultureFallback`, `FallbackCulture`, since 4.3.0).
 - XAML markup extension `{culture:Translate Key, DefaultValue=..., StringFormat=...}` for WPF and .NET MAUI.
 - ASP.NET Core MVC: `[Translate]` attribute, used by `Html.LabelFor`, `<label asp-for>`, `Html.DisplayNameFor` and the
-  validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers and the `<translate>` / `loc-key` tag helpers (since 4.3.0).
+  validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers and the `<translate>` / `loc-key` tag helpers (since 4.3.0), translated validation messages (`AddValidationMessageTranslation`, since 4.3.0).
 - Blazor Server and Blazor WebAssembly: `Binding.Translate` with default value and `StringFormat`, and the `<Translate>` component (since 4.3.0).
 - `IStringLocalizer` / `IStringLocalizerFactory` backed by the vocabularies, for DataAnnotations and the other
   consumers of `Microsoft.Extensions.Localization` (since 4.1.0).
@@ -547,6 +547,31 @@ messages), and the library adds two helpers:
 By default the culture is shared by all the users and changed with `LocalizationManager.Instance.SetCulture(...)`.
 To give every user their own language set `options.FollowCurrentUICulture = true` and add `app.UseRequestLocalization(...)`:
 see [Per-request culture on the server](#per-request-culture-on-the-server).
+
+### Validation messages
+
+*Since 4.3.0* `AddValidationMessageTranslation()` translates the messages of the DataAnnotations attributes
+(`[Required]`, `[StringLength]`, `[Range]`, `[EmailAddress]`...) that have no explicit message, on the server and in the
+`data-val-*` attributes of the client-side validation:
+
+```c#
+builder.Services.AddControllersWithViews()
+    .AddValidationMessageTranslation();   // optional: o => o.KeyPrefix = "Errors."
+```
+
+| Attribute | Vocabulary key | Example value |
+|---|---|---|
+| `[Required]` | `Validation.Required` | `Il campo {0} è obbligatorio.` |
+| `[StringLength(20)]` | `Validation.StringLength` | `Il campo {0} può avere al massimo {1} caratteri.` |
+| `[StringLength(20, MinimumLength = 2)]` | `Validation.StringLengthWithMinimum` | `{0}: da {2} a {1} caratteri.` |
+| `[Range(1, 10)]` | `Validation.Range` | `Il campo {0} deve essere tra {1} e {2}.` |
+
+- The key is the prefix (`Validation.` by default) followed by the attribute name without `Attribute`; `{0}` is the
+  display name of the property (translated with `[Translate]`), the other placeholders are the arguments of the attribute.
+- When the key is missing the default English message is used (and the key is reported to the provider).
+- An attribute with `ErrorMessage` or `ErrorMessageResourceType` is not changed; with `AddDataAnnotationsLocalization()`
+  its message still goes to your `IStringLocalizer` (for example the one of [IStringLocalizer](#istringlocalizer)).
+- It works with `AddMvcLocalizationManager` and with `AddLocalizationManager(...).AddStringLocalizer()`.
 
 ## Blazor
 

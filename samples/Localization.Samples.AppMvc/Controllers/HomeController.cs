@@ -38,6 +38,7 @@ namespace Localization.Samples.AppMvc.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Culture(string lang = null)
         {
             if (lang != null)
@@ -52,6 +53,11 @@ namespace Localization.Samples.AppMvc.Controllers
                 Address = "AddressValue"
             });
         }
+
+        // The form of the Culture page: [Required] and [StringLength] messages come from the vocabulary
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Culture(MyModel model) => View(model);
 
         public IActionResult StringLocalizer(string lang = null)
         {

@@ -50,3 +50,22 @@
     @Html.TranslateLabel("AboutText", "AboutText", "#intro")
     @Html.TranslateLabel("AboutText2", "MVC_CULTURE_MY_KEY")
 </p>
+
+<h2>Validation</h2>
+<form method="post" asp-action="Culture">
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" />
+        <span asp-validation-for="LastName"></span>
+    </div>
+    <button type="submit">OK</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, 'release/*', 'release-candidate/*' ]
     paths: [ 'src/**', 'samples/**', '.github/workflows/**' ]
   pull_request:
     paths: [ 'src/**', 'samples/**', '.github/workflows/**' ]

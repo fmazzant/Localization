@@ -18,10 +18,14 @@ Target frameworks: .NET 10 (`net10.0-windows`), .NET 8 (`net8.0-windows`).
 dotnet add package Mafesoft.Localization.Wpf
 ```
 
-Initialize the manager at startup (`App.xaml.cs`):
+Initialize the manager at startup (`App.xaml.cs`) without blocking the UI thread:
 
 ```c#
-LocalizationManager.Init(new MyVocabularyServiceProvider());
+protected override async void OnStartup(StartupEventArgs e)
+{
+    base.OnStartup(e);
+    await LocalizationManager.InitAsync(new MyVocabularyServiceProvider());
+}
 ```
 
 Translate in XAML:

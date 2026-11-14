@@ -24,8 +24,15 @@ Configure the manager in `MauiProgram.cs`:
 var builder = MauiApp.CreateBuilder();
 builder
     .UseMauiApp<App>()
-    .ConfigureLocalization(new MyVocabularyServiceProvider(), new CultureInfo("it-IT"));
+    .ConfigureLocalization(options =>
+    {
+        options.ServiceProvider = new MyVocabularyServiceProvider();
+        options.Culture = new CultureInfo("it-IT");
+    });
 ```
+
+The vocabulary is loaded asynchronously, without blocking the startup: the controls show the default values until it
+is ready. The overloads `ConfigureLocalization(provider[, culture])` block until the vocabulary is loaded.
 
 Translate in XAML:
 

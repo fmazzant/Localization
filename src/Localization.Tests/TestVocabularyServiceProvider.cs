@@ -24,8 +24,12 @@ namespace Mafesoft.Localization.Tests
 
         public CancellationToken LastLoadToken { get; private set; }
 
+        /// <summary>When set, InitializeAsync waits for this task (a slow provider, e.g. a network call).</summary>
+        public Task InitializeGate { get; init; }
+
         public async Task InitializeAsync(CancellationToken cancellationToken = default)
         {
+            if (InitializeGate != null) await InitializeGate;
             if (AsyncLoading) await Task.Delay(10);
             Initialized = true;
         }

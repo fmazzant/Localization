@@ -29,6 +29,7 @@
 
 namespace Mafesoft.Localization.Mvc.Extensions
 {
+    using Mafesoft.Localization.Hosting;
     using Mafesoft.Localization.Mvc.Metadata;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
@@ -40,10 +41,14 @@ namespace Mafesoft.Localization.Mvc.Extensions
     public static class ServiceCollectionServiceExtensions
     {
         /// <summary>
-        /// Adds and inits the localization manager to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
+        /// Adds the localization manager to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
         /// It also registers a metadata provider so that properties decorated with <see cref="TranslateAttribute"/>
         /// are translated by the standard helpers (Html.LabelFor, Html.DisplayNameFor, &lt;label asp-for&gt;, validation messages...).
         /// </summary>
+        /// <remarks>
+        /// Since 4.3.0 the provider is not called here: the manager is initialized asynchronously by a hosted service when the
+        /// host starts (<c>app.Run()</c> / <c>app.StartAsync()</c>), before the server accepts the first request.
+        /// </remarks>
         /// <param name="services"></param>
         /// <param name="options"></param>
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
@@ -61,7 +66,9 @@ namespace Mafesoft.Localization.Mvc.Extensions
             }
 
             LocalizationManager.Instance.FollowCurrentUICulture = localizationManagerOptions.FollowCurrentUICulture;
-            LocalizationManager.Init(localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
+            LocalizationManager.Instance.UseParentCultureFallback = localizationManagerOptions.UseParentCultureFallback;
+            LocalizationManager.Instance.FallbackCulture = localizationManagerOptions.FallbackCulture;
+            LocalizationManagerInitializer.Register(services, localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
             services.AddSingleton(LocalizationManager.Instance);
             services.Configure<MvcOptions>(mvc => mvc.ModelMetadataDetailsProviders.Add(new TranslateDisplayMetadataProvider()));
             return services;

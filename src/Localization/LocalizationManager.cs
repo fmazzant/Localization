@@ -206,6 +206,73 @@ namespace Mafesoft.Localization
         public static string Translate(string? key, CultureInfo culture, string? defaultValue = null) => Instance[key, culture] ?? defaultValue ?? key ?? string.Empty;
 
         /// <summary>
+        /// Returns the value of the key formatted with <paramref name="args"/> (<c>"Hello {0}, you have {1} messages"</c>).
+        /// When the key is not in the vocabulary the key itself is formatted. The format uses the culture of the vocabulary
+        /// (<see cref="CurrentCulture"/>), not the culture of the thread. A wrong format string does not throw: the text is
+        /// returned unformatted and a warning is written.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="args">The format arguments.</param>
+        public static string TranslateFormat(string? key, params object?[]? args)
+            => Format(CurrentCulture, Translate(key), args);
+
+        /// <summary>
+        /// Returns the value of the key formatted with <paramref name="args"/>. When the key is not in the vocabulary, the default
+        /// value (or the key itself) is formatted. The format uses the culture of the vocabulary (<see cref="CurrentCulture"/>).
+        /// A wrong format string does not throw: the text is returned unformatted and a warning is written.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="defaultValue">The format used when the key is not in the vocabulary, for example <c>"Hello {0}"</c>.</param>
+        /// <param name="args">The format arguments.</param>
+        public static string TranslateFormat(string? key, string? defaultValue, object?[]? args)
+            => Format(CurrentCulture, Translate(key, defaultValue), args);
+
+        /// <summary>
+        /// Returns the value of the key in the vocabulary of the culture formatted with <paramref name="args"/> and
+        /// <paramref name="culture"/>. When the key is not in the vocabulary the key itself is formatted. A wrong format string
+        /// does not throw: the text is returned unformatted and a warning is written.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="culture">The culture of the vocabulary, also used to format the arguments.</param>
+        /// <param name="args">The format arguments.</param>
+        public static string TranslateFormat(string? key, CultureInfo culture, params object?[]? args)
+            => Format(culture, Translate(key, culture), args);
+
+        /// <summary>
+        /// Returns the value of the key in the vocabulary of the culture formatted with <paramref name="args"/> and
+        /// <paramref name="culture"/>. When the key is not in the vocabulary, the default value (or the key itself) is formatted.
+        /// A wrong format string does not throw: the text is returned unformatted and a warning is written.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="culture">The culture of the vocabulary, also used to format the arguments.</param>
+        /// <param name="defaultValue">The format used when the key is not in the vocabulary.</param>
+        /// <param name="args">The format arguments.</param>
+        public static string TranslateFormat(string? key, CultureInfo culture, string? defaultValue, object?[]? args)
+            => Format(culture, Translate(key, culture, defaultValue), args);
+
+        /// <summary>
+        /// Formats a translated text with the culture of its vocabulary. A wrong format string (or a missing argument)
+        /// does not throw: the text is returned unformatted and a warning is written.
+        /// </summary>
+        private static string Format(CultureInfo culture, string format, object?[]? args)
+        {
+            if (args is null || args.Length == 0)
+            {
+                return format;
+            }
+
+            try
+            {
+                return string.Format(culture, format, args);
+            }
+            catch (FormatException ex)
+            {
+                Trace.TraceWarning("Localization: the text \"{0}\" cannot be formatted with {1} argument(s): {2}", format, args.Length, ex.Message);
+                return format;
+            }
+        }
+
+        /// <summary>
         /// Returns the vocabulary of the culture. It is loaded from the provider only the first time (concurrent callers
         /// share the same load) and then cached until the manager is initialized again; <see cref="SetCulture"/> reloads it.
         /// Use it at startup to preload the supported cultures.

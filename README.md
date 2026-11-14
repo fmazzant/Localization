@@ -65,6 +65,7 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 - Pluggable vocabulary provider (`IVocabularyServiceProvider`), synchronous or asynchronous initialization.
 - Runtime culture switch with `SetCulture` / `SetCultureAsync` and the `CultureChanged` event.
 - Default values: `Translate("key", "#Default")` never returns null.
+- Format arguments formatted with the culture of the vocabulary: `TranslateFormat("Welcome", userName, count)` (since 4.3.0).
 - Culture fallback `it-IT` → `it` → invariant → fallback culture, opt-in (`UseParentCultureFallback`, `FallbackCulture`, since 4.3.0).
 - XAML markup extension `{culture:Translate Key, DefaultValue=..., StringFormat=...}` for WPF and .NET MAUI.
 - ASP.NET Core MVC: `[Translate]` attribute, used by `Html.LabelFor`, `<label asp-for>`, `Html.DisplayNameFor` and the
@@ -88,7 +89,7 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 | `IStringLocalizer` | ✅ since 4.1.0 | ✅ | ❌ | ❌ | ✅ |
 | `netstandard2.0` / .NET Framework 4.6.2+ | ✅ | ✅ | ❌ `net10.0` only | ⚠️ .NET Framework only | ❌ `net10.0` only |
 | Culture fallback (`it-IT` → `it` → neutral) | ✅ since 4.3.0, opt-in (`UseParentCultureFallback`, `FallbackCulture`) | ✅ | ✅ | ✅ | ✅ |
-| Format arguments | ⚠️ `StringFormat` and `IStringLocalizer`; `Translate(key, args)` planned ([#24](https://github.com/fmazzant/Localization/issues/24)) | ✅ | ✅ | ⚠️ converter, not bindable | ✅ |
+| Format arguments | ✅ `TranslateFormat(key, args)` since 4.3.0, `StringFormat`, `IStringLocalizer` | ✅ | ✅ | ⚠️ converter, not bindable | ✅ |
 | Reuse existing `.resx` files | ❌ planned ([#30](https://github.com/fmazzant/Localization/issues/30)) | ✅ | ✅ | ✅ | ❌ |
 | Pluralization | ❌ to evaluate ([#33](https://github.com/fmazzant/Localization/issues/33)) | ❌ | ⚠️ zero/one only | ❌ | ❌ |
 | Strongly typed keys | ❌ planned ([#31](https://github.com/fmazzant/Localization/issues/31)) | ⚠️ `.resx` designer class, not with `IStringLocalizer` | ❌ | ❌ | ⚠️ `GetString<T>(x => x.Prop)` |
@@ -287,6 +288,29 @@ IVocabulary vocabulary = await LocalizationManager.Instance.GetVocabularyAsync(n
 
 The vocabularies are cached per culture: each culture is loaded from the provider once, also when many callers ask
 for it at the same time. `SetCulture` reloads the vocabulary of its culture, and `Init` clears the cache.
+
+### Format arguments
+
+*Since 4.3.0.* `TranslateFormat` translates a text with placeholders (`"Welcome": "Hello {0}, you have {1} messages"`) and
+formats it with `string.Format`:
+
+```c#
+string text = LocalizationManager.TranslateFormat("Welcome", userName, count);
+
+// With a default value: the arguments are an array, so a string argument is never taken as the default value
+string text = LocalizationManager.TranslateFormat("Welcome", "Hello {0}, you have {1} messages", new object[] { userName, count });
+
+// In the vocabulary of a given culture
+string english = LocalizationManager.TranslateFormat("Welcome", new CultureInfo("en-US"), userName, count);
+```
+
+- The arguments are formatted with the **culture of the vocabulary** (`LocalizationManager.CurrentCulture`, or the
+  culture passed), not with the culture of the thread: `1.5` is `1,5` in an `it-IT` vocabulary.
+- When the key is missing the default value (or the key itself) is formatted.
+- A wrong format string (`{name}`, a missing argument, an unbalanced brace) does not throw: the text is returned
+  unformatted and a warning is written.
+- The name is `TranslateFormat` and not `Translate`, because `Translate("Welcome", userName)` already means
+  "`userName` is the default value".
 
 ## Culture fallback
 

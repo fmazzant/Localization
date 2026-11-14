@@ -5,6 +5,46 @@ All notable changes to the `Mafesoft.Localization*` packages are documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0] - 2026-11-14
+
+No 4.2.0 release: its features are part of 4.3.0.
+
+### Added
+
+- Culture fallback chain: `UseParentCultureFallback` (default `false`) looks a missing key up in the parent cultures
+  (`it-IT` → `it` → invariant), then in `FallbackCulture`, then uses the default value or the key. The vocabularies of
+  the other cultures are loaded only when a key is missing. Also in the MVC, Blazor and Extensions registration
+  options. ([#23](https://github.com/fmazzant/Localization/issues/23))
+- `TranslateFormat(key, args)` (and the overloads with default value and culture): the text is formatted with the
+  culture of the vocabulary. A wrong format string returns the unformatted text and writes a warning instead of
+  throwing. ([#24](https://github.com/fmazzant/Localization/issues/24))
+- Asynchronous initialization: `AddMvcLocalizationManager` and `AddBlazorLocalizationManager` load the vocabulary with
+  a hosted service when the app starts, without blocking the registration. `AddLocalizationManager` has the new
+  `InitializeOnHostStart` option (default `false`). MAUI: new `ConfigureLocalization(options => ...)` that loads the
+  vocabulary in the background. ([#28](https://github.com/fmazzant/Localization/issues/28))
+- Missing keys: each missing key is reported once per culture, `ReportMissingTerms` turns the reporting off, the new
+  `MissingTerm` event, and logging with `ILogger` (`LocalizationManager.Logger`, set from the app's logger factory by
+  the hosted registrations; `Trace` when there is no logger).
+  ([#27](https://github.com/fmazzant/Localization/issues/27))
+- Blazor `<Translate Key="..." Default="..." Args="..." />` component, which re-renders itself when the culture
+  changes; MVC `<translate key="..." default="...">` tag helper and `loc-key` attribute.
+  ([#25](https://github.com/fmazzant/Localization/issues/25))
+- MVC validation messages: `AddValidationMessageTranslation()` translates the messages of the DataAnnotations
+  attributes without an explicit message (`Validation.Required`, `Validation.StringLength`, ...), on the server and in
+  the client-side `data-val-*` attributes, with the English message as fallback. Opt-in.
+  ([#26](https://github.com/fmazzant/Localization/issues/26))
+
+### Changed
+
+- With `AddMvcLocalizationManager` / `AddBlazorLocalizationManager` the vocabulary is loaded when the app starts:
+  code running between `builder.Build()` and `app.Run()` sees the empty default vocabulary. In Blazor WebAssembly the
+  loading starts in the background; `await InitAsync(...)` before `RunAsync()` waits for it.
+  ([#28](https://github.com/fmazzant/Localization/issues/28))
+- New dependencies: `Mafesoft.Localization` → `Microsoft.Extensions.Logging.Abstractions`;
+  `Mafesoft.Localization.Blazor` → `Microsoft.Extensions.Hosting.Abstractions` and `Microsoft.AspNetCore.Components`;
+  `Mafesoft.Localization.Extensions` → `Microsoft.Extensions.Hosting.Abstractions` (8.0.0, 10.0.0 for net10.0).
+- CI and CodeQL run on the `release/*` and `release-candidate/*` branches too, not only on `master`.
+
 ## [4.1.1.1] - 2026-11-14
 
 README only: not published on NuGet, the packages stay at 4.1.1.

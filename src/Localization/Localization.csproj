@@ -39,6 +39,12 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <!-- ILogger for the missing keys and the provider errors (optional: Trace is used without a logger).
+       Minimum version for each .NET version (src/Directory.Packages.props): the application can use any newer one -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Localization.Tests" />
   </ItemGroup>

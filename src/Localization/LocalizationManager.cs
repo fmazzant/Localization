@@ -30,6 +30,7 @@
 namespace Mafesoft.Localization
 {
     using Mafesoft.Localization.Providers;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -61,6 +62,9 @@ namespace Mafesoft.Localization
         private int followCurrentUICulture;
         private int useParentCultureFallback;
         private CultureInfo? fallbackCulture;
+        private int reportMissingTerms = 1;
+        private ILogger? logger;
+        private readonly ConcurrentDictionary<string, byte> reportedMissingTerms = new ConcurrentDictionary<string, byte>(StringComparer.Ordinal);
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -71,6 +75,36 @@ namespace Mafesoft.Localization
         /// Occurs after the current culture (and its vocabulary) has been changed.
         /// </summary>
         public event EventHandler? CultureChanged;
+
+        /// <summary>
+        /// Occurs the first time a key is not found in the vocabulary of a culture (nor in its fallback cultures), for
+        /// diagnostics tooling. Like the provider notification, it is raised once per key and culture until the culture
+        /// changes, and not at all when <see cref="ReportMissingTerms"/> is false.
+        /// </summary>
+        public event EventHandler<MissingTermEventArgs>? MissingTerm;
+
+        /// <summary>
+        /// When true (default) a missing key is reported: the provider is notified through
+        /// <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/>, <see cref="MissingTerm"/> is raised and the key is
+        /// logged. Each key is reported once per culture; the reported keys are forgotten when the culture changes.
+        /// Set it to false to turn the reporting off, for example in production.
+        /// </summary>
+        public bool ReportMissingTerms
+        {
+            get => Volatile.Read(ref reportMissingTerms) != 0;
+            set => Volatile.Write(ref reportMissingTerms, value ? 1 : 0);
+        }
+
+        /// <summary>
+        /// The logger of the missing keys and of the provider errors. When null they are written with
+        /// <see cref="Trace"/>. The registration methods of the ASP.NET Core, Blazor and MAUI packages set it from the
+        /// <see cref="ILoggerFactory"/> of the application.
+        /// </summary>
+        public ILogger? Logger
+        {
+            get => Volatile.Read(ref logger);
+            set => Volatile.Write(ref logger, value);
+        }
 
         /// <summary>
         /// Current Culture selected. When <see cref="FollowCurrentUICulture"/> is true it is
@@ -267,7 +301,7 @@ namespace Mafesoft.Localization
             }
             catch (FormatException ex)
             {
-                Trace.TraceWarning("Localization: the text \"{0}\" cannot be formatted with {1} argument(s): {2}", format, args.Length, ex.Message);
+                Instance.LogWarning(ex, "Localization: the text \"{0}\" cannot be formatted with {1} argument(s): {2}", format, args.Length, ex.Message);
                 return format;
             }
         }
@@ -314,6 +348,7 @@ namespace Mafesoft.Localization
             RunSync(async () => { await provider.InitializeAsync().ConfigureAwait(false); return true; });
             Instance.ServiceProvider = provider;
             Instance.vocabularies.Clear();
+            Instance.reportedMissingTerms.Clear();
             Instance.SetCulture(culture ?? CurrentCulture);
         }
 
@@ -338,6 +373,7 @@ namespace Mafesoft.Localization
             await provider.InitializeAsync(cancellationToken);
             Instance.ServiceProvider = provider;
             Instance.vocabularies.Clear();
+            Instance.reportedMissingTerms.Clear();
             await Instance.SetCultureAsync(culture ?? CurrentCulture, cancellationToken);
         }
 
@@ -410,6 +446,7 @@ namespace Mafesoft.Localization
                 }
                 CurrentCulture = culture;
                 CurrentVocabulary = vocabulary;
+                reportedMissingTerms.Clear();
             }
             OnCultureChanged();
         }
@@ -436,7 +473,7 @@ namespace Mafesoft.Localization
                 }
             }
 
-            NotifyMissingTerm(vocabulary, resourceKey);
+            NotifyMissingTerm(vocabulary, culture, resourceKey);
             return null;
         }
 
@@ -495,7 +532,7 @@ namespace Mafesoft.Localization
             catch (Exception ex)
             {
                 // A fallback culture that cannot be loaded is skipped: the lookup goes on with the next one.
-                Trace.TraceWarning("Localization: the vocabulary of the fallback culture \"{0}\" cannot be loaded: {1}", culture.Name, ex.Message);
+                LogWarning(ex, "Localization: the vocabulary of the fallback culture \"{0}\" cannot be loaded: {1}", culture.Name, ex.Message);
                 vocabulary = null;
                 return false;
             }
@@ -534,24 +571,83 @@ namespace Mafesoft.Localization
             return vocabularies.GetOrAdd(key, entry).Value;
         }
 
-        private void NotifyMissingTerm(IVocabulary vocabulary, string resourceKey)
+        /// <summary>
+        /// Reports a missing key once per culture (until the culture changes): notifies the provider, raises
+        /// <see cref="MissingTerm"/> and logs it.
+        /// </summary>
+        private void NotifyMissingTerm(IVocabulary vocabulary, CultureInfo culture, string resourceKey)
         {
+            if (!ReportMissingTerms || !reportedMissingTerms.TryAdd(culture.Name + "\n" + resourceKey, 0))
+            {
+                return;
+            }
+
+            Log(LogLevel.Information, null, "Localization: the key \"{0}\" is missing in the vocabulary of the culture \"{1}\"", resourceKey, culture.Name);
+
+            try
+            {
+                MissingTerm?.Invoke(this, new MissingTermEventArgs(resourceKey, culture, vocabulary));
+            }
+            catch (Exception ex)
+            {
+                LogWarning(ex, "Localization: a MissingTerm handler failed for key \"{0}\": {1}", resourceKey, ex.Message);
+            }
+
             try
             {
                 ServiceProvider.AddOrUpdateTermAsync(vocabulary, resourceKey)?.ContinueWith(
-                    t => TraceMissingTermError(resourceKey, t.Exception?.GetBaseException()),
+                    t => LogMissingTermError(resourceKey, t.Exception?.GetBaseException()),
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
                     TaskScheduler.Default);
             }
             catch (Exception ex)
             {
-                TraceMissingTermError(resourceKey, ex);
+                LogMissingTermError(resourceKey, ex);
             }
         }
 
-        private static void TraceMissingTermError(string resourceKey, Exception? ex)
-            => Trace.TraceWarning("Localization: AddOrUpdateTermAsync failed for key \"{0}\": {1}", resourceKey, ex?.Message);
+        private void LogMissingTermError(string resourceKey, Exception? ex)
+            => LogWarning(ex, "Localization: AddOrUpdateTermAsync failed for key \"{0}\": {1}", resourceKey, ex?.Message);
+
+        /// <summary>
+        /// Writes a warning to <see cref="Logger"/>, or to <see cref="Trace"/> when there is no logger.
+        /// </summary>
+        private void LogWarning(Exception? exception, string format, params object?[] args)
+            => Log(LogLevel.Warning, exception, format, args);
+
+        /// <summary>
+        /// Writes to <see cref="Logger"/>, or to <see cref="Trace"/> when there is no logger or the logger fails (for example
+        /// a logger of a host that has been disposed): logging never breaks a translation.
+        /// </summary>
+        private void Log(LogLevel level, Exception? exception, string format, params object?[] args)
+        {
+            var message = string.Format(CultureInfo.InvariantCulture, format, args);
+            var log = Logger;
+            if (log is not null)
+            {
+                try
+                {
+                    // The message is formatted here (positional placeholders, not a logging template) and passed as the state:
+                    // no LogValuesFormatter, which on .NET Framework needs binding redirects for System.Memory.
+                    log.Log(level, default(EventId), message, exception, (state, _) => state);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceWarning("Localization: the logger failed: {0}", ex.Message);
+                }
+            }
+
+            if (level >= LogLevel.Warning)
+            {
+                Trace.TraceWarning(message);
+            }
+            else
+            {
+                Trace.TraceInformation(message);
+            }
+        }
 
         /// <summary>
         /// Waits an asynchronous operation avoiding the classic sync-over-async deadlock

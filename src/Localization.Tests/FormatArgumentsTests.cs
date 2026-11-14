@@ -15,6 +15,7 @@ namespace Mafesoft.Localization.Tests
 
         public FormatArgumentsTests()
         {
+            LocalizationManager.Instance.Logger = null;
             LocalizationManager.Init(new TestVocabularyServiceProvider(), Italian);
         }
 

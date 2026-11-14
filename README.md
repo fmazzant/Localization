@@ -84,7 +84,7 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 |---|---|---|---|---|---|
 | Culture change at runtime, bound UI refreshed | ✅ WPF, MAUI, Blazor; per request on the server | ⚠️ per request; Blazor reloads the page | ✅ | ✅ | ⚠️ per request, no UI bindings |
 | Translations from your own store (database, API) | ✅ `IVocabularyServiceProvider` | ⚠️ write your own `IStringLocalizerFactory` | ⚠️ custom `ResourceManager` | ✅ `ILocalizationProvider` | ❌ JSON files only |
-| Missing keys reported | ✅ `AddOrUpdateTermAsync`, the provider can store them | ⚠️ debug log, `ResourceNotFound` | ❌ | ✅ `MissingKeyEvent` | ✅ log or throw |
+| Missing keys reported | ✅ `AddOrUpdateTermAsync` once per key, `MissingTerm` event, `ILogger` | ⚠️ debug log, `ResourceNotFound` | ❌ | ✅ `MissingKeyEvent` | ✅ log or throw |
 | WPF, MAUI, MVC and Blazor with one API | ✅ | ⚠️ MVC and Blazor; no XAML markup | ❌ MAUI only | ❌ WPF only | ❌ ASP.NET Core only |
 | `IStringLocalizer` | ✅ since 4.1.0 | ✅ | ❌ | ❌ | ✅ |
 | `netstandard2.0` / .NET Framework 4.6.2+ | ✅ | ✅ | ❌ `net10.0` only | ⚠️ .NET Framework only | ❌ `net10.0` only |
@@ -255,6 +255,30 @@ public class JsonVocabularyServiceProvider(string folder) : IVocabularyServicePr
 ```
 
 A term with an empty value counts as missing: `Translate` returns the default value.
+
+### Missing keys
+
+*Since 4.3.0.* Each missing key is reported **once per culture**, not every time it is read: a key read 1 000 times in
+a list calls `AddOrUpdateTermAsync` once. The reported keys are forgotten when the culture changes (`SetCulture`,
+`Init`), so they are reported again for the new vocabulary.
+
+```c#
+// Diagnostics tooling: raised once per key and culture
+LocalizationManager.Instance.MissingTerm += (sender, e) => Console.WriteLine($"{e.Culture.Name}: {e.Key}");
+
+// Log the missing keys and the provider errors with ILogger instead of Trace
+LocalizationManager.Instance.Logger = loggerFactory.CreateLogger<LocalizationManager>();
+
+// Turn the reporting off (provider notification, event and log), for example in production
+LocalizationManager.Instance.ReportMissingTerms = false;
+```
+
+- `AddMvcLocalizationManager`, `AddBlazorLocalizationManager`, `AddLocalizationManager` (in an application with a host)
+  and MAUI `ConfigureLocalization(options => ...)` set `Logger` from the `ILoggerFactory` of the application, so the
+  missing keys appear in the ASP.NET Core / MAUI log (category `Mafesoft.Localization.LocalizationManager`, level
+  `Information`; the provider errors are `Warning`).
+- Without a logger (WPF, .NET Framework, Blazor WebAssembly) they are written with `System.Diagnostics.Trace`.
+
 
 ## LocalizationManager API
 

@@ -44,7 +44,7 @@ namespace Mafesoft.Localization.Tests
             Assert.False(provider.Initialized);
             Assert.Empty(provider.LoadCount);
             Assert.NotSame(provider, LocalizationManager.Instance.ServiceProvider);
-            Assert.Contains(services, d => d.ServiceType == typeof(IHostedService) && d.ImplementationInstance is IHostedLifecycleService);
+            Assert.Contains(services, d => d.ServiceType == typeof(IHostedService) && d.ImplementationFactory != null);
         }
 
         [Theory]
@@ -85,7 +85,6 @@ namespace Mafesoft.Localization.Tests
 
             Assert.True(provider.Initialized);
             Assert.Equal("Ciao", LocalizationManager.Translate("Hello"));
-            Assert.DoesNotContain(services, d => d.ServiceType == typeof(IHostedService));
         }
 
         private static void Register(IServiceCollection services, string registration, IVocabularyServiceProvider provider)

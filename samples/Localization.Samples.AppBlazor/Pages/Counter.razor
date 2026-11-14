@@ -1,11 +1,11 @@
 ﻿@page "/counter"
 @using Mafesoft.Localization.Blazor.Bindings
 
-<h1>@Binding.Translate("BlazorCounter")</h1>
+<h1><Translate Key="BlazorCounter" Default="Counter" /></h1>
 
-<p>@Binding.Translate("BlazorCurrentCount"): @currentCount</p>
+<p><Translate Key="BlazorCurrentCount" Default="Current count" />: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">@Binding.Translate("BlazorClickMe")</button>
+<button class="btn btn-primary" @onclick="IncrementCount"><Translate Key="BlazorClickMe" Default="Click me" /></button>
 
 @code {
     private int currentCount = 0;

@@ -69,8 +69,8 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 - Culture fallback `it-IT` → `it` → invariant → fallback culture, opt-in (`UseParentCultureFallback`, `FallbackCulture`, since 4.3.0).
 - XAML markup extension `{culture:Translate Key, DefaultValue=..., StringFormat=...}` for WPF and .NET MAUI.
 - ASP.NET Core MVC: `[Translate]` attribute, used by `Html.LabelFor`, `<label asp-for>`, `Html.DisplayNameFor` and the
-  validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers.
-- Blazor Server and Blazor WebAssembly: `Binding.Translate` with default value and `StringFormat`.
+  validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers and the `<translate>` / `loc-key` tag helpers (since 4.3.0).
+- Blazor Server and Blazor WebAssembly: `Binding.Translate` with default value and `StringFormat`, and the `<Translate>` component (since 4.3.0).
 - `IStringLocalizer` / `IStringLocalizerFactory` backed by the vocabularies, for DataAnnotations and the other
   consumers of `Microsoft.Extensions.Localization` (since 4.1.0).
 - Per-request culture on the server (`FollowCurrentUICulture`, with `UseRequestLocalization()`) and vocabularies
@@ -533,6 +533,17 @@ messages), and the library adds two helpers:
 @Html.TranslateLabel("Title", "TitleKey", "#Default title")
 ```
 
+*Since 4.3.0* two tag helpers translate directly in the views. Register them in `_ViewImports.cshtml`:
+
+```razor
+@addTagHelper *, Mafesoft.Localization.Mvc
+```
+
+```html
+<translate key="Home.Title" default="Welcome"></translate>   <!-- renders only the text -->
+<button loc-key="Save">Save</button>                           <!-- replaces the content; kept when the key is missing -->
+```
+
 By default the culture is shared by all the users and changed with `LocalizationManager.Instance.SetCulture(...)`.
 To give every user their own language set `options.FollowCurrentUICulture = true` and add `app.UseRequestLocalization(...)`:
 see [Per-request culture on the server](#per-request-culture-on-the-server).
@@ -578,7 +589,19 @@ builder.Services.AddSingleton(LocalizationManager.Instance);
 await builder.Build().RunAsync();
 ```
 
-Translate in a component with `Binding.Translate`, and refresh the component when the culture changes:
+*Since 4.3.0* the `<Translate>` component is the shortest way: it renders the translation and renders again by itself
+when the culture changes, with no `CultureChanged` subscription in the page.
+
+```razor
+@using Mafesoft.Localization.Blazor.Components   @* or in _Imports.razor *@
+
+<h1><Translate Key="Home.Title" Default="Welcome" /></h1>
+<p><Translate Key="Greeting" Default="Hello {0}" Args="new object[] { userName }" /></p>
+```
+
+`Args` formats the text with the culture of the vocabulary (see [Format arguments](#format-arguments)).
+
+Or translate in a component with `Binding.Translate`, and refresh the component when the culture changes:
 
 ```razor
 @using Mafesoft.Localization.Blazor.Bindings

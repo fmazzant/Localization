@@ -1,7 +1,7 @@
 name: NuGet
 
-# Publishes from a release tag (v4.1.0, v4.1.0-beta.1) or from a manual run on master with the version
-# input filled in. Merging to master publishes nothing. A manual run with an empty version is a dry run:
+# Publishes from a release tag (v4.1.0, v4.1.0-beta.1) or from a manual run on main with the version
+# input filled in. Merging to main publishes nothing. A manual run with an empty version is a dry run:
 # it tests and packs, but does not push.
 on:
   push:
@@ -60,8 +60,8 @@ jobs:
             VERSION="${GITHUB_REF_NAME#v}"
             PUBLISH=true
           elif [[ -n "${INPUT_VERSION// /}" ]]; then
-            if [[ "$GITHUB_REF" != refs/heads/master ]]; then
-              echo "::error::A manual publish must run on master (this run is on $GITHUB_REF_NAME). Leave the version empty for a dry run."
+            if [[ "$GITHUB_REF" != refs/heads/main ]]; then
+              echo "::error::A manual publish must run on main (this run is on $GITHUB_REF_NAME). Leave the version empty for a dry run."
               exit 1
             fi
             VERSION="${INPUT_VERSION// /}"

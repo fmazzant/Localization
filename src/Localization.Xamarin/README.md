@@ -2,8 +2,8 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Xamarin?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin)
 [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Xamarin?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin)
-[![Build](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/ci.yml?branch=master&style=flat-square&label=build)](https://github.com/fmazzant/Localization/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/fmazzant/Localization/blob/master/LICENSE.md)
+[![Build](https://img.shields.io/github/actions/workflow/status/fmazzant/Localization/ci.yml?branch=main&style=flat-square&label=build)](https://github.com/fmazzant/Localization/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/fmazzant/Localization/blob/main/LICENSE.md)
 
 [![Mafe.Localization.Xamarin downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Xamarin?style=flat-square&label=Mafe.Localization.Xamarin%20downloads)](https://www.nuget.org/packages/Mafe.Localization.Xamarin)
 
@@ -34,8 +34,8 @@ Replace this package with `Mafesoft.Localization.Maui` and change the XAML names
 ## Links
 
 - [Documentation](https://github.com/fmazzant/Localization#readme)
-- [Changelog](https://github.com/fmazzant/Localization/blob/master/CHANGELOG.md)
+- [Changelog](https://github.com/fmazzant/Localization/blob/main/CHANGELOG.md)
 - [Migrating from `Mafe.Localization`](https://github.com/fmazzant/Localization#migrating-from-mafelocalization)
 - [Issues](https://github.com/fmazzant/Localization/issues)
 
-Licensed under the [MIT License](https://github.com/fmazzant/Localization/blob/master/LICENSE.md).
+Licensed under the [MIT License](https://github.com/fmazzant/Localization/blob/main/LICENSE.md).

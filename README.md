@@ -395,15 +395,19 @@ app.UseRequestLocalization(options => options
 dotnet add package Mafesoft.Localization.Wpf
 ```
 
-Initialize the manager at startup (`App.xaml.cs`):
+Initialize the manager at startup (`App.xaml.cs`) with `InitAsync`, so a provider that reads from the network or a
+database does not block the UI thread:
 
 ```c#
-protected override void OnStartup(StartupEventArgs e)
+protected override async void OnStartup(StartupEventArgs e)
 {
-    LocalizationManager.Init(new JsonVocabularyServiceProvider("vocabularies"), new CultureInfo("it-IT"));
     base.OnStartup(e);
+    await LocalizationManager.InitAsync(new JsonVocabularyServiceProvider("vocabularies"), new CultureInfo("it-IT"));
 }
 ```
+
+The main window shows the default values until the vocabulary is loaded, then the bindings are refreshed.
+`LocalizationManager.Init(...)` is still available, but it blocks the caller until the vocabulary is loaded.
 
 Translate in XAML:
 
@@ -432,8 +436,17 @@ Configure the manager in `MauiProgram.cs`:
 var builder = MauiApp.CreateBuilder();
 builder
     .UseMauiApp<App>()
-    .ConfigureLocalization(new JsonVocabularyServiceProvider(FileSystem.AppDataDirectory), new CultureInfo("it-IT"));
+    .ConfigureLocalization(options =>
+    {
+        options.ServiceProvider = new JsonVocabularyServiceProvider(FileSystem.AppDataDirectory);
+        options.Culture = new CultureInfo("it-IT");
+    });
 ```
+
+*Since 4.3.0* `ConfigureLocalization(options => ...)` does not block the startup (no risk of ANR on Android): the
+vocabulary is loaded asynchronously when the application is built, the controls show the default values until then
+and are refreshed when it is ready (`CultureChanged`). The overloads `ConfigureLocalization(provider)` and
+`ConfigureLocalization(provider, culture)` are kept for compatibility: they **block** until the vocabulary is loaded.
 
 Translate in XAML:
 
@@ -468,6 +481,10 @@ builder.Services.AddMvcLocalizationManager(options =>
     options.Culture = new CultureInfo("it-IT");   // optional: the current UI culture by default
 });
 ```
+
+*Since 4.3.0* `AddMvcLocalizationManager` (and `AddBlazorLocalizationManager`) does not call the provider: a hosted
+service initializes the manager asynchronously when the application starts (`app.Run()`), before the server accepts
+the first request. Code that runs between `builder.Build()` and `app.Run()` still sees the empty default vocabulary.
 
 Annotate the view model with `[Translate]`:
 
@@ -523,7 +540,9 @@ the users and changed with `SetCulture`.
 
 **Blazor WebAssembly:** the package does not depend on the ASP.NET Core shared framework, so it runs in the browser
 too. Initialize the manager asynchronously: a provider that loads the vocabularies with `HttpClient` cannot be waited
-synchronously on the single WebAssembly thread.
+synchronously on the single WebAssembly thread. The WebAssembly host does not run hosted services: there
+`AddBlazorLocalizationManager` starts the initialization in the background (the default values are shown until the
+vocabulary is loaded); to wait for it, call `InitAsync` before `RunAsync()`:
 
 ```c#
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -572,12 +591,17 @@ builder.Services.AddLocalizationManager(options =>
 {
     options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
     options.Culture = new CultureInfo("it-IT");
+    options.InitializeOnHostStart = true;   // since 4.3.0: load the vocabulary asynchronously when the host starts
 })
 .AddStringLocalizer();
 
 // ASP.NET Core MVC: [Display(Name = "...")] and the validation messages are translated too
 builder.Services.AddControllersWithViews().AddDataAnnotationsLocalization();
 ```
+
+`AddLocalizationManager` initializes the manager synchronously by default, so it also works with a plain
+`ServiceCollection` without a host. With `InitializeOnHostStart = true` (since 4.3.0) it does not call the provider:
+a hosted service loads the vocabulary asynchronously when the host starts.
 
 ```c#
 public class HomeController(IStringLocalizer<HomeController> localizer) : Controller

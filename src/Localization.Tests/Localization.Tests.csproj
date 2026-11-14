@@ -39,7 +39,7 @@
     <ProjectReference Include="..\Localization.Extensions\Localization.Extensions.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-    <Compile Remove="BlazorBindingTests.cs;MvcTests.cs;NullabilityTests.cs;PerRequestCultureTests.cs;StringLocalizerTests.cs" />
+    <Compile Remove="AsyncInitializationTests.cs;BlazorBindingTests.cs;MvcTests.cs;NullabilityTests.cs;PerRequestCultureTests.cs;StringLocalizerTests.cs" />
   </ItemGroup>
 
 </Project>

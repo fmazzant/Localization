@@ -41,6 +41,11 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <!-- Asynchronous initialization when the host starts (shared source, internal) -->
+  <ItemGroup>
+    <Compile Include="..\Shared\LocalizationManagerInitializer.cs" Link="Hosting\LocalizationManagerInitializer.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Localization\Localization.csproj" />
   </ItemGroup>

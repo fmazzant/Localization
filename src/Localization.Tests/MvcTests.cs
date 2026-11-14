@@ -62,6 +62,30 @@ namespace Mafesoft.Localization.Tests
             Assert.Contains(mvcOptions.ModelMetadataDetailsProviders, p => p is TranslateDisplayMetadataProvider);
         }
 
+        [Fact]
+        public void AddMvcLocalizationManager_SetsTheCultureFallback()
+        {
+            try
+            {
+                new ServiceCollection().AddMvcLocalizationManager(o =>
+                {
+                    o.ServiceProvider = new TestVocabularyServiceProvider();
+                    o.Culture = new CultureInfo("it-IT");
+                    o.UseParentCultureFallback = true;
+                    o.FallbackCulture = new CultureInfo("en-US");
+                });
+
+                Assert.True(LocalizationManager.Instance.UseParentCultureFallback);
+                Assert.Equal(new CultureInfo("en-US"), LocalizationManager.Instance.FallbackCulture);
+                Assert.Equal("Value {0}", LocalizationManager.Instance["Format", new CultureInfo("fr-FR")]);
+            }
+            finally
+            {
+                LocalizationManager.Instance.UseParentCultureFallback = false;
+                LocalizationManager.Instance.FallbackCulture = null;
+            }
+        }
+
         private static Func<string> GetDisplayName(string propertyName)
         {
             var property = typeof(Person).GetProperty(propertyName);

@@ -52,5 +52,17 @@ namespace Mafesoft.Localization.Extensions
         /// Default false: one culture for the whole application. See <see cref="LocalizationManager.FollowCurrentUICulture"/>.
         /// </summary>
         public bool FollowCurrentUICulture { get; set; }
+
+        /// <summary>
+        /// When true a missing key is searched in the parent cultures (<c>it-IT</c>, <c>it</c>, invariant) and then in
+        /// <see cref="FallbackCulture"/>. Default false. See <see cref="LocalizationManager.UseParentCultureFallback"/>.
+        /// </summary>
+        public bool UseParentCultureFallback { get; set; }
+
+        /// <summary>
+        /// The culture read when a key is missing in the culture (and in its parent cultures), for example <c>en</c>.
+        /// Default null. See <see cref="LocalizationManager.FallbackCulture"/>.
+        /// </summary>
+        public CultureInfo? FallbackCulture { get; set; }
     }
 }

@@ -61,6 +61,8 @@ namespace Mafesoft.Localization.Mvc.Extensions
             }
 
             LocalizationManager.Instance.FollowCurrentUICulture = localizationManagerOptions.FollowCurrentUICulture;
+            LocalizationManager.Instance.UseParentCultureFallback = localizationManagerOptions.UseParentCultureFallback;
+            LocalizationManager.Instance.FallbackCulture = localizationManagerOptions.FallbackCulture;
             LocalizationManager.Init(localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
             services.AddSingleton(LocalizationManager.Instance);
             services.Configure<MvcOptions>(mvc => mvc.ModelMetadataDetailsProviders.Add(new TranslateDisplayMetadataProvider()));

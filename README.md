@@ -33,6 +33,7 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 - [How it works](#how-it-works)
 - [Vocabulary service provider](#vocabulary-service-provider)
 - [LocalizationManager API](#localizationmanager-api)
+- [Culture fallback](#culture-fallback)
 - [Per-request culture on the server](#per-request-culture-on-the-server)
 - [WPF](#wpf)
 - [.NET MAUI](#net-maui)
@@ -64,6 +65,7 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 - Pluggable vocabulary provider (`IVocabularyServiceProvider`), synchronous or asynchronous initialization.
 - Runtime culture switch with `SetCulture` / `SetCultureAsync` and the `CultureChanged` event.
 - Default values: `Translate("key", "#Default")` never returns null.
+- Culture fallback `it-IT` → `it` → invariant → fallback culture, opt-in (`UseParentCultureFallback`, `FallbackCulture`, since 4.3.0).
 - XAML markup extension `{culture:Translate Key, DefaultValue=..., StringFormat=...}` for WPF and .NET MAUI.
 - ASP.NET Core MVC: `[Translate]` attribute, used by `Html.LabelFor`, `<label asp-for>`, `Html.DisplayNameFor` and the
   validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers.
@@ -85,7 +87,7 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 | WPF, MAUI, MVC and Blazor with one API | ✅ | ⚠️ MVC and Blazor; no XAML markup | ❌ MAUI only | ❌ WPF only | ❌ ASP.NET Core only |
 | `IStringLocalizer` | ✅ since 4.1.0 | ✅ | ❌ | ❌ | ✅ |
 | `netstandard2.0` / .NET Framework 4.6.2+ | ✅ | ✅ | ❌ `net10.0` only | ⚠️ .NET Framework only | ❌ `net10.0` only |
-| Culture fallback (`it-IT` → `it` → neutral) | ❌ planned ([#23](https://github.com/fmazzant/Localization/issues/23)) | ✅ | ✅ | ✅ | ✅ |
+| Culture fallback (`it-IT` → `it` → neutral) | ✅ since 4.3.0, opt-in (`UseParentCultureFallback`, `FallbackCulture`) | ✅ | ✅ | ✅ | ✅ |
 | Format arguments | ⚠️ `StringFormat` and `IStringLocalizer`; `Translate(key, args)` planned ([#24](https://github.com/fmazzant/Localization/issues/24)) | ✅ | ✅ | ⚠️ converter, not bindable | ✅ |
 | Reuse existing `.resx` files | ❌ planned ([#30](https://github.com/fmazzant/Localization/issues/30)) | ✅ | ✅ | ✅ | ❌ |
 | Pluralization | ❌ to evaluate ([#33](https://github.com/fmazzant/Localization/issues/33)) | ❌ | ⚠️ zero/one only | ❌ | ❌ |
@@ -285,6 +287,38 @@ IVocabulary vocabulary = await LocalizationManager.Instance.GetVocabularyAsync(n
 
 The vocabularies are cached per culture: each culture is loaded from the provider once, also when many callers ask
 for it at the same time. `SetCulture` reloads the vocabulary of its culture, and `Init` clears the cache.
+
+## Culture fallback
+
+*Since 4.3.0.* By default a key that is not in the vocabulary of the culture returns the default value (or the key).
+Like ResX and `IStringLocalizer`, the manager can search the parent cultures first:
+
+```c#
+LocalizationManager.Instance.UseParentCultureFallback = true;            // it-IT → it → invariant
+LocalizationManager.Instance.FallbackCulture = new CultureInfo("en");    // then en
+
+// or at registration (AddLocalizationManager, AddMvcLocalizationManager, AddBlazorLocalizationManager)
+builder.Services.AddMvcLocalizationManager(options =>
+{
+    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.UseParentCultureFallback = true;
+    options.FallbackCulture = new CultureInfo("en");
+});
+```
+
+The lookup order is: the culture (`it-IT`) → its parent cultures (`it`, then the invariant culture, with
+`UseParentCultureFallback`) → `FallbackCulture` → the default value → the key.
+
+- The provider is asked for the vocabulary of every culture of the chain: `LoadVocabularyAsync(new CultureInfo("it"))`,
+  `LoadVocabularyAsync(CultureInfo.InvariantCulture)` (`Name` is an empty string) and so on. Return an empty vocabulary
+  for the cultures you do not have.
+- The vocabularies of the parent and fallback cultures are loaded only when a key is missing, and then cached like the
+  others. A culture that fails to load is skipped.
+- The missing term is reported to the provider (`AddOrUpdateTermAsync`, with the vocabulary of the culture) only when
+  no culture of the chain has the key. A term with an empty value counts as missing, so the chain goes on.
+- `UseParentCultureFallback` is `false` by default in 4.x, so the behavior does not change; `FallbackCulture` is `null`.
+- It applies to `Translate`, the indexers, the XAML markup extensions, the MVC and Blazor helpers and `IStringLocalizer`,
+  also with `FollowCurrentUICulture` (the chain of the culture of the request).
 
 ## Per-request culture on the server
 

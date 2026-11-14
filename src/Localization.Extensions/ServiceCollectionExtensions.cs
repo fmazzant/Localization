@@ -29,6 +29,7 @@
 
 namespace Mafesoft.Localization.Extensions
 {
+    using Mafesoft.Localization.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Localization;
@@ -42,6 +43,11 @@ namespace Mafesoft.Localization.Extensions
         /// <summary>
         /// Initializes the <see cref="LocalizationManager"/> and registers <see cref="LocalizationManager.Instance"/> as a singleton.
         /// </summary>
+        /// <remarks>
+        /// By default the manager is initialized here, synchronously: it works without a host (a plain
+        /// <see cref="IServiceCollection"/>). In an application with a host (ASP.NET Core, generic host) set
+        /// <see cref="LocalizationManagerOptions.InitializeOnHostStart"/> to initialize it asynchronously when the host starts.
+        /// </remarks>
         /// <param name="services">The service collection.</param>
         /// <param name="configure">Configures the provider and the initial culture.</param>
         /// <returns>A builder to add the integrations, for example <see cref="AddStringLocalizer"/>.</returns>
@@ -61,7 +67,14 @@ namespace Mafesoft.Localization.Extensions
             LocalizationManager.Instance.FollowCurrentUICulture = options.FollowCurrentUICulture;
             LocalizationManager.Instance.UseParentCultureFallback = options.UseParentCultureFallback;
             LocalizationManager.Instance.FallbackCulture = options.FallbackCulture;
-            LocalizationManager.Init(options.ServiceProvider, options.Culture);
+            if (options.InitializeOnHostStart)
+            {
+                LocalizationManagerInitializer.Register(services, options.ServiceProvider, options.Culture);
+            }
+            else
+            {
+                LocalizationManager.Init(options.ServiceProvider, options.Culture);
+            }
             services.TryAddSingleton(LocalizationManager.Instance);
             return new LocalizationManagerBuilder(services);
         }

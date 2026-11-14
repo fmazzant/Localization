@@ -29,6 +29,7 @@
 
 namespace Mafesoft.Localization.Blazor.Extensions
 {
+    using Mafesoft.Localization.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using System;
 
@@ -38,8 +39,15 @@ namespace Mafesoft.Localization.Blazor.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds and inits the localization manager to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
+        /// Adds the localization manager to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
         /// </summary>
+        /// <remarks>
+        /// Since 4.3.0 the provider is not called here. On the server (Blazor Web App) the manager is initialized
+        /// asynchronously by a hosted service when the host starts, before the server accepts the first request. In the browser
+        /// (Blazor WebAssembly), where the host does not run hosted services, the initialization starts at once in the
+        /// background: the default vocabulary is used until it is loaded, then <see cref="LocalizationManager.CultureChanged"/>
+        /// is raised. To wait for it, call <c>await LocalizationManager.InitAsync(...)</c> before <c>RunAsync()</c> instead.
+        /// </remarks>
         /// <param name="services"></param>
         /// <param name="options"></param>
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
@@ -59,7 +67,7 @@ namespace Mafesoft.Localization.Blazor.Extensions
             LocalizationManager.Instance.FollowCurrentUICulture = localizationManagerOptions.FollowCurrentUICulture;
             LocalizationManager.Instance.UseParentCultureFallback = localizationManagerOptions.UseParentCultureFallback;
             LocalizationManager.Instance.FallbackCulture = localizationManagerOptions.FallbackCulture;
-            LocalizationManager.Init(localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
+            LocalizationManagerInitializer.Register(services, localizationManagerOptions.ServiceProvider, localizationManagerOptions.Culture);
             services.AddSingleton(LocalizationManager.Instance);
             return services;
         }

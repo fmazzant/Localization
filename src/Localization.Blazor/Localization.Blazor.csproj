@@ -45,6 +45,12 @@
   <!-- Minimum version for each .NET version (src/Directory.Packages.props): the application can use any newer one -->
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+  </ItemGroup>
+
+  <!-- Asynchronous initialization when the host starts (shared source, internal) -->
+  <ItemGroup>
+    <Compile Include="..\Shared\LocalizationManagerInitializer.cs" Link="Hosting\LocalizationManagerInitializer.cs" />
   </ItemGroup>
 
   <ItemGroup>

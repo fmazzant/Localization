@@ -64,5 +64,13 @@ namespace Mafesoft.Localization.Extensions
         /// Default null. See <see cref="LocalizationManager.FallbackCulture"/>.
         /// </summary>
         public CultureInfo? FallbackCulture { get; set; }
+
+        /// <summary>
+        /// When true the provider is not called by <see cref="ServiceCollectionExtensions.AddLocalizationManager"/>: the manager
+        /// is initialized asynchronously by a hosted service when the host starts (<c>app.Run()</c>), before the other hosted
+        /// services and the web server. Requires a host (ASP.NET Core, generic host). Default false: the manager is
+        /// initialized synchronously during the registration, which also works without a host.
+        /// </summary>
+        public bool InitializeOnHostStart { get; set; }
     }
 }

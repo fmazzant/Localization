@@ -24,6 +24,7 @@ switch (settings.Registration)
             options.ServiceProvider = new MockVocabularyServiceProvider();
             options.Culture = new CultureInfo(settings.Culture);
             options.FollowCurrentUICulture = settings.FollowCurrentUICulture;
+            options.InitializeOnHostStart = true;   // the vocabulary is loaded asynchronously when the app starts
         })
         .AddStringLocalizer(options => options.UseTypeNamePrefix = settings.UseTypeNamePrefix);
         break;

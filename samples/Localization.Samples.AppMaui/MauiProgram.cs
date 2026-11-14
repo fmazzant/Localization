@@ -11,7 +11,7 @@ namespace Localization.Samples.AppMaui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .ConfigureLocalization(new MockVocabularyServiceProvider { })
+                .ConfigureLocalization(options => options.ServiceProvider = new MockVocabularyServiceProvider { })   // asynchronous, does not block the startup
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

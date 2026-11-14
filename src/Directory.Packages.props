@@ -14,6 +14,7 @@
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
+    <PackageVersion Include="bunit" Version="2.15.2" />
   </ItemGroup>
 
   <!--
@@ -23,12 +24,18 @@
   <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components" Version="8.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.3" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.0" />
   </ItemGroup>

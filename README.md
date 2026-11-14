@@ -33,6 +33,7 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 - [How it works](#how-it-works)
 - [Vocabulary service provider](#vocabulary-service-provider)
 - [LocalizationManager API](#localizationmanager-api)
+- [Culture fallback](#culture-fallback)
 - [Per-request culture on the server](#per-request-culture-on-the-server)
 - [WPF](#wpf)
 - [.NET MAUI](#net-maui)
@@ -64,10 +65,12 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 - Pluggable vocabulary provider (`IVocabularyServiceProvider`), synchronous or asynchronous initialization.
 - Runtime culture switch with `SetCulture` / `SetCultureAsync` and the `CultureChanged` event.
 - Default values: `Translate("key", "#Default")` never returns null.
+- Format arguments formatted with the culture of the vocabulary: `TranslateFormat("Welcome", userName, count)` (since 4.3.0).
+- Culture fallback `it-IT` → `it` → invariant → fallback culture, opt-in (`UseParentCultureFallback`, `FallbackCulture`, since 4.3.0).
 - XAML markup extension `{culture:Translate Key, DefaultValue=..., StringFormat=...}` for WPF and .NET MAUI.
 - ASP.NET Core MVC: `[Translate]` attribute, used by `Html.LabelFor`, `<label asp-for>`, `Html.DisplayNameFor` and the
-  validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers.
-- Blazor Server and Blazor WebAssembly: `Binding.Translate` with default value and `StringFormat`.
+  validation messages, plus `TranslateLabelFor` / `TranslateLabel` helpers and the `<translate>` / `loc-key` tag helpers (since 4.3.0), translated validation messages (`AddValidationMessageTranslation`, since 4.3.0).
+- Blazor Server and Blazor WebAssembly: `Binding.Translate` with default value and `StringFormat`, and the `<Translate>` component (since 4.3.0).
 - `IStringLocalizer` / `IStringLocalizerFactory` backed by the vocabularies, for DataAnnotations and the other
   consumers of `Microsoft.Extensions.Localization` (since 4.1.0).
 - Per-request culture on the server (`FollowCurrentUICulture`, with `UseRequestLocalization()`) and vocabularies
@@ -81,12 +84,12 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 |---|---|---|---|---|---|
 | Culture change at runtime, bound UI refreshed | ✅ WPF, MAUI, Blazor; per request on the server | ⚠️ per request; Blazor reloads the page | ✅ | ✅ | ⚠️ per request, no UI bindings |
 | Translations from your own store (database, API) | ✅ `IVocabularyServiceProvider` | ⚠️ write your own `IStringLocalizerFactory` | ⚠️ custom `ResourceManager` | ✅ `ILocalizationProvider` | ❌ JSON files only |
-| Missing keys reported | ✅ `AddOrUpdateTermAsync`, the provider can store them | ⚠️ debug log, `ResourceNotFound` | ❌ | ✅ `MissingKeyEvent` | ✅ log or throw |
+| Missing keys reported | ✅ `AddOrUpdateTermAsync` once per key, `MissingTerm` event, `ILogger` | ⚠️ debug log, `ResourceNotFound` | ❌ | ✅ `MissingKeyEvent` | ✅ log or throw |
 | WPF, MAUI, MVC and Blazor with one API | ✅ | ⚠️ MVC and Blazor; no XAML markup | ❌ MAUI only | ❌ WPF only | ❌ ASP.NET Core only |
 | `IStringLocalizer` | ✅ since 4.1.0 | ✅ | ❌ | ❌ | ✅ |
 | `netstandard2.0` / .NET Framework 4.6.2+ | ✅ | ✅ | ❌ `net10.0` only | ⚠️ .NET Framework only | ❌ `net10.0` only |
-| Culture fallback (`it-IT` → `it` → neutral) | ❌ planned ([#23](https://github.com/fmazzant/Localization/issues/23)) | ✅ | ✅ | ✅ | ✅ |
-| Format arguments | ⚠️ `StringFormat` and `IStringLocalizer`; `Translate(key, args)` planned ([#24](https://github.com/fmazzant/Localization/issues/24)) | ✅ | ✅ | ⚠️ converter, not bindable | ✅ |
+| Culture fallback (`it-IT` → `it` → neutral) | ✅ since 4.3.0, opt-in (`UseParentCultureFallback`, `FallbackCulture`) | ✅ | ✅ | ✅ | ✅ |
+| Format arguments | ✅ `TranslateFormat(key, args)` since 4.3.0, `StringFormat`, `IStringLocalizer` | ✅ | ✅ | ⚠️ converter, not bindable | ✅ |
 | Reuse existing `.resx` files | ❌ planned ([#30](https://github.com/fmazzant/Localization/issues/30)) | ✅ | ✅ | ✅ | ❌ |
 | Pluralization | ❌ to evaluate ([#33](https://github.com/fmazzant/Localization/issues/33)) | ❌ | ⚠️ zero/one only | ❌ | ❌ |
 | Strongly typed keys | ❌ planned ([#31](https://github.com/fmazzant/Localization/issues/31)) | ⚠️ `.resx` designer class, not with `IStringLocalizer` | ❌ | ❌ | ⚠️ `GetString<T>(x => x.Prop)` |
@@ -253,6 +256,30 @@ public class JsonVocabularyServiceProvider(string folder) : IVocabularyServicePr
 
 A term with an empty value counts as missing: `Translate` returns the default value.
 
+### Missing keys
+
+*Since 4.3.0.* Each missing key is reported **once per culture**, not every time it is read: a key read 1 000 times in
+a list calls `AddOrUpdateTermAsync` once. The reported keys are forgotten when the culture changes (`SetCulture`,
+`Init`), so they are reported again for the new vocabulary.
+
+```c#
+// Diagnostics tooling: raised once per key and culture
+LocalizationManager.Instance.MissingTerm += (sender, e) => Console.WriteLine($"{e.Culture.Name}: {e.Key}");
+
+// Log the missing keys and the provider errors with ILogger instead of Trace
+LocalizationManager.Instance.Logger = loggerFactory.CreateLogger<LocalizationManager>();
+
+// Turn the reporting off (provider notification, event and log), for example in production
+LocalizationManager.Instance.ReportMissingTerms = false;
+```
+
+- `AddMvcLocalizationManager`, `AddBlazorLocalizationManager`, `AddLocalizationManager` (in an application with a host)
+  and MAUI `ConfigureLocalization(options => ...)` set `Logger` from the `ILoggerFactory` of the application, so the
+  missing keys appear in the ASP.NET Core / MAUI log (category `Mafesoft.Localization.LocalizationManager`, level
+  `Information`; the provider errors are `Warning`).
+- Without a logger (WPF, .NET Framework, Blazor WebAssembly) they are written with `System.Diagnostics.Trace`.
+
+
 ## LocalizationManager API
 
 ```c#
@@ -285,6 +312,61 @@ IVocabulary vocabulary = await LocalizationManager.Instance.GetVocabularyAsync(n
 
 The vocabularies are cached per culture: each culture is loaded from the provider once, also when many callers ask
 for it at the same time. `SetCulture` reloads the vocabulary of its culture, and `Init` clears the cache.
+
+### Format arguments
+
+*Since 4.3.0.* `TranslateFormat` translates a text with placeholders (`"Welcome": "Hello {0}, you have {1} messages"`) and
+formats it with `string.Format`:
+
+```c#
+string text = LocalizationManager.TranslateFormat("Welcome", userName, count);
+
+// With a default value: the arguments are an array, so a string argument is never taken as the default value
+string text = LocalizationManager.TranslateFormat("Welcome", "Hello {0}, you have {1} messages", new object[] { userName, count });
+
+// In the vocabulary of a given culture
+string english = LocalizationManager.TranslateFormat("Welcome", new CultureInfo("en-US"), userName, count);
+```
+
+- The arguments are formatted with the **culture of the vocabulary** (`LocalizationManager.CurrentCulture`, or the
+  culture passed), not with the culture of the thread: `1.5` is `1,5` in an `it-IT` vocabulary.
+- When the key is missing the default value (or the key itself) is formatted.
+- A wrong format string (`{name}`, a missing argument, an unbalanced brace) does not throw: the text is returned
+  unformatted and a warning is written.
+- The name is `TranslateFormat` and not `Translate`, because `Translate("Welcome", userName)` already means
+  "`userName` is the default value".
+
+## Culture fallback
+
+*Since 4.3.0.* By default a key that is not in the vocabulary of the culture returns the default value (or the key).
+Like ResX and `IStringLocalizer`, the manager can search the parent cultures first:
+
+```c#
+LocalizationManager.Instance.UseParentCultureFallback = true;            // it-IT → it → invariant
+LocalizationManager.Instance.FallbackCulture = new CultureInfo("en");    // then en
+
+// or at registration (AddLocalizationManager, AddMvcLocalizationManager, AddBlazorLocalizationManager)
+builder.Services.AddMvcLocalizationManager(options =>
+{
+    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.UseParentCultureFallback = true;
+    options.FallbackCulture = new CultureInfo("en");
+});
+```
+
+The lookup order is: the culture (`it-IT`) → its parent cultures (`it`, then the invariant culture, with
+`UseParentCultureFallback`) → `FallbackCulture` → the default value → the key.
+
+- The provider is asked for the vocabulary of every culture of the chain: `LoadVocabularyAsync(new CultureInfo("it"))`,
+  `LoadVocabularyAsync(CultureInfo.InvariantCulture)` (`Name` is an empty string) and so on. Return an empty vocabulary
+  for the cultures you do not have.
+- The vocabularies of the parent and fallback cultures are loaded only when a key is missing, and then cached like the
+  others. A culture that fails to load is skipped.
+- The missing term is reported to the provider (`AddOrUpdateTermAsync`, with the vocabulary of the culture) only when
+  no culture of the chain has the key. A term with an empty value counts as missing, so the chain goes on.
+- `UseParentCultureFallback` is `false` by default in 4.x, so the behavior does not change; `FallbackCulture` is `null`.
+- It applies to `Translate`, the indexers, the XAML markup extensions, the MVC and Blazor helpers and `IStringLocalizer`,
+  also with `FollowCurrentUICulture` (the chain of the culture of the request).
 
 ## Per-request culture on the server
 
@@ -337,15 +419,19 @@ app.UseRequestLocalization(options => options
 dotnet add package Mafesoft.Localization.Wpf
 ```
 
-Initialize the manager at startup (`App.xaml.cs`):
+Initialize the manager at startup (`App.xaml.cs`) with `InitAsync`, so a provider that reads from the network or a
+database does not block the UI thread:
 
 ```c#
-protected override void OnStartup(StartupEventArgs e)
+protected override async void OnStartup(StartupEventArgs e)
 {
-    LocalizationManager.Init(new JsonVocabularyServiceProvider("vocabularies"), new CultureInfo("it-IT"));
     base.OnStartup(e);
+    await LocalizationManager.InitAsync(new JsonVocabularyServiceProvider("vocabularies"), new CultureInfo("it-IT"));
 }
 ```
+
+The main window shows the default values until the vocabulary is loaded, then the bindings are refreshed.
+`LocalizationManager.Init(...)` is still available, but it blocks the caller until the vocabulary is loaded.
 
 Translate in XAML:
 
@@ -374,8 +460,17 @@ Configure the manager in `MauiProgram.cs`:
 var builder = MauiApp.CreateBuilder();
 builder
     .UseMauiApp<App>()
-    .ConfigureLocalization(new JsonVocabularyServiceProvider(FileSystem.AppDataDirectory), new CultureInfo("it-IT"));
+    .ConfigureLocalization(options =>
+    {
+        options.ServiceProvider = new JsonVocabularyServiceProvider(FileSystem.AppDataDirectory);
+        options.Culture = new CultureInfo("it-IT");
+    });
 ```
+
+*Since 4.3.0* `ConfigureLocalization(options => ...)` does not block the startup (no risk of ANR on Android): the
+vocabulary is loaded asynchronously when the application is built, the controls show the default values until then
+and are refreshed when it is ready (`CultureChanged`). The overloads `ConfigureLocalization(provider)` and
+`ConfigureLocalization(provider, culture)` are kept for compatibility: they **block** until the vocabulary is loaded.
 
 Translate in XAML:
 
@@ -411,6 +506,10 @@ builder.Services.AddMvcLocalizationManager(options =>
 });
 ```
 
+*Since 4.3.0* `AddMvcLocalizationManager` (and `AddBlazorLocalizationManager`) does not call the provider: a hosted
+service initializes the manager asynchronously when the application starts (`app.Run()`), before the server accepts
+the first request. Code that runs between `builder.Build()` and `app.Run()` still sees the empty default vocabulary.
+
 Annotate the view model with `[Translate]`:
 
 ```c#
@@ -434,9 +533,45 @@ messages), and the library adds two helpers:
 @Html.TranslateLabel("Title", "TitleKey", "#Default title")
 ```
 
+*Since 4.3.0* two tag helpers translate directly in the views. Register them in `_ViewImports.cshtml`:
+
+```razor
+@addTagHelper *, Mafesoft.Localization.Mvc
+```
+
+```html
+<translate key="Home.Title" default="Welcome"></translate>   <!-- renders only the text -->
+<button loc-key="Save">Save</button>                           <!-- replaces the content; kept when the key is missing -->
+```
+
 By default the culture is shared by all the users and changed with `LocalizationManager.Instance.SetCulture(...)`.
 To give every user their own language set `options.FollowCurrentUICulture = true` and add `app.UseRequestLocalization(...)`:
 see [Per-request culture on the server](#per-request-culture-on-the-server).
+
+### Validation messages
+
+*Since 4.3.0* `AddValidationMessageTranslation()` translates the messages of the DataAnnotations attributes
+(`[Required]`, `[StringLength]`, `[Range]`, `[EmailAddress]`...) that have no explicit message, on the server and in the
+`data-val-*` attributes of the client-side validation:
+
+```c#
+builder.Services.AddControllersWithViews()
+    .AddValidationMessageTranslation();   // optional: o => o.KeyPrefix = "Errors."
+```
+
+| Attribute | Vocabulary key | Example value |
+|---|---|---|
+| `[Required]` | `Validation.Required` | `Il campo {0} è obbligatorio.` |
+| `[StringLength(20)]` | `Validation.StringLength` | `Il campo {0} può avere al massimo {1} caratteri.` |
+| `[StringLength(20, MinimumLength = 2)]` | `Validation.StringLengthWithMinimum` | `{0}: da {2} a {1} caratteri.` |
+| `[Range(1, 10)]` | `Validation.Range` | `Il campo {0} deve essere tra {1} e {2}.` |
+
+- The key is the prefix (`Validation.` by default) followed by the attribute name without `Attribute`; `{0}` is the
+  display name of the property (translated with `[Translate]`), the other placeholders are the arguments of the attribute.
+- When the key is missing the default English message is used (and the key is reported to the provider).
+- An attribute with `ErrorMessage` or `ErrorMessageResourceType` is not changed; with `AddDataAnnotationsLocalization()`
+  its message still goes to your `IStringLocalizer` (for example the one of [IStringLocalizer](#istringlocalizer)).
+- It works with `AddMvcLocalizationManager` and with `AddLocalizationManager(...).AddStringLocalizer()`.
 
 ## Blazor
 
@@ -465,7 +600,9 @@ the users and changed with `SetCulture`.
 
 **Blazor WebAssembly:** the package does not depend on the ASP.NET Core shared framework, so it runs in the browser
 too. Initialize the manager asynchronously: a provider that loads the vocabularies with `HttpClient` cannot be waited
-synchronously on the single WebAssembly thread.
+synchronously on the single WebAssembly thread. The WebAssembly host does not run hosted services: there
+`AddBlazorLocalizationManager` starts the initialization in the background (the default values are shown until the
+vocabulary is loaded); to wait for it, call `InitAsync` before `RunAsync()`:
 
 ```c#
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -477,7 +614,19 @@ builder.Services.AddSingleton(LocalizationManager.Instance);
 await builder.Build().RunAsync();
 ```
 
-Translate in a component with `Binding.Translate`, and refresh the component when the culture changes:
+*Since 4.3.0* the `<Translate>` component is the shortest way: it renders the translation and renders again by itself
+when the culture changes, with no `CultureChanged` subscription in the page.
+
+```razor
+@using Mafesoft.Localization.Blazor.Components   @* or in _Imports.razor *@
+
+<h1><Translate Key="Home.Title" Default="Welcome" /></h1>
+<p><Translate Key="Greeting" Default="Hello {0}" Args="new object[] { userName }" /></p>
+```
+
+`Args` formats the text with the culture of the vocabulary (see [Format arguments](#format-arguments)).
+
+Or translate in a component with `Binding.Translate`, and refresh the component when the culture changes:
 
 ```razor
 @using Mafesoft.Localization.Blazor.Bindings
@@ -514,12 +663,17 @@ builder.Services.AddLocalizationManager(options =>
 {
     options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
     options.Culture = new CultureInfo("it-IT");
+    options.InitializeOnHostStart = true;   // since 4.3.0: load the vocabulary asynchronously when the host starts
 })
 .AddStringLocalizer();
 
 // ASP.NET Core MVC: [Display(Name = "...")] and the validation messages are translated too
 builder.Services.AddControllersWithViews().AddDataAnnotationsLocalization();
 ```
+
+`AddLocalizationManager` initializes the manager synchronously by default, so it also works with a plain
+`ServiceCollection` without a host. With `InitializeOnHostStart = true` (since 4.3.0) it does not call the provider:
+a hosted service loads the vocabulary asynchronously when the host starts.
 
 ```c#
 public class HomeController(IStringLocalizer<HomeController> localizer) : Controller

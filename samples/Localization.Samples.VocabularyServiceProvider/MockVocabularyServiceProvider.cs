@@ -67,6 +67,10 @@ namespace Localization.Samples.VocabularyServiceProvider
                          { "ChangedTimesTemplate","cambiato {0} volte." },
                         { "AbstractText","Usa questa pagina di dettaglio per la localizzazione di esempio" },
 
+                        //MVC validation messages (AddValidationMessageTranslation)
+                        { "Validation.Required", "Il campo {0} è obbligatorio." },
+                        { "Validation.StringLength", "Il campo {0} può avere al massimo {1} caratteri." },
+
                         //MVC IStringLocalizer (the "HomeController." keys are read with UseTypeNamePrefix = true)
                         { "LocalizerIntro","Questi testi sono letti con IStringLocalizer, IViewLocalizer e DataAnnotations dai vocabolari del LocalizationManager." },
                         { "LocalizerGreeting","Ciao {0}, oggi è {1:D}." },
@@ -121,6 +125,10 @@ namespace Localization.Samples.VocabularyServiceProvider
                         { "Title","Culture Example" },
                         { "ChangedTimesTemplate","changed {0} times." },
                         { "AbstractText","Use this page to detail your site's culture example." },
+
+                        //MVC validation messages (AddValidationMessageTranslation)
+                        { "Validation.Required", "The {0} field is required (from the vocabulary)." },
+                        { "Validation.StringLength", "{0}: at most {1} characters (from the vocabulary)." },
 
                         //MVC IStringLocalizer (the "HomeController." keys are read with UseTypeNamePrefix = true)
                         { "LocalizerIntro","These texts are read with IStringLocalizer, IViewLocalizer and DataAnnotations from the vocabularies of the LocalizationManager." },

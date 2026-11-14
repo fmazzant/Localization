@@ -5,7 +5,8 @@
 
 <h1>@Binding.Translate("BlazorHelloWorld")</h1>
 
-<p>@Binding.Translate("BlazorWelcome")</p>
+<!-- The <Translate> component renders again by itself when the culture changes -->
+<p><Translate Key="BlazorWelcome" Default="Welcome to your new app." /></p>
 
 <button @onclick='() => SetCultureAsync("it-IT")'>Italiano</button>
 <button @onclick='() => SetCultureAsync("en-US")'>English</button>

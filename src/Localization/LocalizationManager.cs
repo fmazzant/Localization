@@ -30,6 +30,7 @@
 namespace Mafesoft.Localization
 {
     using Mafesoft.Localization.Providers;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -59,6 +60,11 @@ namespace Mafesoft.Localization
         private int cultureRequest;
         private int version;
         private int followCurrentUICulture;
+        private int useParentCultureFallback;
+        private CultureInfo? fallbackCulture;
+        private int reportMissingTerms = 1;
+        private ILogger? logger;
+        private readonly ConcurrentDictionary<string, byte> reportedMissingTerms = new ConcurrentDictionary<string, byte>(StringComparer.Ordinal);
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -69,6 +75,36 @@ namespace Mafesoft.Localization
         /// Occurs after the current culture (and its vocabulary) has been changed.
         /// </summary>
         public event EventHandler? CultureChanged;
+
+        /// <summary>
+        /// Occurs the first time a key is not found in the vocabulary of a culture (nor in its fallback cultures), for
+        /// diagnostics tooling. Like the provider notification, it is raised once per key and culture until the culture
+        /// changes, and not at all when <see cref="ReportMissingTerms"/> is false.
+        /// </summary>
+        public event EventHandler<MissingTermEventArgs>? MissingTerm;
+
+        /// <summary>
+        /// When true (default) a missing key is reported: the provider is notified through
+        /// <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/>, <see cref="MissingTerm"/> is raised and the key is
+        /// logged. Each key is reported once per culture; the reported keys are forgotten when the culture changes.
+        /// Set it to false to turn the reporting off, for example in production.
+        /// </summary>
+        public bool ReportMissingTerms
+        {
+            get => Volatile.Read(ref reportMissingTerms) != 0;
+            set => Volatile.Write(ref reportMissingTerms, value ? 1 : 0);
+        }
+
+        /// <summary>
+        /// The logger of the missing keys and of the provider errors. When null they are written with
+        /// <see cref="Trace"/>. The registration methods of the ASP.NET Core, Blazor and MAUI packages set it from the
+        /// <see cref="ILoggerFactory"/> of the application.
+        /// </summary>
+        public ILogger? Logger
+        {
+            get => Volatile.Read(ref logger);
+            set => Volatile.Write(ref logger, value);
+        }
 
         /// <summary>
         /// Current Culture selected. When <see cref="FollowCurrentUICulture"/> is true it is
@@ -90,6 +126,28 @@ namespace Mafesoft.Localization
         {
             get => Volatile.Read(ref followCurrentUICulture) != 0;
             set => Volatile.Write(ref followCurrentUICulture, value ? 1 : 0);
+        }
+
+        /// <summary>
+        /// When true a key that is not in the vocabulary of a culture is searched in the vocabularies of its parent cultures:
+        /// <c>it-IT</c>, then <c>it</c>, then the invariant (neutral) culture, then <see cref="FallbackCulture"/>.
+        /// The vocabularies of the parent cultures are loaded from the provider only when a key is missing, and then cached.
+        /// Default false: only the vocabulary of the culture (and <see cref="FallbackCulture"/>, when set) is read.
+        /// </summary>
+        public bool UseParentCultureFallback
+        {
+            get => Volatile.Read(ref useParentCultureFallback) != 0;
+            set => Volatile.Write(ref useParentCultureFallback, value ? 1 : 0);
+        }
+
+        /// <summary>
+        /// The culture whose vocabulary is read when a key is not in the vocabulary of the culture (nor in its parent cultures,
+        /// with <see cref="UseParentCultureFallback"/>), for example <c>en</c>. Default null: no fallback culture.
+        /// </summary>
+        public CultureInfo? FallbackCulture
+        {
+            get => Volatile.Read(ref fallbackCulture);
+            set => Volatile.Write(ref fallbackCulture, value);
         }
 
         /// <summary>
@@ -138,17 +196,19 @@ namespace Mafesoft.Localization
 
         /// <summary>
         /// Returns the value associated to resourceKey inside to the current vocabulary.
-        /// When the key does not exist or its value is empty, the provider is notified through
-        /// <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
+        /// When the key does not exist or its value is empty, the fallback cultures are searched (see
+        /// <see cref="UseParentCultureFallback"/> and <see cref="FallbackCulture"/>); when no culture has the key the provider
+        /// is notified through <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
         /// </summary>
         /// <param name="resourceKey"></param>
         /// <returns></returns>
-        public string? this[string? resourceKey] => Lookup(CurrentVocabulary, resourceKey);
+        public string? this[string? resourceKey] => Lookup(CurrentVocabulary, CurrentCulture, resourceKey);
 
         /// <summary>
         /// Returns the value associated to resourceKey inside the vocabulary of the culture, whatever the current culture is.
-        /// The vocabulary is loaded the first time and then cached. When the key does not exist or its value is empty, the provider is notified
-        /// through <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
+        /// The vocabulary is loaded the first time and then cached. When the key does not exist or its value is empty, the fallback
+        /// cultures are searched (see <see cref="UseParentCultureFallback"/> and <see cref="FallbackCulture"/>); when no culture has
+        /// the key the provider is notified through <see cref="IVocabularyServiceProvider.AddOrUpdateTermAsync"/> and null is returned.
         /// </summary>
         /// <param name="resourceKey">The key of the resource.</param>
         /// <param name="culture">The culture of the vocabulary.</param>
@@ -158,7 +218,7 @@ namespace Mafesoft.Localization
             {
                 if (culture is null) throw new ArgumentNullException(nameof(culture));
 
-                return resourceKey is null || resourceKey.Length == 0 ? null : Lookup(GetVocabulary(culture), resourceKey);
+                return resourceKey is null || resourceKey.Length == 0 ? null : Lookup(GetVocabulary(culture), culture, resourceKey);
             }
         }
 
@@ -178,6 +238,73 @@ namespace Mafesoft.Localization
         /// <param name="culture">The culture of the vocabulary.</param>
         /// <param name="defaultValue">The value returned when the key is not in the vocabulary.</param>
         public static string Translate(string? key, CultureInfo culture, string? defaultValue = null) => Instance[key, culture] ?? defaultValue ?? key ?? string.Empty;
+
+        /// <summary>
+        /// Returns the value of the key formatted with <paramref name="args"/> (<c>"Hello {0}, you have {1} messages"</c>).
+        /// When the key is not in the vocabulary the key itself is formatted. The format uses the culture of the vocabulary
+        /// (<see cref="CurrentCulture"/>), not the culture of the thread. A wrong format string does not throw: the text is
+        /// returned unformatted and a warning is written.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="args">The format arguments.</param>
+        public static string TranslateFormat(string? key, params object?[]? args)
+            => Format(CurrentCulture, Translate(key), args);
+
+        /// <summary>
+        /// Returns the value of the key formatted with <paramref name="args"/>. When the key is not in the vocabulary, the default
+        /// value (or the key itself) is formatted. The format uses the culture of the vocabulary (<see cref="CurrentCulture"/>).
+        /// A wrong format string does not throw: the text is returned unformatted and a warning is written.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="defaultValue">The format used when the key is not in the vocabulary, for example <c>"Hello {0}"</c>.</param>
+        /// <param name="args">The format arguments.</param>
+        public static string TranslateFormat(string? key, string? defaultValue, object?[]? args)
+            => Format(CurrentCulture, Translate(key, defaultValue), args);
+
+        /// <summary>
+        /// Returns the value of the key in the vocabulary of the culture formatted with <paramref name="args"/> and
+        /// <paramref name="culture"/>. When the key is not in the vocabulary the key itself is formatted. A wrong format string
+        /// does not throw: the text is returned unformatted and a warning is written.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="culture">The culture of the vocabulary, also used to format the arguments.</param>
+        /// <param name="args">The format arguments.</param>
+        public static string TranslateFormat(string? key, CultureInfo culture, params object?[]? args)
+            => Format(culture, Translate(key, culture), args);
+
+        /// <summary>
+        /// Returns the value of the key in the vocabulary of the culture formatted with <paramref name="args"/> and
+        /// <paramref name="culture"/>. When the key is not in the vocabulary, the default value (or the key itself) is formatted.
+        /// A wrong format string does not throw: the text is returned unformatted and a warning is written.
+        /// </summary>
+        /// <param name="key">The key of the resource.</param>
+        /// <param name="culture">The culture of the vocabulary, also used to format the arguments.</param>
+        /// <param name="defaultValue">The format used when the key is not in the vocabulary.</param>
+        /// <param name="args">The format arguments.</param>
+        public static string TranslateFormat(string? key, CultureInfo culture, string? defaultValue, object?[]? args)
+            => Format(culture, Translate(key, culture, defaultValue), args);
+
+        /// <summary>
+        /// Formats a translated text with the culture of its vocabulary. A wrong format string (or a missing argument)
+        /// does not throw: the text is returned unformatted and a warning is written.
+        /// </summary>
+        private static string Format(CultureInfo culture, string format, object?[]? args)
+        {
+            if (args is null || args.Length == 0)
+            {
+                return format;
+            }
+
+            try
+            {
+                return string.Format(culture, format, args);
+            }
+            catch (FormatException ex)
+            {
+                Instance.LogWarning(ex, "Localization: the text \"{0}\" cannot be formatted with {1} argument(s): {2}", format, args.Length, ex.Message);
+                return format;
+            }
+        }
 
         /// <summary>
         /// Returns the vocabulary of the culture. It is loaded from the provider only the first time (concurrent callers
@@ -221,6 +348,7 @@ namespace Mafesoft.Localization
             RunSync(async () => { await provider.InitializeAsync().ConfigureAwait(false); return true; });
             Instance.ServiceProvider = provider;
             Instance.vocabularies.Clear();
+            Instance.reportedMissingTerms.Clear();
             Instance.SetCulture(culture ?? CurrentCulture);
         }
 
@@ -245,6 +373,7 @@ namespace Mafesoft.Localization
             await provider.InitializeAsync(cancellationToken);
             Instance.ServiceProvider = provider;
             Instance.vocabularies.Clear();
+            Instance.reportedMissingTerms.Clear();
             await Instance.SetCultureAsync(culture ?? CurrentCulture, cancellationToken);
         }
 
@@ -317,11 +446,12 @@ namespace Mafesoft.Localization
                 }
                 CurrentCulture = culture;
                 CurrentVocabulary = vocabulary;
+                reportedMissingTerms.Clear();
             }
             OnCultureChanged();
         }
 
-        private string? Lookup(IVocabulary? vocabulary, string? resourceKey)
+        private string? Lookup(IVocabulary? vocabulary, CultureInfo culture, string? resourceKey)
         {
             // string.IsNullOrEmpty has no nullable annotations on netstandard2.0 and net462
             if (vocabulary is null || resourceKey is null || resourceKey.Length == 0)
@@ -329,13 +459,83 @@ namespace Mafesoft.Localization
                 return null;
             }
 
-            if (vocabulary.TryGetValue(resourceKey, out var value) && !string.IsNullOrEmpty(value))
+            if (TryGetTerm(vocabulary, resourceKey, out var value))
             {
                 return value;
             }
 
-            NotifyMissingTerm(vocabulary, resourceKey);
+            // Lookup order: culture, parent cultures (it-IT, it, invariant), fallback culture.
+            foreach (var fallback in GetFallbackCultures(culture))
+            {
+                if (TryGetFallbackVocabulary(fallback, out var fallbackVocabulary) && TryGetTerm(fallbackVocabulary!, resourceKey, out value))
+                {
+                    return value;
+                }
+            }
+
+            NotifyMissingTerm(vocabulary, culture, resourceKey);
             return null;
+        }
+
+        private static bool TryGetTerm(IVocabulary vocabulary, string resourceKey, out string? value)
+        {
+            if (vocabulary.TryGetValue(resourceKey, out var term) && !string.IsNullOrEmpty(term))
+            {
+                value = term;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the cultures searched after <paramref name="culture"/>: its parent cultures up to the invariant culture
+        /// (with <see cref="UseParentCultureFallback"/>), then <see cref="FallbackCulture"/>. Every culture appears once.
+        /// </summary>
+        private IEnumerable<CultureInfo> GetFallbackCultures(CultureInfo culture)
+        {
+            var useParents = UseParentCultureFallback;
+            var fallback = FallbackCulture;
+            if (!useParents && fallback is null)
+            {
+                yield break;
+            }
+
+            var visited = new HashSet<string>(StringComparer.Ordinal) { culture.Name };
+            if (useParents)
+            {
+                var parent = culture;
+                while (parent.Name.Length != 0)
+                {
+                    parent = parent.Parent;
+                    if (visited.Add(parent.Name))
+                    {
+                        yield return parent;
+                    }
+                }
+            }
+
+            if (fallback is not null && visited.Add(fallback.Name))
+            {
+                yield return fallback;
+            }
+        }
+
+        private bool TryGetFallbackVocabulary(CultureInfo culture, out IVocabulary? vocabulary)
+        {
+            try
+            {
+                vocabulary = GetVocabulary(culture);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // A fallback culture that cannot be loaded is skipped: the lookup goes on with the next one.
+                LogWarning(ex, "Localization: the vocabulary of the fallback culture \"{0}\" cannot be loaded: {1}", culture.Name, ex.Message);
+                vocabulary = null;
+                return false;
+            }
         }
 
         private IVocabulary GetVocabulary(CultureInfo culture)
@@ -371,24 +571,83 @@ namespace Mafesoft.Localization
             return vocabularies.GetOrAdd(key, entry).Value;
         }
 
-        private void NotifyMissingTerm(IVocabulary vocabulary, string resourceKey)
+        /// <summary>
+        /// Reports a missing key once per culture (until the culture changes): notifies the provider, raises
+        /// <see cref="MissingTerm"/> and logs it.
+        /// </summary>
+        private void NotifyMissingTerm(IVocabulary vocabulary, CultureInfo culture, string resourceKey)
         {
+            if (!ReportMissingTerms || !reportedMissingTerms.TryAdd(culture.Name + "\n" + resourceKey, 0))
+            {
+                return;
+            }
+
+            Log(LogLevel.Information, null, "Localization: the key \"{0}\" is missing in the vocabulary of the culture \"{1}\"", resourceKey, culture.Name);
+
+            try
+            {
+                MissingTerm?.Invoke(this, new MissingTermEventArgs(resourceKey, culture, vocabulary));
+            }
+            catch (Exception ex)
+            {
+                LogWarning(ex, "Localization: a MissingTerm handler failed for key \"{0}\": {1}", resourceKey, ex.Message);
+            }
+
             try
             {
                 ServiceProvider.AddOrUpdateTermAsync(vocabulary, resourceKey)?.ContinueWith(
-                    t => TraceMissingTermError(resourceKey, t.Exception?.GetBaseException()),
+                    t => LogMissingTermError(resourceKey, t.Exception?.GetBaseException()),
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
                     TaskScheduler.Default);
             }
             catch (Exception ex)
             {
-                TraceMissingTermError(resourceKey, ex);
+                LogMissingTermError(resourceKey, ex);
             }
         }
 
-        private static void TraceMissingTermError(string resourceKey, Exception? ex)
-            => Trace.TraceWarning("Localization: AddOrUpdateTermAsync failed for key \"{0}\": {1}", resourceKey, ex?.Message);
+        private void LogMissingTermError(string resourceKey, Exception? ex)
+            => LogWarning(ex, "Localization: AddOrUpdateTermAsync failed for key \"{0}\": {1}", resourceKey, ex?.Message);
+
+        /// <summary>
+        /// Writes a warning to <see cref="Logger"/>, or to <see cref="Trace"/> when there is no logger.
+        /// </summary>
+        private void LogWarning(Exception? exception, string format, params object?[] args)
+            => Log(LogLevel.Warning, exception, format, args);
+
+        /// <summary>
+        /// Writes to <see cref="Logger"/>, or to <see cref="Trace"/> when there is no logger or the logger fails (for example
+        /// a logger of a host that has been disposed): logging never breaks a translation.
+        /// </summary>
+        private void Log(LogLevel level, Exception? exception, string format, params object?[] args)
+        {
+            var message = string.Format(CultureInfo.InvariantCulture, format, args);
+            var log = Logger;
+            if (log is not null)
+            {
+                try
+                {
+                    // The message is formatted here (positional placeholders, not a logging template) and passed as the state:
+                    // no LogValuesFormatter, which on .NET Framework needs binding redirects for System.Memory.
+                    log.Log(level, default(EventId), message, exception, (state, _) => state);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceWarning("Localization: the logger failed: {0}", ex.Message);
+                }
+            }
+
+            if (level >= LogLevel.Warning)
+            {
+                Trace.TraceWarning(message);
+            }
+            else
+            {
+                Trace.TraceInformation(message);
+            }
+        }
 
         /// <summary>
         /// Waits an asynchronous operation avoiding the classic sync-over-async deadlock

@@ -98,6 +98,8 @@ namespace Mafesoft.Localization.Mvc.Rendering
             return htmlHelper.Label(expression, labelText, htmlAttributes);
         }
 
+        // Trimming and NativeAOT (issue #32): the only reflection is reading [Translate] from the member of the expression
+        // tree, which the trimmer keeps (the expression references it), so nothing needs an annotation.
         private static MemberInfo? GetMember(Expression body)
         {
             while (body is UnaryExpression unary

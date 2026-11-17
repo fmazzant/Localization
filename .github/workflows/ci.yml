@@ -86,3 +86,40 @@ jobs:
       - name: Build the MAUI sample
         if: runner.os == 'Windows'
         run: dotnet build samples/Localization.Samples.AppMaui/Localization.Samples.AppMaui.csproj -c Release -f net10.0-windows10.0.19041.0
+
+      # Trimming and NativeAOT (issue #32): a console app that uses the trimmable packages is published with NativeAOT,
+      # every trimming / AOT warning is an error, and the native program checks that the translations work.
+      - name: NativeAOT check
+        if: runner.os == 'Linux'
+        run: |
+          dotnet publish samples/Localization.Samples.AotCheck/Localization.Samples.AotCheck.csproj -c Release -r linux-x64 -o aot-check
+          ./aot-check/Localization.Samples.AotCheck
+
+  # The MAUI sample published with NativeAOT for Mac Catalyst (build only, not signed): the MAUI package and the XAML
+  # markup extensions must not break a NativeAOT app (issue #32). Same macOS setup as the AdvancedWebView CI.
+  maui-nativeaot:
+    runs-on: xcode-27
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      # Must match the pinned MAUI workload below: workload set 10.0.403 (iOS 27.1.x) requires Xcode 27.1.
+      - name: Select Xcode 27.1
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '27.1'
+
+      # Pinned workload set: a new release can require a newer Xcode. Update it together with the Xcode version above.
+      - name: Install MAUI workload
+        run: dotnet workload install maui --version 10.0.403
+
+      - name: Publish the MAUI sample with NativeAOT (Mac Catalyst)
+        run: >
+          dotnet publish samples/Localization.Samples.AppMaui/Localization.Samples.AppMaui.csproj
+          -c Release -f net10.0-maccatalyst -r maccatalyst-arm64
+          -p:PublishAot=true -p:EnableCodeSigning=false -p:CreatePackage=false

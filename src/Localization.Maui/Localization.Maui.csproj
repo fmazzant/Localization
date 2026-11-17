@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Microsoft.Maui.Controls turns the trim analyzer off outside of a trimmed publish: keep it on (issue #32) -->
+  <PropertyGroup>
+    <_MauiDoNotConfigureTrimAnalyzer>true</_MauiDoNotConfigureTrimAnalyzer>
+  </PropertyGroup>
+
   <PropertyGroup>
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <AssemblyName>Mafesoft.$(MSBuildProjectName)</AssemblyName>

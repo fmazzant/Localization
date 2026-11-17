@@ -22,6 +22,16 @@
     <EnablePackageValidation>true</EnablePackageValidation>
   </PropertyGroup>
 
+  <!--
+    Trimming and NativeAOT (issue #32): the .NET 10 builds of the libraries are marked trimmable and AOT compatible, so
+    the trimming / AOT analyzers run on every build and the apps that trim do not get warnings from the Mafesoft
+    assemblies. A library that cannot be (Localization.Json.Newtonsoft) sets both to false in its .csproj.
+  -->
+  <PropertyGroup Condition="'$(IsTestProject)' != 'true' and $(TargetFramework.StartsWith('net10.0'))">
+    <IsTrimmable>true</IsTrimmable>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
   <!-- Libraries: nullable reference types, every nullable warning is an error -->
   <PropertyGroup Condition="'$(IsTestProject)' != 'true'">
     <Nullable>enable</Nullable>

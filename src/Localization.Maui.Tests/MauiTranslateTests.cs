@@ -101,7 +101,8 @@ namespace Mafesoft.Localization.Maui.Tests
         {
             var label = new Label();
 
-            label.Translate(Label.TextProperty, m => string.Format(m["Format"], 42));
+            // "?? {0}": the label can outlive the test, and the other tests set cultures without "Format" (he-IL).
+            label.Translate(Label.TextProperty, m => string.Format(m["Format"] ?? "{0}", 42));
             Assert.Equal("Valore 42", label.Text);
 
             LocalizationManager.Instance.SetCulture(English);

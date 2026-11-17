@@ -121,5 +121,5 @@ jobs:
       - name: Publish the MAUI sample with NativeAOT (Mac Catalyst)
         run: >
           dotnet publish samples/Localization.Samples.AppMaui/Localization.Samples.AppMaui.csproj
-          -c Release -f net10.0-maccatalyst -r maccatalyst-arm64
-          -p:PublishAot=true -p:EnableCodeSigning=false -p:CreatePackage=false
+          -c Release -f net10.0-maccatalyst
+          -p:SampleNativeAot=true -p:EnableCodeSigning=false -p:CreatePackage=false

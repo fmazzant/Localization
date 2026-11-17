@@ -39,6 +39,16 @@
 		<Configurations>Debug;Release;x86</Configurations>
 	</PropertyGroup>
 
+	<!--
+		NativeAOT check (issue #32), Mac Catalyst only: dotnet publish -f net10.0-maccatalyst -p:SampleNativeAot=true.
+		PublishAot is set here, not on the command line: a global PublishAot would also reach the referenced libraries
+		(netstandard2.0, net8.0), which cannot be compiled ahead of time.
+	-->
+	<PropertyGroup Condition="'$(SampleNativeAot)' == 'true' and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+		<PublishAot>true</PublishAot>
+		<RuntimeIdentifier>maccatalyst-arm64</RuntimeIdentifier>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />

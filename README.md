@@ -122,6 +122,7 @@ comparison is not one-sided.
 | `Mafesoft.Localization` | Core (any .NET application) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization) | [![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization)](https://www.nuget.org/packages/Mafe.Localization) |
 | `Mafesoft.Localization.Extensions` | `IStringLocalizer`, dependency injection (since 4.1.0, see [IStringLocalizer](#istringlocalizer)) | .NET 10, .NET 8, .NET Standard 2.0 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Extensions?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | – |
 | `Mafesoft.Localization.Json` | JSON vocabularies (since 4.4.0, see [JSON vocabularies](#json-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | – |
+| `Mafesoft.Localization.Json.Newtonsoft` | Newtonsoft.Json engine for the JSON vocabularies (since 4.4.0, see [Choose the JSON engine](#choose-the-json-engine)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | – |
 | `Mafesoft.Localization.Wpf` | WPF | `net10.0-windows`, `net8.0-windows` | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Wpf?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Mafe.Localization.Windows downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Windows?style=flat-square&label=Mafe.Localization.Windows)](https://www.nuget.org/packages/Mafe.Localization.Windows) |
 | `Mafesoft.Localization.Maui` | .NET MAUI | .NET 10 (MAUI 10), .NET 8 (MAUI 8) | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Maui?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Mafe.Localization.Maui downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Maui?style=flat-square&label=Mafe.Localization.Maui)](https://www.nuget.org/packages/Mafe.Localization.Maui) |
 | `Mafesoft.Localization.Mvc` | ASP.NET Core MVC | .NET 10, .NET 8 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Mvc?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Mafe.Localization.Mvc downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Mvc?style=flat-square&label=Mafe.Localization.Mvc)](https://www.nuget.org/packages/Mafe.Localization.Mvc) |
@@ -131,7 +132,7 @@ comparison is not one-sided.
 
 Legacy downloads are the downloads of the old `Mafe.Localization.*` packages, up to 3.0.0: `Mafesoft.Localization.Wpf` was
 published as `Mafe.Localization.Windows`, `Mafesoft.Localization.Extensions` is new in 4.1.0 and
-`Mafesoft.Localization.Json` in 4.4.0.
+`Mafesoft.Localization.Json` and `Mafesoft.Localization.Json.Newtonsoft` in 4.4.0.
 
 - **.NET 10** (LTS, supported until November 2028) is the main target.
 - **.NET 9** is not targeted: it reached end of support on 10 November 2026. .NET 9 applications use the .NET 8 build.
@@ -339,11 +340,39 @@ await LocalizationManager.InitAsync(provider, new CultureInfo("it-IT"));
 - `MissingTermsDirectory`: the keys used by the application and missing in a vocabulary are written to
   `missing.<culture>.json` in that directory, with their default value, ready to be translated and copied into the
   vocabulary. Meant for development.
-- The files are read with `System.Text.Json` (`JsonDocument`, no reflection) through `IJsonVocabularySerializer`: set
-  `JsonVocabularyOptions.Serializer` to use another JSON library.
+- The files are read with `System.Text.Json` (`JsonDocument`, no reflection) through `IJsonVocabularySerializer`: see
+  [Choose the JSON engine](#choose-the-json-engine) to use Newtonsoft.Json or another library.
 - The samples read their texts from `samples/Localization.Samples.VocabularyServiceProvider/Resources`: MAUI, WPF and
   Blazor WebAssembly as embedded resources, MVC and Blazor Server from the folder in development, so a saved change to
   a file shows up in the running app.
+
+### Choose the JSON engine
+
+The files are read with `System.Text.Json` by default: no extra dependency, safe with trimming and NativeAOT. An
+application that already uses Newtonsoft.Json can keep one JSON library:
+
+```
+dotnet add package Mafesoft.Localization.Json.Newtonsoft
+```
+
+```c#
+using Mafesoft.Localization.Json.Newtonsoft;
+
+var options = new JsonVocabularyOptions { ReloadOnChange = true }.UseNewtonsoftJson();        // default settings
+var options = new JsonVocabularyOptions().UseNewtonsoftJson(mySerializerSettings);            // the application's settings
+var options = new JsonVocabularyOptions { Serializer = new MyVocabularySerializer() };         // any other engine
+
+var provider = JsonVocabularyServiceProvider.FromDirectory("Resources", options);
+```
+
+- Both engines give the same keys and values for the same files (flat, nested, comments, arrays, numbers, booleans).
+  Dates stay text with Newtonsoft.Json too; a number with an exponent (`1e3`) is read as `1000`.
+- From the `JsonSerializerSettings`: `MaxDepth` when reading, `Formatting` and `StringEscapeHandling` when writing the
+  missing terms file.
+- Newtonsoft.Json is not safe with trimming and NativeAOT: the warning comes only from that package, the main package
+  does not depend on it.
+- Another engine implements `IJsonVocabularySerializer`: `Read` returns the terms of a file (nested keys joined with
+  `JsonVocabularyKeys.Separator`), `Write` writes flat terms.
 
 ## LocalizationManager API
 

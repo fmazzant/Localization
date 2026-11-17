@@ -45,6 +45,11 @@
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.0" />
   </ItemGroup>
 
+  <!-- Mafesoft.Localization.Json.Newtonsoft: the lowest version without known vulnerabilities -->
+  <ItemGroup>
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
   <!-- Xamarin (Localization.Xamarin, last release 4.0.0) -->
   <ItemGroup>
     <PackageVersion Include="Xamarin.Forms" Version="5.0.0.2662" />

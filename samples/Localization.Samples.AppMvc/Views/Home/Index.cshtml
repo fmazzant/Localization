@@ -2,8 +2,9 @@
     ViewData["Title"] = "Home Page";
 }
 
+@* Keys: constants generated from the JSON vocabularies (Mafesoft.Localization.Json) *@
 <div class="text-center">
-    <h1 class="display-4"><translate key="Title" default="Welcome"></translate></h1>
-    <p loc-key="AbstractText">Use this page to detail your site's culture example.</p>
+    <h1 class="display-4"><translate key="@Keys.Title" default="Welcome"></translate></h1>
+    <p loc-key="@Keys.AbstractText">Use this page to detail your site's culture example.</p>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>

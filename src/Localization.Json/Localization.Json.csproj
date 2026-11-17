@@ -56,6 +56,16 @@
     <ProjectReference Include="..\Localization\Localization.csproj" />
   </ItemGroup>
 
+  <!--
+    The source generator of the keys and the MLOC001 analyzer (Localization.Json.Generator, issue #31) are shipped in
+    this package as an analyzer, with the props that make its MSBuild properties visible to the compiler.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\Localization.Json.Generator\Localization.Json.Generator.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    <None Include="..\Localization.Json.Generator\bin\$(Configuration)\netstandard2.0\Mafesoft.Localization.Json.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="buildTransitive\Mafesoft.Localization.Json.props" Pack="true" PackagePath="buildTransitive" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Localization.Tests" />
   </ItemGroup>

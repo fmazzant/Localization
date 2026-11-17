@@ -349,6 +349,51 @@ await LocalizationManager.InitAsync(provider, new CultureInfo("it-IT"));
   Blazor WebAssembly as embedded resources, MVC and Blazor Server from the folder in development, so a saved change to
   a file shows up in the running app.
 
+### Typed keys
+
+*Since 4.4.0.* Keys are strings: a typo is found only at runtime. Give the vocabularies to the compiler and
+`Mafesoft.Localization.Json` generates a class of constants, plus a warning for the keys that are not in the vocabulary:
+
+```xml
+<ItemGroup>
+  <EmbeddedResource Include="Resources\*.json" />
+  <AdditionalFiles Include="Resources\*.json" />
+</ItemGroup>
+```
+
+```c#
+// Generated in the root namespace of the project, from every vocabulary file:
+// public static partial class Keys { public const string Home_Title = "Home.Title"; ... }
+string title = LocalizationManager.Translate(Keys.Home_Title);
+```
+
+```xml
+<!-- XAML (WPF, MAUI): xmlns:local is the namespace of the project -->
+<Label Content="{culture:Translate ResourceKey={x:Static local:Keys.Home_Title}}" />
+```
+
+```razor
+<h1>@Binding.Translate(Keys.Home_Title)</h1>
+<translate key="@Keys.Home_Title"></translate>
+```
+
+- Member names: `Home.Title` is `Home_Title`; other characters become `_`, a leading digit gets `_` before it, a C#
+  keyword gets `@` (`Keys.@class`). The documentation of each constant shows its text in the reference vocabulary.
+- **MLOC001** warns when a constant key passed to `LocalizationManager.Translate`, `TranslateFormat` or
+  `LocalizationManager.Instance[...]` is not in the reference vocabulary: the file of `MafesoftLocalizationDefaultCulture`,
+  otherwise `invariant.json`, otherwise the first file by name. Keys in XAML markup are not checked.
+- The vocabularies are the `AdditionalFiles` named after a culture (`it-IT.json`, `en.json`, `invariant.json`);
+  `missing.it-IT.json` and other JSON files are ignored. MLOC002 reports a file that cannot be read.
+- MSBuild properties: `MafesoftLocalizationKeysClass` (default `Keys`), `MafesoftLocalizationKeysNamespace` (default the
+  root namespace) and `MafesoftLocalizationDefaultCulture` (for example `en`).
+
+```xml
+<PropertyGroup>
+  <MafesoftLocalizationDefaultCulture>en</MafesoftLocalizationDefaultCulture>
+  <MafesoftLocalizationKeysClass>Texts</MafesoftLocalizationKeysClass>
+</PropertyGroup>
+```
+
 ### Choose the JSON engine
 
 The files are read with `System.Text.Json` by default: no extra dependency, safe with trimming and NativeAOT. An

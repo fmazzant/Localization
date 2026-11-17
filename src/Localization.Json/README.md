@@ -47,6 +47,8 @@ string title = LocalizationManager.Translate("Home.Title");   // Benvenuto
 * Nested objects become dotted keys (`Home.Title`); comments and trailing commas are allowed.
 * `ReloadOnChange` reloads the `LocalizationManager` when a file changes; `MissingTermsDirectory` writes the missing
   keys to `missing.<culture>.json`.
+* With `<AdditionalFiles Include="Resources\*.json" />` a source generator creates the `Keys` class of constants
+  (`Keys.Home_Title`) and warns (MLOC001) for keys that are not in the vocabulary.
 * System.Text.Json is used through `IJsonVocabularySerializer`: `Mafesoft.Localization.Json.Newtonsoft` switches to
   Newtonsoft.Json (`options.UseNewtonsoftJson()`), or set `JsonVocabularyOptions.Serializer` to use another
   JSON library.

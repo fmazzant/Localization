@@ -50,6 +50,12 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
+  <!-- Source generator of Mafesoft.Localization.Json (runs in the compiler): Roslyn of the .NET 8 SDK -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
+  </ItemGroup>
+
   <!-- Xamarin (Localization.Xamarin, last release 4.0.0) -->
   <ItemGroup>
     <PackageVersion Include="Xamarin.Forms" Version="5.0.0.2662" />

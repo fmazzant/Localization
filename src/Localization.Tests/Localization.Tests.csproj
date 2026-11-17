@@ -33,6 +33,7 @@
     <ProjectReference Include="..\Localization\Localization.csproj" />
     <ProjectReference Include="..\Localization.Json\Localization.Json.csproj" />
     <ProjectReference Include="..\Localization.Json.Newtonsoft\Localization.Json.Newtonsoft.csproj" />
+    <ProjectReference Include="..\Localization.Resx\Localization.Resx.csproj" />
   </ItemGroup>
 
   <!-- JSON vocabularies read as embedded resources (issue #29) -->

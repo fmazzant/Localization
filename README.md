@@ -33,6 +33,7 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 - [How it works](#how-it-works)
 - [Vocabulary service provider](#vocabulary-service-provider)
 - [JSON vocabularies](#json-vocabularies)
+- [Resx vocabularies](#resx-vocabularies)
 - [LocalizationManager API](#localizationmanager-api)
 - [Culture fallback](#culture-fallback)
 - [Per-request culture on the server](#per-request-culture-on-the-server)
@@ -123,6 +124,7 @@ comparison is not one-sided.
 | `Mafesoft.Localization.Extensions` | `IStringLocalizer`, dependency injection (since 4.1.0, see [IStringLocalizer](#istringlocalizer)) | .NET 10, .NET 8, .NET Standard 2.0 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Extensions?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | – |
 | `Mafesoft.Localization.Json` | JSON vocabularies (since 4.4.0, see [JSON vocabularies](#json-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | – |
 | `Mafesoft.Localization.Json.Newtonsoft` | Newtonsoft.Json engine for the JSON vocabularies (since 4.4.0, see [Choose the JSON engine](#choose-the-json-engine)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | – |
+| `Mafesoft.Localization.Resx` | Vocabularies from existing `.resx` files (since 4.4.0, see [Resx vocabularies](#resx-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Resx?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Resx) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Resx?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Resx) | – |
 | `Mafesoft.Localization.Wpf` | WPF | `net10.0-windows`, `net8.0-windows` | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Wpf?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Mafe.Localization.Windows downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Windows?style=flat-square&label=Mafe.Localization.Windows)](https://www.nuget.org/packages/Mafe.Localization.Windows) |
 | `Mafesoft.Localization.Maui` | .NET MAUI | .NET 10 (MAUI 10), .NET 8 (MAUI 8) | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Maui?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Mafe.Localization.Maui downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Maui?style=flat-square&label=Mafe.Localization.Maui)](https://www.nuget.org/packages/Mafe.Localization.Maui) |
 | `Mafesoft.Localization.Mvc` | ASP.NET Core MVC | .NET 10, .NET 8 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Mvc?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Mafe.Localization.Mvc downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Mvc?style=flat-square&label=Mafe.Localization.Mvc)](https://www.nuget.org/packages/Mafe.Localization.Mvc) |
@@ -132,7 +134,7 @@ comparison is not one-sided.
 
 Legacy downloads are the downloads of the old `Mafe.Localization.*` packages, up to 3.0.0: `Mafesoft.Localization.Wpf` was
 published as `Mafe.Localization.Windows`, `Mafesoft.Localization.Extensions` is new in 4.1.0 and
-`Mafesoft.Localization.Json` and `Mafesoft.Localization.Json.Newtonsoft` in 4.4.0.
+`Mafesoft.Localization.Json`, `Mafesoft.Localization.Json.Newtonsoft` and `Mafesoft.Localization.Resx` in 4.4.0.
 
 - **.NET 10** (LTS, supported until November 2028) is the main target.
 - **.NET 9** is not targeted: it reached end of support on 10 November 2026. .NET 9 applications use the .NET 8 build.
@@ -373,6 +375,33 @@ var provider = JsonVocabularyServiceProvider.FromDirectory("Resources", options)
   does not depend on it.
 - Another engine implements `IJsonVocabularySerializer`: `Read` returns the terms of a file (nested keys joined with
   `JsonVocabularyKeys.Separator`), `Write` writes flat terms.
+
+## Resx vocabularies
+
+```
+dotnet add package Mafesoft.Localization.Resx
+```
+
+*Since 4.4.0.* An application that already has `.resx` files can adopt Mafesoft.Localization (XAML markup, runtime
+culture switch, missing-key reporting) without converting its resources:
+
+```c#
+using Mafesoft.Localization.Resx;
+
+// Strings.resx, Strings.it.resx, Strings.it-IT.resx: the ResourceManager of the class generated by the designer
+var provider = new ResxVocabularyServiceProvider(Strings.ResourceManager);
+// or by type: new ResxVocabularyServiceProvider(typeof(Strings))
+
+await LocalizationManager.InitAsync(provider, new CultureInfo("it-IT"));
+```
+
+- The vocabulary of `it-IT` has the strings of `Strings.it-IT.resx` and, for the keys it does not have, of
+  `Strings.it.resx` and `Strings.resx`: the same values as `ResourceManager.GetString(key, culture)`.
+- Only string resources are read; images and other resources are skipped.
+- The `.resx` files are compiled into the application, so the provider does not save anything: see the missing keys
+  with `LocalizationManager.Instance.MissingTerm` or the logger (see [Missing keys](#missing-keys)).
+- The MVC sample reads `Resources/SampleTexts.resx` and `SampleTexts.it.resx` with `"Vocabularies": "Resx"` in
+  `appsettings.json`.
 
 ## LocalizationManager API
 

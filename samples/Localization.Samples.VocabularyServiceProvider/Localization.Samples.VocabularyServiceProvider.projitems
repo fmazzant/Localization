@@ -10,5 +10,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)MockVocabularyServiceProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SampleVocabularies.cs" />
+  </ItemGroup>
+  <!-- JSON vocabularies (Mafesoft.Localization.Json), embedded as Resources.it-IT.json and Resources.en-US.json -->
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\*.json" LogicalName="Resources.%(Filename)%(Extension)" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\src\Localization.Json\Localization.Json.csproj" />
   </ItemGroup>
 </Project>

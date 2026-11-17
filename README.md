@@ -32,6 +32,7 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 - [Quick start](#quick-start)
 - [How it works](#how-it-works)
 - [Vocabulary service provider](#vocabulary-service-provider)
+- [JSON vocabularies](#json-vocabularies)
 - [LocalizationManager API](#localizationmanager-api)
 - [Culture fallback](#culture-fallback)
 - [Per-request culture on the server](#per-request-culture-on-the-server)
@@ -120,6 +121,7 @@ comparison is not one-sided.
 |---|---|---|---|---|---|
 | `Mafesoft.Localization` | Core (any .NET application) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization) | [![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization)](https://www.nuget.org/packages/Mafe.Localization) |
 | `Mafesoft.Localization.Extensions` | `IStringLocalizer`, dependency injection (since 4.1.0, see [IStringLocalizer](#istringlocalizer)) | .NET 10, .NET 8, .NET Standard 2.0 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Extensions?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | – |
+| `Mafesoft.Localization.Json` | JSON vocabularies (since 4.4.0, see [JSON vocabularies](#json-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | – |
 | `Mafesoft.Localization.Wpf` | WPF | `net10.0-windows`, `net8.0-windows` | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Wpf?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Mafe.Localization.Windows downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Windows?style=flat-square&label=Mafe.Localization.Windows)](https://www.nuget.org/packages/Mafe.Localization.Windows) |
 | `Mafesoft.Localization.Maui` | .NET MAUI | .NET 10 (MAUI 10), .NET 8 (MAUI 8) | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Maui?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Mafe.Localization.Maui downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Maui?style=flat-square&label=Mafe.Localization.Maui)](https://www.nuget.org/packages/Mafe.Localization.Maui) |
 | `Mafesoft.Localization.Mvc` | ASP.NET Core MVC | .NET 10, .NET 8 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Mvc?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Mafe.Localization.Mvc downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Mvc?style=flat-square&label=Mafe.Localization.Mvc)](https://www.nuget.org/packages/Mafe.Localization.Mvc) |
@@ -128,7 +130,8 @@ comparison is not one-sided.
 <!-- markdownlint-enable MD013 -->
 
 Legacy downloads are the downloads of the old `Mafe.Localization.*` packages, up to 3.0.0: `Mafesoft.Localization.Wpf` was
-published as `Mafe.Localization.Windows`, `Mafesoft.Localization.Extensions` is new in 4.1.0.
+published as `Mafe.Localization.Windows`, `Mafesoft.Localization.Extensions` is new in 4.1.0 and
+`Mafesoft.Localization.Json` in 4.4.0.
 
 - **.NET 10** (LTS, supported until November 2028) is the main target.
 - **.NET 9** is not targeted: it reached end of support on 10 November 2026. .NET 9 applications use the .NET 8 build.
@@ -214,7 +217,8 @@ A provider implements `IVocabularyServiceProvider`. Every method accepts a `Canc
 | `SaveAsync(vocabulary)` | when you call `LocalizationManager.Instance.SaveCultureAsync()` |
 | `AddOrUpdateTermAsync(vocabulary, key)` | when a key is not in the vocabulary (for example to store it for the translators) |
 
-A provider that reads one JSON file per culture (`vocabularies/it-IT.json`, `vocabularies/en-US.json`):
+For JSON files there is a ready-made provider, see [JSON vocabularies](#json-vocabularies). A minimal provider that
+reads one JSON file per culture (`vocabularies/it-IT.json`, `vocabularies/en-US.json`) looks like this:
 
 ```c#
 using System.Globalization;
@@ -280,6 +284,67 @@ LocalizationManager.Instance.ReportMissingTerms = false;
 - Without a logger (WPF, .NET Framework, Blazor WebAssembly) they are written with `System.Diagnostics.Trace`.
 
 
+## JSON vocabularies
+
+```
+dotnet add package Mafesoft.Localization.Json
+```
+
+*Since 4.4.0.* `Mafesoft.Localization.Json` is a ready-made provider: one JSON file per culture, so you do not have to
+write an `IVocabularyServiceProvider`.
+
+```text
+Resources/
+  it-IT.json
+  it.json
+  en.json
+```
+
+```json
+{
+  // flat or nested keys: "Home": { "Title" } is the key Home.Title
+  "Hello": "Ciao",
+  "Home": {
+    "Title": "Benvenuto",
+    "Menu": { "Open": "Apri" }
+  }
+}
+```
+
+```c#
+using Mafesoft.Localization.Json;
+
+// MAUI, WPF, Blazor WebAssembly: files embedded in the app (<EmbeddedResource Include="Resources\*.json" />)
+var provider = JsonVocabularyServiceProvider.FromEmbeddedResources(typeof(App).Assembly, "Resources");
+
+// ASP.NET Core: files on disk, reloaded when they change
+var provider = JsonVocabularyServiceProvider.FromFileProvider(
+    builder.Environment.ContentRootFileProvider, "Resources",
+    new JsonVocabularyOptions { ReloadOnChange = true });
+
+// Any directory
+var provider = JsonVocabularyServiceProvider.FromDirectory(Path.Combine(AppContext.BaseDirectory, "Resources"));
+
+await LocalizationManager.InitAsync(provider, new CultureInfo("it-IT"));
+```
+
+- The file name is the culture name: `it-IT.json`, `en.json`, `invariant.json` for the invariant culture. A culture
+  without a file has an empty vocabulary: with `UseParentCultureFallback` (see [Culture fallback](#culture-fallback))
+  `it-IT` reads the keys missing in `it-IT.json` from `it.json`.
+- Comments and trailing commas are allowed. Numbers and booleans are read as their text; arrays give one key per item
+  (`Days.0`, `Days.1`). A file that is not valid JSON fails the load with an `InvalidDataException` naming the file.
+- `ReloadOnChange` (files only, not embedded resources): when a file is saved the `LocalizationManager` that uses the
+  provider reloads its vocabularies (`LocalizationManager.Instance.ReloadAsync()`) and the bindings refresh. The
+  `Changed` event of the provider is raised first. The reload runs on a thread pool thread.
+- `MissingTermsDirectory`: the keys used by the application and missing in a vocabulary are written to
+  `missing.<culture>.json` in that directory, with their default value, ready to be translated and copied into the
+  vocabulary. Meant for development.
+- The files are read with `System.Text.Json` (`JsonDocument`, no reflection) through `IJsonVocabularySerializer`: set
+  `JsonVocabularyOptions.Serializer` to use another JSON library.
+- The samples read their texts from `samples/Localization.Samples.VocabularyServiceProvider/Resources`: MAUI, WPF and
+  Blazor WebAssembly as embedded resources, MVC and Blazor Server from the folder in development, so a saved change to
+  a file shows up in the running app.
+
 ## LocalizationManager API
 
 ```c#
@@ -312,6 +377,8 @@ IVocabulary vocabulary = await LocalizationManager.Instance.GetVocabularyAsync(n
 
 The vocabularies are cached per culture: each culture is loaded from the provider once, also when many callers ask
 for it at the same time. `SetCulture` reloads the vocabulary of its culture, and `Init` clears the cache.
+*Since 4.4.0.* `ReloadAsync()` clears the cache and reloads the current culture, for example after the files of the
+provider changed.
 
 ### Format arguments
 

@@ -11,7 +11,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // In the browser the initialization must be asynchronous: a provider that loads the vocabularies
 // with HttpClient cannot be waited synchronously on the single WebAssembly thread.
-await LocalizationManager.InitAsync(new MockVocabularyServiceProvider(), new CultureInfo("it-IT"));
+await LocalizationManager.InitAsync(SampleVocabularies.Embedded(), new CultureInfo("it-IT"));
 builder.Services.AddSingleton(LocalizationManager.Instance);
 
 await builder.Build().RunAsync();

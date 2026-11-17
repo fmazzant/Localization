@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Wpf.Tests", "L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Maui.Tests", "Localization.Maui.Tests\Localization.Maui.Tests.csproj", "{04AEF04B-407C-43C3-8C17-D92D88295A16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization.Json", "Localization.Json\Localization.Json.csproj", "{B994503F-3A11-403A-ACBB-06919F26FCA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{04AEF04B-407C-43C3-8C17-D92D88295A16}.Release|x64.Build.0 = Release|Any CPU
 		{04AEF04B-407C-43C3-8C17-D92D88295A16}.Release|x86.ActiveCfg = Release|Any CPU
 		{04AEF04B-407C-43C3-8C17-D92D88295A16}.Release|x86.Build.0 = Release|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Debug|x64.Build.0 = Debug|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Debug|x86.Build.0 = Debug|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Release|x64.ActiveCfg = Release|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Release|x64.Build.0 = Release|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Release|x86.ActiveCfg = Release|Any CPU
+		{B994503F-3A11-403A-ACBB-06919F26FCA7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -378,6 +378,20 @@ namespace Mafesoft.Localization
         }
 
         /// <summary>
+        /// Reloads the vocabularies from the provider, for example after the provider's files changed: the cached
+        /// vocabularies of the other cultures are discarded (they are loaded again when used) and the current culture is
+        /// loaded again. <see cref="CultureChanged"/> and <see cref="PropertyChanged"/> are raised, so the bindings refresh.
+        /// </summary>
+        /// <param name="cancellationToken">Token to cancel the operation: when canceled the current vocabulary does not change.</param>
+        public Task ReloadAsync(CancellationToken cancellationToken = default)
+        {
+            vocabularies.Clear();
+            reportedMissingTerms.Clear();
+            // The culture set with SetCulture, also with FollowCurrentUICulture (the caller may be a file watcher thread).
+            return SetCultureAsync(Volatile.Read(ref currentCulture), cancellationToken);
+        }
+
+        /// <summary>
         /// Loads and returns the vocabulary of the culture.
         /// </summary>
         /// <param name="cultureInfo">Culture to load.</param>

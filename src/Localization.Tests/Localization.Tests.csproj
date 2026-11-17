@@ -31,6 +31,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Localization\Localization.csproj" />
+    <ProjectReference Include="..\Localization.Json\Localization.Json.csproj" />
+  </ItemGroup>
+
+  <!-- JSON vocabularies read as embedded resources (issue #29) -->
+  <ItemGroup>
+    <EmbeddedResource Include="JsonVocabularies\*.json" />
   </ItemGroup>
 
   <!-- Blazor, MVC, ASP.NET Core and NullabilityInfoContext do not exist on .NET Framework -->

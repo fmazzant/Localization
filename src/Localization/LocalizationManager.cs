@@ -172,6 +172,19 @@ namespace Mafesoft.Localization
         public int Version => Volatile.Read(ref version);
 
         /// <summary>
+        /// Whether the text of the current culture (see <see cref="CurrentCulture"/>) is written from right to left, for
+        /// example Arabic or Hebrew (<see cref="TextInfo.IsRightToLeft"/>). Bind the layout direction to it: it is
+        /// notified with every culture change, like the translations.
+        /// </summary>
+        public bool IsRightToLeft => CurrentCulture.TextInfo.IsRightToLeft;
+
+        /// <summary>
+        /// The text direction of the current culture for the HTML <c>dir</c> attribute: <c>rtl</c> or <c>ltr</c>.
+        /// Use it in Razor views and Blazor components: <c>&lt;html dir="@LocalizationManager.Instance.TextDirection"&gt;</c>.
+        /// </summary>
+        public string TextDirection => IsRightToLeft ? "rtl" : "ltr";
+
+        /// <summary>
         /// The vocabulary of the current culture (see <see cref="CurrentCulture"/>), or null before the manager is initialized.
         /// Reading it does not notify the provider of missing terms.
         /// </summary>

@@ -10,6 +10,7 @@
     <div class="top-row px-4">
         <button @onclick="SetItalianLanguage">@Binding.Translate("BlazorSetItalian")</button>
         <button href="#" @onclick="SetEnglishLanguage">@Binding.Translate("BlazorSetEnglish")</button>
+        <button @onclick="SetArabicLanguage">@Binding.Translate("BlazorSetArabic")</button>
         <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
     </div>
 
@@ -31,6 +32,13 @@
     private void SetEnglishLanguage()
     {
         LocalizationManager.Instance.SetCulture(new System.Globalization.CultureInfo("en-US"));
+        _navigationManager.NavigateTo(_navigationManager.Uri, true);
+    }
+
+    // Arabic is written right to left: App.razor sets dir="rtl" on the page (LocalizationManager.Instance.TextDirection)
+    private void SetArabicLanguage()
+    {
+        LocalizationManager.Instance.SetCulture(new System.Globalization.CultureInfo("ar"));
         _navigationManager.NavigateTo(_navigationManager.Uri, true);
     }
 }

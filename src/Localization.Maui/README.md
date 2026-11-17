@@ -48,6 +48,9 @@ Or compute a value in code on every culture change:
 label.Translate(Label.TextProperty, () => LocalizationManager.Translate("MainWindow"));
 ```
 
+Right-to-left languages (Arabic, Hebrew): the layout direction follows the culture with
+`<ContentPage FlowDirection="{culture:FlowDirection}" ...>` (since 4.4.0).
+
 Coming from Xamarin.Forms? Replace `Mafesoft.Localization.Xamarin` with this package and change the XAML namespace
 to `Mafesoft.Localization.Maui`.
 

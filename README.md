@@ -36,6 +36,7 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 - [Resx vocabularies](#resx-vocabularies)
 - [LocalizationManager API](#localizationmanager-api)
 - [Culture fallback](#culture-fallback)
+- [Right-to-left languages](#right-to-left-languages)
 - [Per-request culture on the server](#per-request-culture-on-the-server)
 - [WPF](#wpf)
 - [.NET MAUI](#net-maui)
@@ -492,6 +493,36 @@ The lookup order is: the culture (`it-IT`) → its parent cultures (`it`, then t
 - `UseParentCultureFallback` is `false` by default in 4.x, so the behavior does not change; `FallbackCulture` is `null`.
 - It applies to `Translate`, the indexers, the XAML markup extensions, the MVC and Blazor helpers and `IStringLocalizer`,
   also with `FollowCurrentUICulture` (the chain of the culture of the request).
+
+## Right-to-left languages
+
+*Since 4.4.0.* When the culture changes to a right-to-left language (Arabic, Hebrew, Persian...) the layout direction
+can follow it, not only the text:
+
+```c#
+bool rtl = LocalizationManager.Instance.IsRightToLeft;        // CultureInfo.TextInfo.IsRightToLeft of the current culture
+string dir = LocalizationManager.Instance.TextDirection;      // "rtl" or "ltr", for the HTML dir attribute
+```
+
+Both are notified with every culture change, like the translations.
+
+```xml
+<!-- WPF (xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf") -->
+<Window FlowDirection="{culture:FlowDirection}" ...>
+
+<!-- .NET MAUI (xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui") -->
+<ContentPage FlowDirection="{culture:FlowDirection}" ...>
+```
+
+```razor
+@* Blazor (App.razor) and MVC (_Layout.cshtml) *@
+<html lang="@LocalizationManager.CurrentCulture.TwoLetterISOLanguageName" dir="@LocalizationManager.Instance.TextDirection">
+```
+
+- With `FollowCurrentUICulture` (see [Per-request culture on the server](#per-request-culture-on-the-server)) the
+  direction is the one of the culture of the request.
+- The samples switch between Italian, English and Arabic: WPF (combo box), MAUI (button) and Blazor Server (buttons);
+  the Arabic texts are in `samples/Localization.Samples.VocabularyServiceProvider/Resources/ar.json`.
 
 ## Per-request culture on the server
 

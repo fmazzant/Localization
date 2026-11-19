@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Localization.Samples.AppWpf"
         xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf"
         mc:Ignorable="d"
+        FlowDirection="{culture:FlowDirection}"
         Title="{culture:Translate MainWindow, DefaultValue='#Main Window'}" 
         Height="369" 
         Width="668">
@@ -28,6 +29,8 @@
             <ComboBoxItem Content="Italian" Name="Italian" Tag="it-IT" IsSelected="True">
             </ComboBoxItem>
             <ComboBoxItem Content="English" Name="English" Tag="en-US">
+            </ComboBoxItem>
+            <ComboBoxItem Content="العربية (Arabic)" Name="Arabic" Tag="ar">
             </ComboBoxItem>
         </ComboBox>
         <TextBlock Padding="15,5,15,5" 

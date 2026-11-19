@@ -42,6 +42,9 @@ Or compute a value in code on every culture change:
 label.Translate(Label.ContentProperty, () => LocalizationManager.Translate("MainWindow"));
 ```
 
+Right-to-left languages (Arabic, Hebrew): the layout direction follows the culture with
+`<Window FlowDirection="{culture:FlowDirection}" ...>` (since 4.4.0).
+
 ## Links
 
 - [Documentation](https://github.com/fmazzant/Localization#readme)

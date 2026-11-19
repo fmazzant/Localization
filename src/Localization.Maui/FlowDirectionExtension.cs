@@ -30,6 +30,7 @@
 namespace Mafesoft.Localization.Maui
 {
     using Mafesoft.Localization;
+    using Mafesoft.Localization.Maui.Extensions;
     using Microsoft.Maui;
     using Microsoft.Maui.Controls;
     using Microsoft.Maui.Controls.Xaml;
@@ -59,13 +60,12 @@ namespace Mafesoft.Localization.Maui
         /// </summary>
         /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
         /// <returns>The binding.</returns>
-        public BindingBase ProvideValue(IServiceProvider serviceProvider) => new Binding
+        public BindingBase ProvideValue(IServiceProvider serviceProvider)
         {
-            Mode = BindingMode.OneWay,
-            Path = nameof(LocalizationManager.IsRightToLeft),
-            Source = LocalizationManager.Instance,
-            Converter = RightToLeftConverter.Instance,
-        };
+            var binding = LocalizationBindings.Create(manager => manager.IsRightToLeft, nameof(LocalizationManager.IsRightToLeft));
+            binding.Converter = RightToLeftConverter.Instance;
+            return binding;
+        }
 
         /// <summary>
         /// Converts <see cref="LocalizationManager.IsRightToLeft"/> to <see cref="FlowDirection"/>.

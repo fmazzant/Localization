@@ -70,13 +70,9 @@ namespace Mafesoft.Localization.Maui.Extensions
         /// </summary>
         private static void SetTranslateBinding(BindableObject bindableObject, BindableProperty bindableProperty, Func<object?> onCultureChanged)
         {
-            Binding binding = new Binding()
-            {
-                Source = LocalizationManager.Instance,
-                Path = nameof(LocalizationManager.Version),
-                Converter = TranslateConverter.Instance,
-                ConverterParameter = onCultureChanged
-            };
+            var binding = LocalizationBindings.Create(manager => manager.Version, nameof(LocalizationManager.Version));
+            binding.Converter = TranslateConverter.Instance;
+            binding.ConverterParameter = onCultureChanged;
             bindableObject.SetBinding(bindableProperty, binding);
         }
 

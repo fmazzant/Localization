@@ -43,6 +43,7 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 - [ASP.NET Core MVC](#aspnet-core-mvc)
 - [Blazor](#blazor)
 - [IStringLocalizer](#istringlocalizer)
+- [Trimming and NativeAOT](#trimming-and-nativeaot)
 - [Migrating from `Mafe.Localization`](#migrating-from-mafelocalization)
 - [Legacy: Xamarin.Forms](#legacy-xamarinforms)
 - [Build and test](#build-and-test)
@@ -893,6 +894,20 @@ public class HomeController(IStringLocalizer<HomeController> localizer) : Contro
   follow the culture of each request (see [Per-request culture on the server](#per-request-culture-on-the-server)).
   The [package README](src/Localization.Extensions/README.md#differences-from-the-resx-localizer) lists the
   differences from the resx localizer.
+
+## Trimming and NativeAOT
+
+*Since 4.4.0.* The .NET 10 builds of the packages are marked trimmable and AOT compatible (`IsTrimmable`,
+`IsAotCompatible`): an app published with trimming or NativeAOT (iOS, Mac Catalyst, Android, console, ASP.NET Core
+minimal APIs) gets no trimming / AOT warnings from the Mafesoft assemblies.
+
+- MAUI: `{culture:Translate}`, `{culture:FlowDirection}` and `Translate(...)` in code create typed bindings (a getter,
+  as compiled XAML bindings do) instead of string-path bindings, which MAUI reports as not trim safe.
+- `Mafesoft.Localization.Json` reads the files with `JsonDocument` (no reflection). `Mafesoft.Localization.Json.Newtonsoft`
+  is the exception: Newtonsoft.Json is not trim safe, use the default engine in trimmed apps.
+- WPF and ASP.NET Core MVC do not support trimming themselves; the packages add no warnings of their own.
+- CI publishes `samples/Localization.Samples.AotCheck` with NativeAOT (every trimming / AOT warning is an error) and runs
+  it, and publishes the MAUI sample with NativeAOT for Mac Catalyst.
 
 ## Migrating from `Mafe.Localization`
 

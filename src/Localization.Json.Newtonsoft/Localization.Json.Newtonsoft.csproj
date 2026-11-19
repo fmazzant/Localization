@@ -43,6 +43,11 @@
     Newtonsoft.Json uses reflection: this package is not trimming / NativeAOT safe. Mafesoft.Localization.Json (with
     System.Text.Json) is, and does not depend on Newtonsoft.Json.
   -->
+  <PropertyGroup>
+    <IsTrimmable>false</IsTrimmable>
+    <IsAotCompatible>false</IsAotCompatible>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>

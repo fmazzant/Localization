@@ -5,6 +5,39 @@ All notable changes to the `Mafesoft.Localization*` packages are documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0] - 2026-11-19
+
+### Added
+
+- New package `Mafesoft.Localization.Json` with `JsonVocabularyServiceProvider`: one file per culture (`it-IT.json`,
+  `en.json`, `invariant.json`), flat or nested keys (`Home.Title`), comments and trailing commas allowed. Sources:
+  embedded resources, a directory or an `IFileProvider`. `ReloadOnChange` reloads the manager when a file is saved;
+  `MissingTermsDirectory` writes the missing keys to `missing.<culture>.json` for the translators.
+  ([#29](https://github.com/fmazzant/Localization/issues/29))
+- `LocalizationManager.ReloadAsync()`: clears the cache and reloads the current culture.
+  ([#29](https://github.com/fmazzant/Localization/issues/29))
+- New package `Mafesoft.Localization.Json.Newtonsoft`: `UseNewtonsoftJson()` / `UseNewtonsoftJson(settings)` choose
+  Newtonsoft.Json as the JSON engine; System.Text.Json stays the default and the main package does not depend on
+  Newtonsoft.Json. ([#72](https://github.com/fmazzant/Localization/issues/72))
+- New package `Mafesoft.Localization.Resx` with `ResxVocabularyServiceProvider`: vocabularies from existing `.resx`
+  files (`ResourceManager` or the generated resx class), with the same values as `ResourceManager.GetString`.
+  ([#30](https://github.com/fmazzant/Localization/issues/30))
+- Typed keys: a source generator in `Mafesoft.Localization.Json` creates a class of constants from the JSON
+  vocabularies given as `AdditionalFiles`, usable in C#, XAML (`x:Static`) and Razor. Analyzer `MLOC001` reports a
+  constant key that is not in the reference vocabulary. ([#31](https://github.com/fmazzant/Localization/issues/31))
+- Right-to-left: `LocalizationManager.IsRightToLeft` and `TextDirection` (`"rtl"` / `"ltr"`), notified with every
+  culture change; `{culture:FlowDirection}` markup extension for WPF and MAUI.
+  ([#34](https://github.com/fmazzant/Localization/issues/34))
+- Trimming and NativeAOT: the .NET 10 builds of the packages are marked `IsTrimmable` and `IsAotCompatible`
+  (except `Mafesoft.Localization.Json.Newtonsoft`). ([#32](https://github.com/fmazzant/Localization/issues/32))
+
+### Changed
+
+- MAUI: `{culture:Translate}`, `{culture:FlowDirection}` and `Translate(...)` create typed bindings instead of
+  string-path bindings. ([#32](https://github.com/fmazzant/Localization/issues/32))
+- The default branch is `main` (was `master`); the `NuGet` workflow creates the GitHub Release of the pushed tag with
+  the packages and the notes of this file.
+
 ## [4.3.0] - 2026-11-14
 
 No 4.2.0 release: its features are part of 4.3.0.
@@ -144,6 +177,8 @@ The releases published as `Mafe.Localization*` are described in the [GitHub rele
 - [2.0.0](https://github.com/fmazzant/Localization/releases/tag/v2.0.0) - 2022-04-28
 - [1.0.0](https://github.com/fmazzant/Localization/releases/tag/1.0.0) - 2020-11-13
 
+[4.4.0]: https://github.com/fmazzant/Localization/compare/v4.3.0...v4.4.0
+[4.3.0]: https://github.com/fmazzant/Localization/compare/v4.1.1...v4.3.0
 [4.1.1]: https://github.com/fmazzant/Localization/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/fmazzant/Localization/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/fmazzant/Localization/compare/v3.0.0...v4.0.0

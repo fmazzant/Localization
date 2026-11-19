@@ -8,7 +8,7 @@
 [![Mafe.Localization.Blazor downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Blazor?style=flat-square&label=Mafe.Localization.Blazor%20downloads)](https://www.nuget.org/packages/Mafe.Localization.Blazor)
 
 Blazor extension of [Mafesoft.Localization](https://www.nuget.org/packages/Mafesoft.Localization): translate the
-components with `Binding.Translate`. Works with Blazor Server and Blazor WebAssembly.
+components with the `<Translate>` component or `Binding.Translate`. Works with Blazor Server and Blazor WebAssembly.
 
 Target frameworks: .NET 10, .NET 8.
 
@@ -42,7 +42,16 @@ await LocalizationManager.InitAsync(new MyVocabularyServiceProvider(), new Cultu
 builder.Services.AddSingleton(LocalizationManager.Instance);
 ```
 
-Translate in a component:
+Translate with the `<Translate>` component (since 4.3.0): it renders again by itself when the culture changes.
+
+```razor
+@using Mafesoft.Localization.Blazor.Components
+
+<h1><Translate Key="Home.Title" Default="Welcome" /></h1>
+<p><Translate Key="Greeting" Default="Hello {0}" Args="new object[] { userName }" /></p>
+```
+
+Or with `Binding.Translate`:
 
 ```razor
 @using Mafesoft.Localization.Blazor.Bindings
@@ -50,8 +59,17 @@ Translate in a component:
 <h1>@Binding.Translate("Title", "#Title")</h1>
 ```
 
-To refresh a component when the culture changes, subscribe `LocalizationManager.Instance.CultureChanged` and call
-`InvokeAsync(StateHasChanged)`.
+To refresh a component that uses `Binding.Translate` when the culture changes, subscribe
+`LocalizationManager.Instance.CultureChanged` and call `InvokeAsync(StateHasChanged)`.
+
+Right-to-left languages (since 4.4.0), in `App.razor`:
+
+```razor
+<html lang="@LocalizationManager.CurrentCulture.TwoLetterISOLanguageName" dir="@LocalizationManager.Instance.TextDirection">
+```
+
+`AddBlazorLocalizationManager` loads the vocabulary asynchronously when the app starts (since 4.3.0); in Blazor
+WebAssembly `await InitAsync(...)` before `RunAsync()` waits for it.
 
 ## Links
 

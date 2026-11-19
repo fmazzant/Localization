@@ -51,6 +51,9 @@ label.Translate(Label.TextProperty, () => LocalizationManager.Translate("MainWin
 Right-to-left languages (Arabic, Hebrew): the layout direction follows the culture with
 `<ContentPage FlowDirection="{culture:FlowDirection}" ...>` (since 4.4.0).
 
+Trimming and NativeAOT (since 4.4.0): `{culture:Translate}`, `{culture:FlowDirection}` and `Translate(...)` create
+typed bindings, so an app published with NativeAOT (iOS, Mac Catalyst) or trimming gets no warnings from this package.
+
 Coming from Xamarin.Forms? Replace `Mafesoft.Localization.Xamarin` with this package and change the XAML namespace
 to `Mafesoft.Localization.Maui`.
 

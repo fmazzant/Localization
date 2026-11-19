@@ -8,10 +8,12 @@
 [![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization%20downloads)](https://www.nuget.org/packages/Mafe.Localization)
 
 A .NET library to manage the localization of your application: it loads the vocabulary of the current culture from
-a provider you write (database, files, web service...) and notifies the UI when the culture changes.
+a provider (database, files, web service...) and notifies the UI when the culture changes.
 
 This is the core package. Add the package for your technology too: `Mafesoft.Localization.Wpf`,
-`Mafesoft.Localization.Mvc`, `Mafesoft.Localization.Blazor` or `Mafesoft.Localization.Maui`.
+`Mafesoft.Localization.Mvc`, `Mafesoft.Localization.Blazor` or `Mafesoft.Localization.Maui`. Write your own provider,
+or use a ready-made one: `Mafesoft.Localization.Json` (JSON files, typed keys) or `Mafesoft.Localization.Resx`
+(existing `.resx` files). `Mafesoft.Localization.Extensions` adds `IStringLocalizer` and the dependency injection.
 
 Target frameworks: .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2.
 
@@ -49,6 +51,16 @@ string? value = LocalizationManager.Instance["Hello"];            // null when t
 
 await LocalizationManager.Instance.SetCultureAsync(new CultureInfo("en-US"));
 ```
+
+Also in the core package:
+
+* `TranslateFormat("Welcome", userName, count)`: format arguments with the culture of the vocabulary (since 4.3.0).
+* Culture fallback `it-IT` → `it` → invariant → `FallbackCulture`, opt-in with `UseParentCultureFallback` (since 4.3.0).
+* Missing keys reported once per culture, `MissingTerm` event, logging with `ILogger` (since 4.3.0).
+* Per-request culture on the server with `FollowCurrentUICulture` (since 4.1.0).
+* Right-to-left languages: `IsRightToLeft` and `TextDirection` (`"rtl"` / `"ltr"`) follow the culture (since 4.4.0).
+* `ReloadAsync()` reloads the vocabularies after the source changed (since 4.4.0).
+* The .NET 10 build is trimming and NativeAOT compatible (since 4.4.0).
 
 ## Links
 

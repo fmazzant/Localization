@@ -16,7 +16,10 @@ namespace Localization.Samples.AppWpf
 
             // Asynchronous initialization: the startup is not blocked while the vocabulary is loaded. The main window
             // shows the default values until then, and it is refreshed when the vocabulary is ready.
-            await LocalizationManager.InitAsync(new MockVocabularyServiceProvider { });
+            // The vocabularies are the JSON files embedded in the app (Mafesoft.Localization.Json); a culture without a
+            // file reads the English one.
+            LocalizationManager.Instance.FallbackCulture = new System.Globalization.CultureInfo("en-US");
+            await LocalizationManager.InitAsync(SampleVocabularies.Embedded());
         }
     }
 }

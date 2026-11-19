@@ -3,6 +3,7 @@ using Mafesoft.Localization.Maui.Converters;
 using Mafesoft.Localization.Maui.Extensions;
 using Mafesoft.Localization.Tests;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Hosting;
 
 namespace Mafesoft.Localization.Maui.Tests
@@ -68,19 +69,19 @@ namespace Mafesoft.Localization.Maui.Tests
         [Fact]
         public void TranslateExtension_SharesOneConverterAcrossBindings()
         {
-            var first = Assert.IsType<Binding>(new TranslateExtension { ResourceKey = "Hello" }.ProvideValue(null));
-            var second = Assert.IsType<Binding>(new TranslateExtension { ResourceKey = "Missing" }.ProvideValue(null));
+            var first = Assert.IsAssignableFrom<TypedBindingBase>(new TranslateExtension { ResourceKey = "Hello" }.ProvideValue(null));
+            var second = Assert.IsAssignableFrom<TypedBindingBase>(new TranslateExtension { ResourceKey = "Missing" }.ProvideValue(null));
 
             Assert.Same(first.Converter, second.Converter);
         }
 
         [Fact]
-        public void TranslateExtension_ReturnsAOneWayBindingOnTheManager()
+        public void TranslateExtension_ReturnsAOneWayTypedBindingOnTheManager()
         {
-            var binding = Assert.IsType<Binding>(new TranslateExtension { ResourceKey = "Hello" }.ProvideValue(null));
+            // A typed binding (getter, no string path): trim and NativeAOT safe (issue #32)
+            var binding = Assert.IsAssignableFrom<TypedBindingBase>(new TranslateExtension { ResourceKey = "Hello" }.ProvideValue(null));
 
             Assert.Same(LocalizationManager.Instance, binding.Source);
-            Assert.Equal("[Hello]", binding.Path);
             Assert.Equal(BindingMode.OneWay, binding.Mode);
         }
 
@@ -101,7 +102,8 @@ namespace Mafesoft.Localization.Maui.Tests
         {
             var label = new Label();
 
-            label.Translate(Label.TextProperty, m => string.Format(m["Format"], 42));
+            // "?? {0}": the label can outlive the test, and the other tests set cultures without "Format" (he-IL).
+            label.Translate(Label.TextProperty, m => string.Format(m["Format"] ?? "{0}", 42));
             Assert.Equal("Valore 42", label.Text);
 
             LocalizationManager.Instance.SetCulture(English);

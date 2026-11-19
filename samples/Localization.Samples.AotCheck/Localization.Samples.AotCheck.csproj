@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Trimming and NativeAOT check (issue #32): a console app published with NativeAOT that uses the trimmable packages.
+    Every trimming / AOT warning is an error, so the publish fails when a Mafesoft assembly is not trim / AOT safe; the
+    published program then checks that the translations work. CI: dotnet publish -c Release -r linux-x64
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <MafesoftLocalizationDefaultCulture>en</MafesoftLocalizationDefaultCulture>
+  </PropertyGroup>
+
+  <!-- The container of the dependency injection check -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Localization/Localization.csproj" />
+    <ProjectReference Include="../../src/Localization.Json/Localization.Json.csproj" />
+    <ProjectReference Include="../../src/Localization.Resx/Localization.Resx.csproj" />
+    <ProjectReference Include="../../src/Localization.Extensions/Localization.Extensions.csproj" />
+    <!-- The generator of the typed keys, as the package adds it -->
+    <ProjectReference Include="../../src/Localization.Json.Generator/Localization.Json.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <Import Project="../../src/Localization.Json/buildTransitive/Mafesoft.Localization.Json.props" />
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\*.json" />
+    <AdditionalFiles Include="Resources\*.json" />
+  </ItemGroup>
+
+</Project>

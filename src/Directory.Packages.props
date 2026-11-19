@@ -29,6 +29,9 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components" Version="8.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
@@ -38,6 +41,19 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- Mafesoft.Localization.Json.Newtonsoft: the lowest version without known vulnerabilities -->
+  <ItemGroup>
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <!-- Source generator of Mafesoft.Localization.Json (runs in the compiler): Roslyn of the .NET 8 SDK -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
   </ItemGroup>
 
   <!-- Xamarin (Localization.Xamarin, last release 4.0.0) -->

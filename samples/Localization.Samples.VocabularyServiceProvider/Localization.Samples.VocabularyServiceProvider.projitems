@@ -10,5 +10,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)MockVocabularyServiceProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SampleVocabularies.cs" />
   </ItemGroup>
+  <!-- JSON vocabularies (Mafesoft.Localization.Json), embedded as Resources.it-IT.json and Resources.en-US.json -->
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\*.json" LogicalName="Resources.%(Filename)%(Extension)" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\src\Localization.Json\Localization.Json.csproj" />
+  </ItemGroup>
+  <!--
+    Typed keys (issue #31): the generator makes the Keys class from the same JSON files, in the namespace of each sample.
+    The package does this by itself; with project references the analyzer, the AdditionalFiles and the props are added here.
+  -->
+  <PropertyGroup>
+    <MafesoftLocalizationDefaultCulture>en-US</MafesoftLocalizationDefaultCulture>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Resources\*.json" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\src\Localization.Json.Generator\Localization.Json.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\src\Localization.Json\buildTransitive\Mafesoft.Localization.Json.props" />
 </Project>

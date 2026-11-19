@@ -1,0 +1,8 @@
+{
+  // nested keys
+  "Home": {
+    "Title": "Benvenuto",
+    "Menu": { "Open": "Apri" }
+  },
+  "Hello": "Ciao",
+}

@@ -12,7 +12,9 @@ builder.Services.AddRazorComponents()
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddBlazorLocalizationManager(options =>
 {
-    options.ServiceProvider = new MockVocabularyServiceProvider();
+    options.ServiceProvider = builder.Environment.IsDevelopment()
+        ? SampleVocabularies.FromSourceFolder(builder.Environment.ContentRootPath)  // edit a JSON file while the app runs
+        : SampleVocabularies.Embedded();
     options.Culture = new CultureInfo("it-IT");
 });
 

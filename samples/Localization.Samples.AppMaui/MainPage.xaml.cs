@@ -13,16 +13,14 @@ namespace Localization.Samples.AppMaui
 
         void Button_Clicked(System.Object sender, System.EventArgs e)
         {
-            if (LocalizationManager.CurrentCulture.ToString() == "it-IT")
+            // it-IT, en-US, ar (right to left: the page binds FlowDirection="{culture:FlowDirection}"), then it-IT again
+            var next = LocalizationManager.CurrentCulture.Name switch
             {
-                CultureInfo cultureInfo = new CultureInfo("en-US");
-                LocalizationManager.Instance.SetCulture(cultureInfo);
-            }
-            else
-            {
-                CultureInfo cultureInfo = new CultureInfo("it-IT");
-                LocalizationManager.Instance.SetCulture(cultureInfo);
-            }
+                "it-IT" => "en-US",
+                "en-US" => "ar",
+                _ => "it-IT",
+            };
+            LocalizationManager.Instance.SetCulture(new CultureInfo(next));
         }
     }
 

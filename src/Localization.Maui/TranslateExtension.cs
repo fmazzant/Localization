@@ -31,6 +31,7 @@ namespace Mafesoft.Localization.Maui
 {
     using Mafesoft.Localization;
     using Mafesoft.Localization.Maui.Converters;
+    using Mafesoft.Localization.Maui.Extensions;
     using Microsoft.Maui.Controls;
     using Microsoft.Maui.Controls.Xaml;
     using System;
@@ -78,15 +79,12 @@ namespace Mafesoft.Localization.Maui
         /// <returns>The object value to set on the property where the extension is applied.</returns>
         public BindingBase ProvideValue(IServiceProvider serviceProvider)
         {
-            var binding = new Binding
-            {
-                Mode = BindingMode.OneWay,
-                Path = $"[{ResourceKey}]",
-                Source = LocalizationManager.Instance,
-                StringFormat = StringFormat,
-                Converter = DefaultConverter,
-                ConverterParameter = DefaultValue ?? ResourceKey,
-            };
+            // A typed binding to the indexer (no string path, trim safe): the key is read when the culture changes.
+            var key = ResourceKey;
+            var binding = LocalizationBindings.Create(manager => manager[key], "Item");
+            binding.StringFormat = StringFormat;
+            binding.Converter = DefaultConverter;
+            binding.ConverterParameter = DefaultValue ?? ResourceKey;
             return binding;
         }
     }

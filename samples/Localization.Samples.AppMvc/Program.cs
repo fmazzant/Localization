@@ -1,8 +1,11 @@
 using System.Globalization;
+using System.Resources;
 using Localization.Samples.AppMvc.Models;
 using Localization.Samples.VocabularyServiceProvider;
+using Mafesoft.Localization;
 using Mafesoft.Localization.Extensions;
 using Mafesoft.Localization.Mvc.Extensions;
+using Mafesoft.Localization.Resx;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,13 +18,24 @@ if (settings.SupportedCultures.Length == 0)
 }
 builder.Services.AddSingleton(Options.Create(settings));
 
+// The "Vocabularies" setting: "Json" reads the JSON files of the samples (Mafesoft.Localization.Json), "Resx" the .resx
+// files of Resources/ (Mafesoft.Localization.Resx)
+IVocabularyServiceProvider CreateVocabularyProvider() => settings.Vocabularies switch
+{
+    LocalizationVocabularies.Resx => new ResxVocabularyServiceProvider(
+        new ResourceManager("Localization.Samples.AppMvc.Resources.SampleTexts", typeof(LocalizationSettings).Assembly)),
+    _ => builder.Environment.IsDevelopment()
+        ? SampleVocabularies.FromSourceFolder(builder.Environment.ContentRootPath)  // edit a JSON file while the app runs
+        : SampleVocabularies.Embedded(),
+};
+
 switch (settings.Registration)
 {
     case LocalizationRegistration.Extensions:
         // IStringLocalizer, IViewLocalizer and DataAnnotations read the vocabularies of the LocalizationManager
         builder.Services.AddLocalizationManager(options =>
         {
-            options.ServiceProvider = new MockVocabularyServiceProvider();
+            options.ServiceProvider = CreateVocabularyProvider();
             options.Culture = new CultureInfo(settings.Culture);
             options.FollowCurrentUICulture = settings.FollowCurrentUICulture;
             options.InitializeOnHostStart = true;   // the vocabulary is loaded asynchronously when the app starts
@@ -34,7 +48,7 @@ switch (settings.Registration)
         // IStringLocalizer is the standard resx one registered by AddViewLocalization() (no .resx files: it returns the keys)
         builder.Services.AddMvcLocalizationManager(options =>
         {
-            options.ServiceProvider = new MockVocabularyServiceProvider();
+            options.ServiceProvider = CreateVocabularyProvider();
             options.Culture = new CultureInfo(settings.Culture);
             options.FollowCurrentUICulture = settings.FollowCurrentUICulture;
         });

@@ -32,14 +32,18 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 - [Quick start](#quick-start)
 - [How it works](#how-it-works)
 - [Vocabulary service provider](#vocabulary-service-provider)
+- [JSON vocabularies](#json-vocabularies)
+- [Resx vocabularies](#resx-vocabularies)
 - [LocalizationManager API](#localizationmanager-api)
 - [Culture fallback](#culture-fallback)
+- [Right-to-left languages](#right-to-left-languages)
 - [Per-request culture on the server](#per-request-culture-on-the-server)
 - [WPF](#wpf)
 - [.NET MAUI](#net-maui)
 - [ASP.NET Core MVC](#aspnet-core-mvc)
 - [Blazor](#blazor)
 - [IStringLocalizer](#istringlocalizer)
+- [Trimming and NativeAOT](#trimming-and-nativeaot)
 - [Migrating from `Mafe.Localization`](#migrating-from-mafelocalization)
 - [Legacy: Xamarin.Forms](#legacy-xamarinforms)
 - [Build and test](#build-and-test)
@@ -120,6 +124,9 @@ comparison is not one-sided.
 |---|---|---|---|---|---|
 | `Mafesoft.Localization` | Core (any .NET application) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization) | [![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization)](https://www.nuget.org/packages/Mafe.Localization) |
 | `Mafesoft.Localization.Extensions` | `IStringLocalizer`, dependency injection (since 4.1.0, see [IStringLocalizer](#istringlocalizer)) | .NET 10, .NET 8, .NET Standard 2.0 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Extensions?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | – |
+| `Mafesoft.Localization.Json` | JSON vocabularies (since 4.4.0, see [JSON vocabularies](#json-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | – |
+| `Mafesoft.Localization.Json.Newtonsoft` | Newtonsoft.Json engine for the JSON vocabularies (since 4.4.0, see [Choose the JSON engine](#choose-the-json-engine)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | – |
+| `Mafesoft.Localization.Resx` | Vocabularies from existing `.resx` files (since 4.4.0, see [Resx vocabularies](#resx-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Resx?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Resx) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Resx?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Resx) | – |
 | `Mafesoft.Localization.Wpf` | WPF | `net10.0-windows`, `net8.0-windows` | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Wpf?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Mafe.Localization.Windows downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Windows?style=flat-square&label=Mafe.Localization.Windows)](https://www.nuget.org/packages/Mafe.Localization.Windows) |
 | `Mafesoft.Localization.Maui` | .NET MAUI | .NET 10 (MAUI 10), .NET 8 (MAUI 8) | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Maui?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Mafe.Localization.Maui downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Maui?style=flat-square&label=Mafe.Localization.Maui)](https://www.nuget.org/packages/Mafe.Localization.Maui) |
 | `Mafesoft.Localization.Mvc` | ASP.NET Core MVC | .NET 10, .NET 8 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Mvc?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Mafe.Localization.Mvc downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Mvc?style=flat-square&label=Mafe.Localization.Mvc)](https://www.nuget.org/packages/Mafe.Localization.Mvc) |
@@ -128,7 +135,8 @@ comparison is not one-sided.
 <!-- markdownlint-enable MD013 -->
 
 Legacy downloads are the downloads of the old `Mafe.Localization.*` packages, up to 3.0.0: `Mafesoft.Localization.Wpf` was
-published as `Mafe.Localization.Windows`, `Mafesoft.Localization.Extensions` is new in 4.1.0.
+published as `Mafe.Localization.Windows`, `Mafesoft.Localization.Extensions` is new in 4.1.0 and
+`Mafesoft.Localization.Json`, `Mafesoft.Localization.Json.Newtonsoft` and `Mafesoft.Localization.Resx` in 4.4.0.
 
 - **.NET 10** (LTS, supported until November 2028) is the main target.
 - **.NET 9** is not targeted: it reached end of support on 10 November 2026. .NET 9 applications use the .NET 8 build.
@@ -214,7 +222,8 @@ A provider implements `IVocabularyServiceProvider`. Every method accepts a `Canc
 | `SaveAsync(vocabulary)` | when you call `LocalizationManager.Instance.SaveCultureAsync()` |
 | `AddOrUpdateTermAsync(vocabulary, key)` | when a key is not in the vocabulary (for example to store it for the translators) |
 
-A provider that reads one JSON file per culture (`vocabularies/it-IT.json`, `vocabularies/en-US.json`):
+For JSON files there is a ready-made provider, see [JSON vocabularies](#json-vocabularies). A minimal provider that
+reads one JSON file per culture (`vocabularies/it-IT.json`, `vocabularies/en-US.json`) looks like this:
 
 ```c#
 using System.Globalization;
@@ -280,6 +289,167 @@ LocalizationManager.Instance.ReportMissingTerms = false;
 - Without a logger (WPF, .NET Framework, Blazor WebAssembly) they are written with `System.Diagnostics.Trace`.
 
 
+## JSON vocabularies
+
+```
+dotnet add package Mafesoft.Localization.Json
+```
+
+*Since 4.4.0.* `Mafesoft.Localization.Json` is a ready-made provider: one JSON file per culture, so you do not have to
+write an `IVocabularyServiceProvider`.
+
+```text
+Resources/
+  it-IT.json
+  it.json
+  en.json
+```
+
+```json
+{
+  // flat or nested keys: "Home": { "Title" } is the key Home.Title
+  "Hello": "Ciao",
+  "Home": {
+    "Title": "Benvenuto",
+    "Menu": { "Open": "Apri" }
+  }
+}
+```
+
+```c#
+using Mafesoft.Localization.Json;
+
+// MAUI, WPF, Blazor WebAssembly: files embedded in the app (<EmbeddedResource Include="Resources\*.json" />)
+var provider = JsonVocabularyServiceProvider.FromEmbeddedResources(typeof(App).Assembly, "Resources");
+
+// ASP.NET Core: files on disk, reloaded when they change
+var provider = JsonVocabularyServiceProvider.FromFileProvider(
+    builder.Environment.ContentRootFileProvider, "Resources",
+    new JsonVocabularyOptions { ReloadOnChange = true });
+
+// Any directory
+var provider = JsonVocabularyServiceProvider.FromDirectory(Path.Combine(AppContext.BaseDirectory, "Resources"));
+
+await LocalizationManager.InitAsync(provider, new CultureInfo("it-IT"));
+```
+
+- The file name is the culture name: `it-IT.json`, `en.json`, `invariant.json` for the invariant culture. A culture
+  without a file has an empty vocabulary: with `UseParentCultureFallback` (see [Culture fallback](#culture-fallback))
+  `it-IT` reads the keys missing in `it-IT.json` from `it.json`.
+- Comments and trailing commas are allowed. Numbers and booleans are read as their text; arrays give one key per item
+  (`Days.0`, `Days.1`). A file that is not valid JSON fails the load with an `InvalidDataException` naming the file.
+- `ReloadOnChange` (files only, not embedded resources): when a file is saved the `LocalizationManager` that uses the
+  provider reloads its vocabularies (`LocalizationManager.Instance.ReloadAsync()`) and the bindings refresh. The
+  `Changed` event of the provider is raised first. The reload runs on a thread pool thread.
+- `MissingTermsDirectory`: the keys used by the application and missing in a vocabulary are written to
+  `missing.<culture>.json` in that directory, with their default value, ready to be translated and copied into the
+  vocabulary. Meant for development.
+- The files are read with `System.Text.Json` (`JsonDocument`, no reflection) through `IJsonVocabularySerializer`: see
+  [Choose the JSON engine](#choose-the-json-engine) to use Newtonsoft.Json or another library.
+- The samples read their texts from `samples/Localization.Samples.VocabularyServiceProvider/Resources`: MAUI, WPF and
+  Blazor WebAssembly as embedded resources, MVC and Blazor Server from the folder in development, so a saved change to
+  a file shows up in the running app.
+
+### Typed keys
+
+*Since 4.4.0.* Keys are strings: a typo is found only at runtime. Give the vocabularies to the compiler and
+`Mafesoft.Localization.Json` generates a class of constants, plus a warning for the keys that are not in the vocabulary:
+
+```xml
+<ItemGroup>
+  <EmbeddedResource Include="Resources\*.json" />
+  <AdditionalFiles Include="Resources\*.json" />
+</ItemGroup>
+```
+
+```c#
+// Generated in the root namespace of the project, from every vocabulary file:
+// public static partial class Keys { public const string Home_Title = "Home.Title"; ... }
+string title = LocalizationManager.Translate(Keys.Home_Title);
+```
+
+```xml
+<!-- XAML (WPF, MAUI): xmlns:local is the namespace of the project -->
+<Label Content="{culture:Translate ResourceKey={x:Static local:Keys.Home_Title}}" />
+```
+
+```razor
+<h1>@Binding.Translate(Keys.Home_Title)</h1>
+<translate key="@Keys.Home_Title"></translate>
+```
+
+- Member names: `Home.Title` is `Home_Title`; other characters become `_`, a leading digit gets `_` before it, a C#
+  keyword gets `@` (`Keys.@class`). The documentation of each constant shows its text in the reference vocabulary.
+- **MLOC001** warns when a constant key passed to `LocalizationManager.Translate`, `TranslateFormat` or
+  `LocalizationManager.Instance[...]` is not in the reference vocabulary: the file of `MafesoftLocalizationDefaultCulture`,
+  otherwise `invariant.json`, otherwise the first file by name. Keys in XAML markup are not checked.
+- The vocabularies are the `AdditionalFiles` named after a culture (`it-IT.json`, `en.json`, `invariant.json`);
+  `missing.it-IT.json` and other JSON files are ignored. MLOC002 reports a file that cannot be read.
+- MSBuild properties: `MafesoftLocalizationKeysClass` (default `Keys`), `MafesoftLocalizationKeysNamespace` (default the
+  root namespace) and `MafesoftLocalizationDefaultCulture` (for example `en`).
+
+```xml
+<PropertyGroup>
+  <MafesoftLocalizationDefaultCulture>en</MafesoftLocalizationDefaultCulture>
+  <MafesoftLocalizationKeysClass>Texts</MafesoftLocalizationKeysClass>
+</PropertyGroup>
+```
+
+### Choose the JSON engine
+
+The files are read with `System.Text.Json` by default: no extra dependency, safe with trimming and NativeAOT. An
+application that already uses Newtonsoft.Json can keep one JSON library:
+
+```
+dotnet add package Mafesoft.Localization.Json.Newtonsoft
+```
+
+```c#
+using Mafesoft.Localization.Json.Newtonsoft;
+
+var options = new JsonVocabularyOptions { ReloadOnChange = true }.UseNewtonsoftJson();        // default settings
+var options = new JsonVocabularyOptions().UseNewtonsoftJson(mySerializerSettings);            // the application's settings
+var options = new JsonVocabularyOptions { Serializer = new MyVocabularySerializer() };         // any other engine
+
+var provider = JsonVocabularyServiceProvider.FromDirectory("Resources", options);
+```
+
+- Both engines give the same keys and values for the same files (flat, nested, comments, arrays, numbers, booleans).
+  Dates stay text with Newtonsoft.Json too; a number with an exponent (`1e3`) is read as `1000`.
+- From the `JsonSerializerSettings`: `MaxDepth` when reading, `Formatting` and `StringEscapeHandling` when writing the
+  missing terms file.
+- Newtonsoft.Json is not safe with trimming and NativeAOT: the warning comes only from that package, the main package
+  does not depend on it.
+- Another engine implements `IJsonVocabularySerializer`: `Read` returns the terms of a file (nested keys joined with
+  `JsonVocabularyKeys.Separator`), `Write` writes flat terms.
+
+## Resx vocabularies
+
+```
+dotnet add package Mafesoft.Localization.Resx
+```
+
+*Since 4.4.0.* An application that already has `.resx` files can adopt Mafesoft.Localization (XAML markup, runtime
+culture switch, missing-key reporting) without converting its resources:
+
+```c#
+using Mafesoft.Localization.Resx;
+
+// Strings.resx, Strings.it.resx, Strings.it-IT.resx: the ResourceManager of the class generated by the designer
+var provider = new ResxVocabularyServiceProvider(Strings.ResourceManager);
+// or by type: new ResxVocabularyServiceProvider(typeof(Strings))
+
+await LocalizationManager.InitAsync(provider, new CultureInfo("it-IT"));
+```
+
+- The vocabulary of `it-IT` has the strings of `Strings.it-IT.resx` and, for the keys it does not have, of
+  `Strings.it.resx` and `Strings.resx`: the same values as `ResourceManager.GetString(key, culture)`.
+- Only string resources are read; images and other resources are skipped.
+- The `.resx` files are compiled into the application, so the provider does not save anything: see the missing keys
+  with `LocalizationManager.Instance.MissingTerm` or the logger (see [Missing keys](#missing-keys)).
+- The MVC sample reads `Resources/SampleTexts.resx` and `SampleTexts.it.resx` with `"Vocabularies": "Resx"` in
+  `appsettings.json`.
+
 ## LocalizationManager API
 
 ```c#
@@ -312,6 +482,8 @@ IVocabulary vocabulary = await LocalizationManager.Instance.GetVocabularyAsync(n
 
 The vocabularies are cached per culture: each culture is loaded from the provider once, also when many callers ask
 for it at the same time. `SetCulture` reloads the vocabulary of its culture, and `Init` clears the cache.
+*Since 4.4.0.* `ReloadAsync()` clears the cache and reloads the current culture, for example after the files of the
+provider changed.
 
 ### Format arguments
 
@@ -367,6 +539,36 @@ The lookup order is: the culture (`it-IT`) → its parent cultures (`it`, then t
 - `UseParentCultureFallback` is `false` by default in 4.x, so the behavior does not change; `FallbackCulture` is `null`.
 - It applies to `Translate`, the indexers, the XAML markup extensions, the MVC and Blazor helpers and `IStringLocalizer`,
   also with `FollowCurrentUICulture` (the chain of the culture of the request).
+
+## Right-to-left languages
+
+*Since 4.4.0.* When the culture changes to a right-to-left language (Arabic, Hebrew, Persian...) the layout direction
+can follow it, not only the text:
+
+```c#
+bool rtl = LocalizationManager.Instance.IsRightToLeft;        // CultureInfo.TextInfo.IsRightToLeft of the current culture
+string dir = LocalizationManager.Instance.TextDirection;      // "rtl" or "ltr", for the HTML dir attribute
+```
+
+Both are notified with every culture change, like the translations.
+
+```xml
+<!-- WPF (xmlns:culture="clr-namespace:Mafesoft.Localization.Wpf;assembly=Mafesoft.Localization.Wpf") -->
+<Window FlowDirection="{culture:FlowDirection}" ...>
+
+<!-- .NET MAUI (xmlns:culture="clr-namespace:Mafesoft.Localization.Maui;assembly=Mafesoft.Localization.Maui") -->
+<ContentPage FlowDirection="{culture:FlowDirection}" ...>
+```
+
+```razor
+@* Blazor (App.razor) and MVC (_Layout.cshtml) *@
+<html lang="@LocalizationManager.CurrentCulture.TwoLetterISOLanguageName" dir="@LocalizationManager.Instance.TextDirection">
+```
+
+- With `FollowCurrentUICulture` (see [Per-request culture on the server](#per-request-culture-on-the-server)) the
+  direction is the one of the culture of the request.
+- The samples switch between Italian, English and Arabic: WPF (combo box), MAUI (button) and Blazor Server (buttons);
+  the Arabic texts are in `samples/Localization.Samples.VocabularyServiceProvider/Resources/ar.json`.
 
 ## Per-request culture on the server
 
@@ -692,6 +894,20 @@ public class HomeController(IStringLocalizer<HomeController> localizer) : Contro
   follow the culture of each request (see [Per-request culture on the server](#per-request-culture-on-the-server)).
   The [package README](src/Localization.Extensions/README.md#differences-from-the-resx-localizer) lists the
   differences from the resx localizer.
+
+## Trimming and NativeAOT
+
+*Since 4.4.0.* The .NET 10 builds of the packages are marked trimmable and AOT compatible (`IsTrimmable`,
+`IsAotCompatible`): an app published with trimming or NativeAOT (iOS, Mac Catalyst, Android, console, ASP.NET Core
+minimal APIs) gets no trimming / AOT warnings from the Mafesoft assemblies.
+
+- MAUI: `{culture:Translate}`, `{culture:FlowDirection}` and `Translate(...)` in code create typed bindings (a getter,
+  as compiled XAML bindings do) instead of string-path bindings, which MAUI reports as not trim safe.
+- `Mafesoft.Localization.Json` reads the files with `JsonDocument` (no reflection). `Mafesoft.Localization.Json.Newtonsoft`
+  is the exception: Newtonsoft.Json is not trim safe, use the default engine in trimmed apps.
+- WPF and ASP.NET Core MVC do not support trimming themselves; the packages add no warnings of their own.
+- CI publishes `samples/Localization.Samples.AotCheck` with NativeAOT (every trimming / AOT warning is an error) and runs
+  it, and publishes the MAUI sample with NativeAOT for Mac Catalyst.
 
 ## Migrating from `Mafe.Localization`
 

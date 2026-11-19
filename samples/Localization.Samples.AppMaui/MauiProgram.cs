@@ -11,7 +11,11 @@ namespace Localization.Samples.AppMaui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .ConfigureLocalization(options => options.ServiceProvider = new MockVocabularyServiceProvider { })   // asynchronous, does not block the startup
+                .ConfigureLocalization(options =>   // asynchronous, does not block the startup
+                {
+                    options.ServiceProvider = SampleVocabularies.Embedded();  // JSON files embedded in the app
+                    options.FallbackCulture = new System.Globalization.CultureInfo("en-US");
+                })
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

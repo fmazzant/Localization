@@ -31,6 +31,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Localization\Localization.csproj" />
+    <ProjectReference Include="..\Localization.Json\Localization.Json.csproj" />
+    <ProjectReference Include="..\Localization.Json.Newtonsoft\Localization.Json.Newtonsoft.csproj" />
+    <ProjectReference Include="..\Localization.Resx\Localization.Resx.csproj" />
+  </ItemGroup>
+
+  <!-- JSON vocabularies read as embedded resources (issue #29) -->
+  <ItemGroup>
+    <EmbeddedResource Include="JsonVocabularies\*.json" />
   </ItemGroup>
 
   <!-- Blazor, MVC, ASP.NET Core and NullabilityInfoContext do not exist on .NET Framework -->
@@ -38,6 +46,14 @@
     <ProjectReference Include="..\Localization.Blazor\Localization.Blazor.csproj" />
     <ProjectReference Include="..\Localization.Mvc\Localization.Mvc.csproj" />
     <ProjectReference Include="..\Localization.Extensions\Localization.Extensions.csproj" />
+  </ItemGroup>
+  <!-- Source generator of the keys (issue #31): run on in-memory compilations -->
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+    <ProjectReference Include="..\Localization.Json.Generator\Localization.Json.Generator.csproj" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Compile Remove="KeysGeneratorTests.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Compile Remove="AsyncInitializationTests.cs;ValidationMessageTests.cs;TranslateComponentAndTagHelperTests.cs;BlazorBindingTests.cs;MvcTests.cs;NullabilityTests.cs;PerRequestCultureTests.cs;StringLocalizerTests.cs" />

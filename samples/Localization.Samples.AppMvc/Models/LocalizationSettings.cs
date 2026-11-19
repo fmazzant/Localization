@@ -33,11 +33,23 @@ namespace Localization.Samples.AppMvc.Models
         /// Only with <see cref="LocalizationRegistration.Extensions"/>: IStringLocalizer&lt;HomeController&gt;["Key"] reads "HomeController.Key".
         /// </summary>
         public bool UseTypeNamePrefix { get; set; }
+
+        /// <summary>
+        /// Where the vocabularies are read: <see cref="LocalizationVocabularies.Json"/> (the JSON files of the samples) or
+        /// <see cref="LocalizationVocabularies.Resx"/> (Resources/SampleTexts.resx and SampleTexts.it.resx).
+        /// </summary>
+        public LocalizationVocabularies Vocabularies { get; set; } = LocalizationVocabularies.Json;
     }
 
     public enum LocalizationRegistration
     {
         Extensions,
         Mvc
+    }
+
+    public enum LocalizationVocabularies
+    {
+        Json,
+        Resx
     }
 }

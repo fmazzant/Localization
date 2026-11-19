@@ -7,5 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="../../src/Localization.Mvc/Localization.Mvc.csproj" />
     <ProjectReference Include="../../src/Localization.Extensions/Localization.Extensions.csproj" />
+    <ProjectReference Include="../../src/Localization.Resx/Localization.Resx.csproj" />
   </ItemGroup>
 </Project>

@@ -53,4 +53,11 @@ string title = LocalizationManager.Translate("Home.Title");   // Benvenuto
   Newtonsoft.Json (`options.UseNewtonsoftJson()`), or set `JsonVocabularyOptions.Serializer` to use another
   JSON library.
 
-See the [documentation](https://github.com/fmazzant/Localization#json-vocabularies).
+## Links
+
+- [Documentation](https://github.com/fmazzant/Localization#json-vocabularies)
+- [Typed keys](https://github.com/fmazzant/Localization#typed-keys)
+- [Changelog](https://github.com/fmazzant/Localization/blob/main/CHANGELOG.md)
+- [Issues](https://github.com/fmazzant/Localization/issues)
+
+Licensed under the [MIT License](https://github.com/fmazzant/Localization/blob/main/LICENSE.md).

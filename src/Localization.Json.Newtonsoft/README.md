@@ -30,4 +30,10 @@ await LocalizationManager.InitAsync(provider, new CultureInfo("it-IT"));
 * The same files give the same keys and values as the default System.Text.Json engine.
 * Newtonsoft.Json is not safe with trimming and NativeAOT: use the default engine in trimmed or NativeAOT apps.
 
-See the [documentation](https://github.com/fmazzant/Localization#choose-the-json-engine).
+## Links
+
+- [Documentation](https://github.com/fmazzant/Localization#choose-the-json-engine)
+- [Changelog](https://github.com/fmazzant/Localization/blob/main/CHANGELOG.md)
+- [Issues](https://github.com/fmazzant/Localization/issues)
+
+Licensed under the [MIT License](https://github.com/fmazzant/Localization/blob/main/LICENSE.md).

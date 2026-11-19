@@ -26,9 +26,14 @@ builder.Services.AddLocalizationManager(options =>
 {
     options.ServiceProvider = new MyVocabularyServiceProvider();
     options.Culture = new CultureInfo("it-IT");
+    options.InitializeOnHostStart = true;      // since 4.3.0: load the vocabulary asynchronously when the host starts
+    options.UseParentCultureFallback = true;   // since 4.3.0: it-IT → it → invariant
 })
 .AddStringLocalizer();
 ```
+
+By default `AddLocalizationManager` initializes the manager synchronously, so it also works with a plain
+`ServiceCollection` without a host.
 
 ```c#
 public class HomeController(IStringLocalizer<HomeController> localizer) : Controller
@@ -57,7 +62,7 @@ the same as the resx-based `ResourceManagerStringLocalizer`:
 |---|---|---|
 | Culture | `CultureInfo.CurrentUICulture`, per request with `UseRequestLocalization()` | One culture for the whole application, changed with `SetCulture`. With `FollowCurrentUICulture = true`: `CultureInfo.CurrentUICulture`, per request like resx |
 | Keys | One resource file per type or view (`Controllers.HomeController.it.resx`) | One vocabulary per culture, shared by every localizer. With `UseTypeNamePrefix` the key is `TypeName.Key` (`Type.Name`, without namespace) or `baseName.Key` for the views |
-| Parent cultures | `it-IT` falls back to `it` and then to the neutral resources | No fallback, `includeParentCultures` is ignored |
+| Parent cultures | `it-IT` falls back to `it` and then to the neutral resources | Opt-in since 4.3.0: with `UseParentCultureFallback` `it-IT` → `it` → invariant, then `FallbackCulture`. `GetAllStrings` ignores `includeParentCultures` |
 | Missing key | Returns the key, `ResourceNotFound = true` | Same, and the provider is notified (`AddOrUpdateTermAsync`) |
 | Source of the strings | `.resx` files embedded in the assembly | The `IVocabularyServiceProvider` (the resx strings must be moved there) |
 
@@ -78,6 +83,10 @@ the same as the resx-based `ResourceManagerStringLocalizer`:
 * **Shared keys.** Two resx files that translate the same key differently collide in the vocabulary: rename the keys
   or enable `UseTypeNamePrefix`.
 * The default validation messages of DataAnnotations (without `ErrorMessage`) are not translated, as with resx.
+  In ASP.NET Core MVC `AddValidationMessageTranslation()` of `Mafesoft.Localization.Mvc` (since 4.3.0) translates them
+  from the vocabulary (`Validation.Required`, ...).
+* The vocabularies come from the `IVocabularyServiceProvider`: write your own, or use the ready-made providers for JSON
+  files (`Mafesoft.Localization.Json`) and existing `.resx` files (`Mafesoft.Localization.Resx`), since 4.4.0.
 
 ## Links
 

@@ -29,5 +29,12 @@ string title = LocalizationManager.Translate("Title");
 * The vocabulary of a culture has its strings and, for the missing keys, those of the parent cultures and of the
   neutral resources: the same values as `ResourceManager.GetString(key, culture)`.
 * Only string resources are read. The provider does not save anything: the `.resx` files are compiled into the app.
+  See the missing keys with `LocalizationManager.Instance.MissingTerm` or the logger.
 
-See the [documentation](https://github.com/fmazzant/Localization#resx-vocabularies).
+## Links
+
+- [Documentation](https://github.com/fmazzant/Localization#resx-vocabularies)
+- [Changelog](https://github.com/fmazzant/Localization/blob/main/CHANGELOG.md)
+- [Issues](https://github.com/fmazzant/Localization/issues)
+
+Licensed under the [MIT License](https://github.com/fmazzant/Localization/blob/main/LICENSE.md).

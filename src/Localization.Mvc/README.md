@@ -8,7 +8,7 @@
 [![Mafe.Localization.Mvc downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Mvc?style=flat-square&label=Mafe.Localization.Mvc%20downloads)](https://www.nuget.org/packages/Mafe.Localization.Mvc)
 
 ASP.NET Core MVC extension of [Mafesoft.Localization](https://www.nuget.org/packages/Mafesoft.Localization):
-translate labels, display names and validation messages with the `[Translate]` attribute and HTML helpers.
+translate labels, display names and validation messages with the `[Translate]` attribute, HTML helpers and tag helpers.
 
 Target frameworks: .NET 10, .NET 8.
 
@@ -43,6 +43,27 @@ Use it in the view (the standard helpers such as `Html.LabelFor` and `<label asp
 ```razor
 @Html.TranslateLabelFor(m => m.Name)
 @Html.TranslateLabel("Title", "TitleKey", "#Default title")
+```
+
+Tag helpers (since 4.3.0), registered in `_ViewImports.cshtml` with `@addTagHelper *, Mafesoft.Localization.Mvc`:
+
+```html
+<translate key="Home.Title" default="Welcome"></translate>   <!-- renders only the text -->
+<button loc-key="Save">Save</button>                           <!-- replaces the content; kept when the key is missing -->
+```
+
+Validation messages (since 4.3.0): the messages of `[Required]`, `[StringLength]`, `[Range]`... without an explicit
+`ErrorMessage` are read from the vocabulary (`Validation.Required`, `Validation.StringLength`, ...), on the server and
+in the client-side validation, with the English message as fallback:
+
+```c#
+builder.Services.AddControllersWithViews().AddValidationMessageTranslation();
+```
+
+Right-to-left languages (since 4.4.0), in `_Layout.cshtml`:
+
+```razor
+<html lang="@LocalizationManager.CurrentCulture.TwoLetterISOLanguageName" dir="@LocalizationManager.Instance.TextDirection">
 ```
 
 By default the culture is shared by all users (`LocalizationManager` is a process-wide singleton). Since 4.1.0 every

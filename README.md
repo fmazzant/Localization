@@ -10,9 +10,11 @@
 [![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization%20downloads)](https://www.nuget.org/packages/Mafe.Localization)
 
 **Mafesoft.Localization** is a .NET library to translate your application from **vocabularies you load from any
-source** — a database, JSON files, a web API — through a small provider you write. The culture can be **changed at
-runtime**: every bound text (XAML, Razor, Blazor) is refreshed immediately, without restarting the application.
-The same API works in WPF, .NET MAUI, ASP.NET Core MVC and Blazor.
+source** — a database, a web API, a cache — through a small provider you write, or with the ready-made providers for
+**JSON files** and existing **`.resx` files**. The culture can be **changed at runtime**: every bound text (XAML,
+Razor, Blazor) is refreshed immediately, without restarting the application, also for right-to-left languages.
+The same API works in WPF, .NET MAUI, ASP.NET Core MVC and Blazor, and the .NET 10 builds are trimming and NativeAOT
+compatible.
 
 > **Version 4.0.0: the packages are now published as `Mafesoft.*`** and all the namespaces start with `Mafesoft.`.
 > If you are using the `Mafe.Localization*` packages, read [Migrating from `Mafe.Localization`](#migrating-from-mafelocalization).
@@ -56,7 +58,8 @@ If Mafesoft.Localization is useful to you, consider [supporting the project](#su
 a new deploy, and switching language usually means reloading the UI. Mafesoft.Localization is built for the other case:
 
 - **Vocabularies from any source.** You write an `IVocabularyServiceProvider` that loads the terms of a culture from
-  wherever they live: a database edited by your translators, JSON files, a remote API, a cache.
+  wherever they live: a database edited by your translators, a remote API, a cache. For JSON files and existing
+  `.resx` files the provider is ready-made.
 - **Culture change at runtime.** `SetCulture` loads the new vocabulary and notifies the bindings: XAML labels, Razor
   views and Blazor components show the new language immediately.
 - **The same API everywhere.** `LocalizationManager`, `Translate("key", "default")` and the `{culture:Translate}`
@@ -79,6 +82,15 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
   consumers of `Microsoft.Extensions.Localization` (since 4.1.0).
 - Per-request culture on the server (`FollowCurrentUICulture`, with `UseRequestLocalization()`) and vocabularies
   cached per culture (since 4.1.0).
+- Ready-made JSON provider: one file per culture, flat or nested keys, embedded resources, a directory or an
+  `IFileProvider`, reload when a file is saved, missing keys written for the translators (`Mafesoft.Localization.Json`,
+  since 4.4.0). System.Text.Json by default, Newtonsoft.Json with `Mafesoft.Localization.Json.Newtonsoft`.
+- Typed keys: a source generator creates a class of constants from the JSON vocabularies, and the `MLOC001` analyzer
+  warns about keys that are not in the vocabulary (since 4.4.0).
+- Existing `.resx` files as vocabularies (`Mafesoft.Localization.Resx`, since 4.4.0).
+- Right-to-left languages: `IsRightToLeft`, `TextDirection` and the `{culture:FlowDirection}` markup extension for WPF
+  and .NET MAUI (since 4.4.0).
+- Trimming and NativeAOT: the .NET 10 builds are `IsTrimmable` and `IsAotCompatible` (since 4.4.0).
 - Nullable reference types annotations, XML documentation, Source Link and symbols.
 
 ## Comparison with the alternatives
@@ -88,16 +100,17 @@ a new deploy, and switching language usually means reloading the UI. Mafesoft.Lo
 |---|---|---|---|---|---|
 | Culture change at runtime, bound UI refreshed | ✅ WPF, MAUI, Blazor; per request on the server | ⚠️ per request; Blazor reloads the page | ✅ | ✅ | ⚠️ per request, no UI bindings |
 | Translations from your own store (database, API) | ✅ `IVocabularyServiceProvider` | ⚠️ write your own `IStringLocalizerFactory` | ⚠️ custom `ResourceManager` | ✅ `ILocalizationProvider` | ❌ JSON files only |
+| Ready-made JSON files provider | ✅ since 4.4.0 (`Mafesoft.Localization.Json`), reload on change | ❌ | ❌ | ⚠️ write your own provider | ✅ |
 | Missing keys reported | ✅ `AddOrUpdateTermAsync` once per key, `MissingTerm` event, `ILogger` | ⚠️ debug log, `ResourceNotFound` | ❌ | ✅ `MissingKeyEvent` | ✅ log or throw |
 | WPF, MAUI, MVC and Blazor with one API | ✅ | ⚠️ MVC and Blazor; no XAML markup | ❌ MAUI only | ❌ WPF only | ❌ ASP.NET Core only |
 | `IStringLocalizer` | ✅ since 4.1.0 | ✅ | ❌ | ❌ | ✅ |
 | `netstandard2.0` / .NET Framework 4.6.2+ | ✅ | ✅ | ❌ `net10.0` only | ⚠️ .NET Framework only | ❌ `net10.0` only |
 | Culture fallback (`it-IT` → `it` → neutral) | ✅ since 4.3.0, opt-in (`UseParentCultureFallback`, `FallbackCulture`) | ✅ | ✅ | ✅ | ✅ |
 | Format arguments | ✅ `TranslateFormat(key, args)` since 4.3.0, `StringFormat`, `IStringLocalizer` | ✅ | ✅ | ⚠️ converter, not bindable | ✅ |
-| Reuse existing `.resx` files | ❌ planned ([#30](https://github.com/fmazzant/Localization/issues/30)) | ✅ | ✅ | ✅ | ❌ |
+| Reuse existing `.resx` files | ✅ since 4.4.0 (`Mafesoft.Localization.Resx`) | ✅ | ✅ | ✅ | ❌ |
+| Strongly typed keys | ✅ since 4.4.0, generated from the JSON vocabularies, `MLOC001` analyzer | ⚠️ `.resx` designer class, not with `IStringLocalizer` | ❌ | ❌ | ⚠️ `GetString<T>(x => x.Prop)` |
+| Native AOT / trimming | ✅ since 4.4.0 (.NET 10 builds; not with Newtonsoft.Json) | ⚠️ abstractions only | ⚠️ partly annotated | ❌ | ❌ |
 | Pluralization | ❌ to evaluate ([#33](https://github.com/fmazzant/Localization/issues/33)) | ❌ | ⚠️ zero/one only | ❌ | ❌ |
-| Strongly typed keys | ❌ planned ([#31](https://github.com/fmazzant/Localization/issues/31)) | ⚠️ `.resx` designer class, not with `IStringLocalizer` | ❌ | ❌ | ⚠️ `GetString<T>(x => x.Prop)` |
-| Native AOT / trimming | ❌ planned ([#32](https://github.com/fmazzant/Localization/issues/32)) | ⚠️ abstractions only | ⚠️ partly annotated | ❌ | ❌ |
 | Design-time preview, non-string resources (images, sizes) | ❌ | ❌ | ❌ | ✅ | ❌ |
 | Community, documentation, Q&A | ❌ small | ✅ part of .NET | ⚠️ medium | ⚠️ medium, last release 2023 | ⚠️ medium |
 <!-- markdownlint-enable MD013 -->
@@ -115,28 +128,29 @@ comparison is not one-sided.
   at runtime.
 - **WPFLocalizeExtension** for a WPF-only app that needs the design-time preview or localizes images, sizes and other
   non-string properties.
-- **My.Extensions.Localization.Json** for an ASP.NET Core app that keeps the translations in JSON files next to the code.
+- **My.Extensions.Localization.Json** for an ASP.NET Core app that keeps the translations in JSON files next to the code
+  and uses only `IStringLocalizer`.
 
 ## Packages
 
 <!-- markdownlint-disable MD013 -->
-| Package | Platform | Target frameworks | NuGet | Downloads | Legacy downloads |
-|---|---|---|---|---|---|
-| `Mafesoft.Localization` | Core (any .NET application) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization) | [![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization)](https://www.nuget.org/packages/Mafe.Localization) |
-| `Mafesoft.Localization.Extensions` | `IStringLocalizer`, dependency injection (since 4.1.0, see [IStringLocalizer](#istringlocalizer)) | .NET 10, .NET 8, .NET Standard 2.0 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Extensions?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | – |
-| `Mafesoft.Localization.Json` | JSON vocabularies (since 4.4.0, see [JSON vocabularies](#json-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | – |
-| `Mafesoft.Localization.Json.Newtonsoft` | Newtonsoft.Json engine for the JSON vocabularies (since 4.4.0, see [Choose the JSON engine](#choose-the-json-engine)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | – |
-| `Mafesoft.Localization.Resx` | Vocabularies from existing `.resx` files (since 4.4.0, see [Resx vocabularies](#resx-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Resx?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Resx) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Resx?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Resx) | – |
-| `Mafesoft.Localization.Wpf` | WPF | `net10.0-windows`, `net8.0-windows` | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Wpf?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) | [![Mafe.Localization.Windows downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Windows?style=flat-square&label=Mafe.Localization.Windows)](https://www.nuget.org/packages/Mafe.Localization.Windows) |
-| `Mafesoft.Localization.Maui` | .NET MAUI | .NET 10 (MAUI 10), .NET 8 (MAUI 8) | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Maui?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) | [![Mafe.Localization.Maui downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Maui?style=flat-square&label=Mafe.Localization.Maui)](https://www.nuget.org/packages/Mafe.Localization.Maui) |
-| `Mafesoft.Localization.Mvc` | ASP.NET Core MVC | .NET 10, .NET 8 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Mvc?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) | [![Mafe.Localization.Mvc downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Mvc?style=flat-square&label=Mafe.Localization.Mvc)](https://www.nuget.org/packages/Mafe.Localization.Mvc) |
-| `Mafesoft.Localization.Blazor` | Blazor Server, Blazor WebAssembly | .NET 10, .NET 8 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Blazor?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Blazor) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Blazor?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Blazor) | [![Mafe.Localization.Blazor downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Blazor?style=flat-square&label=Mafe.Localization.Blazor)](https://www.nuget.org/packages/Mafe.Localization.Blazor) |
-| `Mafesoft.Localization.Xamarin` | Xamarin.Forms (**deprecated**, see [Legacy](#legacy-xamarinforms)) | .NET Standard 2.0 / 2.1 | [![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Xamarin?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin) | [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Xamarin?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin) | [![Mafe.Localization.Xamarin downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Xamarin?style=flat-square&label=Mafe.Localization.Xamarin)](https://www.nuget.org/packages/Mafe.Localization.Xamarin) |
+| Package | Platform | Target frameworks |
+|---|---|---|
+| `Mafesoft.Localization`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization) [![Mafe.Localization downloads](https://img.shields.io/nuget/dt/Mafe.Localization?style=flat-square&label=Mafe.Localization)](https://www.nuget.org/packages/Mafe.Localization) | Core (any .NET application) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 |
+| `Mafesoft.Localization.Extensions`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Extensions?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Extensions?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Extensions) | `IStringLocalizer`, dependency injection (since 4.1.0, see [IStringLocalizer](#istringlocalizer)) | .NET 10, .NET 8, .NET Standard 2.0 |
+| `Mafesoft.Localization.Json`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json) | JSON vocabularies and typed keys (since 4.4.0, see [JSON vocabularies](#json-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 |
+| `Mafesoft.Localization.Json.Newtonsoft`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Json.Newtonsoft?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Json.Newtonsoft) | Newtonsoft.Json engine for the JSON vocabularies (since 4.4.0, see [Choose the JSON engine](#choose-the-json-engine)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 |
+| `Mafesoft.Localization.Resx`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Resx?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Resx) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Resx?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Resx) | Vocabularies from existing `.resx` files (since 4.4.0, see [Resx vocabularies](#resx-vocabularies)) | .NET 10, .NET 8, .NET Standard 2.0, .NET Framework 4.6.2 |
+| `Mafesoft.Localization.Wpf`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Wpf?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Wpf?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Wpf) [![Mafe.Localization.Windows downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Windows?style=flat-square&label=Mafe.Localization.Windows)](https://www.nuget.org/packages/Mafe.Localization.Windows) | WPF | `net10.0-windows`, `net8.0-windows` |
+| `Mafesoft.Localization.Maui`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Maui?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Maui?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Maui) [![Mafe.Localization.Maui downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Maui?style=flat-square&label=Mafe.Localization.Maui)](https://www.nuget.org/packages/Mafe.Localization.Maui) | .NET MAUI | .NET 10 (MAUI 10), .NET 8 (MAUI 8) |
+| `Mafesoft.Localization.Mvc`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Mvc?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Mvc?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Mvc) [![Mafe.Localization.Mvc downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Mvc?style=flat-square&label=Mafe.Localization.Mvc)](https://www.nuget.org/packages/Mafe.Localization.Mvc) | ASP.NET Core MVC | .NET 10, .NET 8 |
+| `Mafesoft.Localization.Blazor`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Blazor?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Blazor) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Blazor?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Blazor) [![Mafe.Localization.Blazor downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Blazor?style=flat-square&label=Mafe.Localization.Blazor)](https://www.nuget.org/packages/Mafe.Localization.Blazor) | Blazor Server, Blazor WebAssembly | .NET 10, .NET 8 |
+| `Mafesoft.Localization.Xamarin`<br>[![NuGet](https://img.shields.io/nuget/v/Mafesoft.Localization.Xamarin?style=flat-square&label=nuget)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin) [![Downloads](https://img.shields.io/nuget/dt/Mafesoft.Localization.Xamarin?style=flat-square&label=downloads)](https://www.nuget.org/packages/Mafesoft.Localization.Xamarin) [![Mafe.Localization.Xamarin downloads](https://img.shields.io/nuget/dt/Mafe.Localization.Xamarin?style=flat-square&label=Mafe.Localization.Xamarin)](https://www.nuget.org/packages/Mafe.Localization.Xamarin) | Xamarin.Forms (**deprecated**, see [Legacy](#legacy-xamarinforms)) | .NET Standard 2.0 / 2.1 |
 <!-- markdownlint-enable MD013 -->
 
-Legacy downloads are the downloads of the old `Mafe.Localization.*` packages, up to 3.0.0: `Mafesoft.Localization.Wpf` was
-published as `Mafe.Localization.Windows`, `Mafesoft.Localization.Extensions` is new in 4.1.0 and
-`Mafesoft.Localization.Json`, `Mafesoft.Localization.Json.Newtonsoft` and `Mafesoft.Localization.Resx` in 4.4.0.
+The third badge, where present, counts the downloads of the old `Mafe.Localization.*` package, up to 3.0.0:
+`Mafesoft.Localization.Wpf` was published as `Mafe.Localization.Windows`, `Mafesoft.Localization.Extensions` is new in
+4.1.0 and `Mafesoft.Localization.Json`, `Mafesoft.Localization.Json.Newtonsoft` and `Mafesoft.Localization.Resx` in 4.4.0.
 
 - **.NET 10** (LTS, supported until November 2028) is the main target.
 - **.NET 9** is not targeted: it reached end of support on 10 November 2026. .NET 9 applications use the .NET 8 build.
@@ -152,12 +166,19 @@ dotnet add package Mafesoft.Localization
 dotnet add package Mafesoft.Localization.Wpf      # or .Maui, .Mvc, .Blazor
 ```
 
-The technology packages depend on `Mafesoft.Localization`, so for them the second command is enough.
+The technology packages depend on `Mafesoft.Localization`, so for them the second command is enough. Add the package
+of the vocabularies if you do not write your own provider:
+
+```
+dotnet add package Mafesoft.Localization.Json     # JSON files (or .Resx for existing .resx files)
+```
+
+For `IStringLocalizer` and the dependency injection outside MVC and Blazor add `Mafesoft.Localization.Extensions`.
 
 ## Quick start
 
-1. Write a provider that loads the vocabularies (here from memory, see [Vocabulary service provider](#vocabulary-service-provider)
-   for JSON files):
+1. Write a provider that loads the vocabularies (here from memory; for JSON or `.resx` files use the ready-made
+   providers, see [JSON vocabularies](#json-vocabularies) and [Resx vocabularies](#resx-vocabularies)):
 
    ```c#
    using System.Globalization;
@@ -209,7 +230,8 @@ culture and keeps it in memory. The platform packages bind the UI to the manager
 raises `PropertyChanged` and `CultureChanged`, and every bound text is read again from the new vocabulary.
 
 > **Server applications:** because the manager is a singleton, in ASP.NET Core MVC and Blazor Server the selected
-> culture is shared by all the users of the application. In Blazor WebAssembly each user has their own.
+> culture is shared by all the users of the application, unless you set `FollowCurrentUICulture` (since 4.1.0, see
+> [Per-request culture on the server](#per-request-culture-on-the-server)). In Blazor WebAssembly each user has their own.
 
 ## Vocabulary service provider
 
@@ -222,7 +244,8 @@ A provider implements `IVocabularyServiceProvider`. Every method accepts a `Canc
 | `SaveAsync(vocabulary)` | when you call `LocalizationManager.Instance.SaveCultureAsync()` |
 | `AddOrUpdateTermAsync(vocabulary, key)` | when a key is not in the vocabulary (for example to store it for the translators) |
 
-For JSON files there is a ready-made provider, see [JSON vocabularies](#json-vocabularies). A minimal provider that
+For JSON and `.resx` files there are ready-made providers, see [JSON vocabularies](#json-vocabularies) and
+[Resx vocabularies](#resx-vocabularies). Write your own for any other store. As an example, a minimal provider that
 reads one JSON file per culture (`vocabularies/it-IT.json`, `vocabularies/en-US.json`) looks like this:
 
 ```c#
@@ -230,7 +253,7 @@ using System.Globalization;
 using System.Text.Json;
 using Mafesoft.Localization;
 
-public class JsonVocabularyServiceProvider(string folder) : IVocabularyServiceProvider
+public class FileVocabularyServiceProvider(string folder) : IVocabularyServiceProvider
 {
     public Task InitializeAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
 
@@ -520,7 +543,7 @@ LocalizationManager.Instance.FallbackCulture = new CultureInfo("en");    // then
 // or at registration (AddLocalizationManager, AddMvcLocalizationManager, AddBlazorLocalizationManager)
 builder.Services.AddMvcLocalizationManager(options =>
 {
-    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.ServiceProvider = JsonVocabularyServiceProvider.FromDirectory("vocabularies");
     options.UseParentCultureFallback = true;
     options.FallbackCulture = new CultureInfo("en");
 });
@@ -580,7 +603,7 @@ which the request localization middleware sets for each request (and Blazor Serv
 ```c#
 builder.Services.AddMvcLocalizationManager(options =>   // or AddBlazorLocalizationManager / AddLocalizationManager
 {
-    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.ServiceProvider = JsonVocabularyServiceProvider.FromDirectory("vocabularies");
     options.Culture = new CultureInfo("it-IT");          // loaded at startup
     options.FollowCurrentUICulture = true;
 });
@@ -628,7 +651,7 @@ database does not block the UI thread:
 protected override async void OnStartup(StartupEventArgs e)
 {
     base.OnStartup(e);
-    await LocalizationManager.InitAsync(new JsonVocabularyServiceProvider("vocabularies"), new CultureInfo("it-IT"));
+    await LocalizationManager.InitAsync(JsonVocabularyServiceProvider.FromDirectory("vocabularies"), new CultureInfo("it-IT"));
 }
 ```
 
@@ -664,7 +687,7 @@ builder
     .UseMauiApp<App>()
     .ConfigureLocalization(options =>
     {
-        options.ServiceProvider = new JsonVocabularyServiceProvider(FileSystem.AppDataDirectory);
+        options.ServiceProvider = JsonVocabularyServiceProvider.FromEmbeddedResources(typeof(App).Assembly, "Resources");
         options.Culture = new CultureInfo("it-IT");
     });
 ```
@@ -703,7 +726,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvcLocalizationManager(options =>
 {
-    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.ServiceProvider = JsonVocabularyServiceProvider.FromDirectory("vocabularies");
     options.Culture = new CultureInfo("it-IT");   // optional: the current UI culture by default
 });
 ```
@@ -790,7 +813,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddBlazorLocalizationManager(options =>
 {
-    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.ServiceProvider = JsonVocabularyServiceProvider.FromDirectory("vocabularies");
     options.Culture = new CultureInfo("it-IT");
     options.FollowCurrentUICulture = true;   // since 4.1.0: one language per circuit, with app.UseRequestLocalization(...)
 });
@@ -863,7 +886,7 @@ using Mafesoft.Localization.Extensions;
 
 builder.Services.AddLocalizationManager(options =>
 {
-    options.ServiceProvider = new JsonVocabularyServiceProvider("vocabularies");
+    options.ServiceProvider = JsonVocabularyServiceProvider.FromDirectory("vocabularies");
     options.Culture = new CultureInfo("it-IT");
     options.InitializeOnHostStart = true;   // since 4.3.0: load the vocabulary asynchronously when the host starts
 })
@@ -1001,14 +1024,17 @@ dotnet test src/Localization.Maui.Tests
 dotnet test src/Localization.Wpf.Tests     # Windows only
 ```
 
-`Localization.Tests` (core, MVC, Blazor, `IStringLocalizer`) runs on .NET 8 and .NET 10, and on Windows also on .NET Framework
-(the core tests against the `net462` build); `Localization.Maui.Tests` runs the MAUI controls without a platform head on
-.NET 10 (Linux, macOS and Windows); `Localization.Wpf.Tests` runs on .NET 10 on Windows. The samples
-(`samples/Localization.Samples.sln`: WPF, MAUI, MVC, Blazor Web App, Blazor WebAssembly, Xamarin) reference the projects
-inside `src`, so they always run with the current code.
+`Localization.Tests` (core, MVC, Blazor, `IStringLocalizer`, JSON and Resx vocabularies, typed keys generator, right-to-left)
+runs on .NET 8 and .NET 10, and on Windows also on .NET Framework (the core tests against the `net462` build);
+`Localization.Maui.Tests` runs the MAUI controls without a platform head on .NET 10 (Linux, macOS and Windows);
+`Localization.Wpf.Tests` runs on .NET 10 on Windows. The samples (`samples/Localization.Samples.sln`: WPF, MAUI, MVC,
+Blazor Web App, Blazor WebAssembly, Xamarin, and the `AotCheck` console app) reference the projects inside `src`, so
+they always run with the current code.
 
 The CI (`.github/workflows/ci.yml`) runs on Ubuntu and Windows, publishes the code coverage in the job summary and, on
-Windows, builds the samples (MAUI with `dotnet workload restore`, Windows head only; Xamarin is not built).
+Windows, builds the samples (MAUI with `dotnet workload restore`, Windows head only; Xamarin is not built). It also
+publishes `Localization.Samples.AotCheck` with NativeAOT and the MAUI sample for Mac Catalyst (see
+[Trimming and NativeAOT](#trimming-and-nativeaot)).
 
 `global.json` pins the .NET 10 SDK (any newer feature band is accepted). The package versions of the projects in `src`
 are defined in one place, `src/Directory.Packages.props` (Central Package Management); `src/nuget.config` restores them from
@@ -1018,11 +1044,14 @@ nuget.org only. `.editorconfig` holds the code style.
 
 All the packages share one version, `<VersionPrefix>` in `src/Directory.Build.props`. To publish a release:
 
-1. update `<VersionPrefix>` and the [CHANGELOG](CHANGELOG.md);
-2. create a GitHub release with the tag `v<version>` (e.g. `v4.1.0`, or `v4.1.0-beta.1` for a prerelease).
+1. update `<VersionPrefix>` and the [CHANGELOG](CHANGELOG.md) (a `## [x.y.z] - date` section);
+2. push the tag `v<version>` (e.g. `v4.4.0`, or `v4.4.0-beta.1` for a prerelease).
 
 The `NuGet` workflow (`.github/workflows/nuget.yml`) runs only for `v*` tags: it fails if the tag does not match `<VersionPrefix>`, then tests,
-packs and publishes all the packages with the same version. Merging to `main` publishes nothing.
+packs and publishes all the packages with the same version, and creates the GitHub Release of the tag with the packages
+attached and the notes of the matching CHANGELOG section. A release created by hand on GitHub works too: the workflow
+attaches the packages to it. Merging to `main` publishes nothing. A manual run of the workflow (`workflow_dispatch`)
+with an empty version is a dry run: it tests and packs without publishing.
 
 Every `dotnet pack` runs the [package validation](https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview):
 inside a major version the package is compared with the first release of that version (4.1.0 with 4.0.0), so a
@@ -1039,7 +1068,7 @@ workflow file `nuget.yml` and environment `production` (renaming the file breaks
 Bug reports, ideas and pull requests are welcome.
 
 1. Open an [issue](https://github.com/fmazzant/Localization/issues) that describes the bug or the change.
-2. Create a branch from `main` named after the issue (for example `features/42-short-description`).
+2. Create a branch from `main` named after the issue (for example `feat/42-short-description`).
 3. Keep the change focused, add or update the tests, and make sure `dotnet build` (no warnings: nullable warnings are
    errors) and `dotnet test` pass.
 4. Update the README and add an entry to the `Unreleased` section of the [CHANGELOG](CHANGELOG.md).

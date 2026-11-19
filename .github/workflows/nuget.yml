@@ -97,7 +97,7 @@ jobs:
       - name: Pack
         shell: bash
         run: |
-          for project in Localization Localization.Extensions Localization.Wpf Localization.Mvc Localization.Blazor Localization.Maui Localization.Xamarin; do
+          for project in Localization Localization.Extensions Localization.Json Localization.Wpf Localization.Mvc Localization.Blazor Localization.Maui Localization.Xamarin; do
             dotnet pack "src/$project/$project.csproj" -c Release -o artifacts -p:VersionSuffix="${{ steps.version.outputs.suffix }}"
           done
           # Localization.Xamarin: 4.0.0 only, the last Xamarin release. Remove it from the list after publishing.

@@ -21,7 +21,9 @@ switch (settings.Registration)
         // IStringLocalizer, IViewLocalizer and DataAnnotations read the vocabularies of the LocalizationManager
         builder.Services.AddLocalizationManager(options =>
         {
-            options.ServiceProvider = new MockVocabularyServiceProvider();
+            options.ServiceProvider = builder.Environment.IsDevelopment()
+                ? SampleVocabularies.FromSourceFolder(builder.Environment.ContentRootPath)  // edit a JSON file while the app runs
+                : SampleVocabularies.Embedded();
             options.Culture = new CultureInfo(settings.Culture);
             options.FollowCurrentUICulture = settings.FollowCurrentUICulture;
             options.InitializeOnHostStart = true;   // the vocabulary is loaded asynchronously when the app starts
@@ -34,7 +36,9 @@ switch (settings.Registration)
         // IStringLocalizer is the standard resx one registered by AddViewLocalization() (no .resx files: it returns the keys)
         builder.Services.AddMvcLocalizationManager(options =>
         {
-            options.ServiceProvider = new MockVocabularyServiceProvider();
+            options.ServiceProvider = builder.Environment.IsDevelopment()
+                ? SampleVocabularies.FromSourceFolder(builder.Environment.ContentRootPath)  // edit a JSON file while the app runs
+                : SampleVocabularies.Embedded();
             options.Culture = new CultureInfo(settings.Culture);
             options.FollowCurrentUICulture = settings.FollowCurrentUICulture;
         });

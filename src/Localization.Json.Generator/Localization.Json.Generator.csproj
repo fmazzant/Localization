@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Source generator and analyzer of Mafesoft.Localization.Json (issue #31): typed constants for the keys of the JSON
+    vocabularies, and a warning for the keys that are not in the vocabulary. It is not a package of its own: the
+    Localization.Json package ships it in analyzers/dotnet/cs. Analyzers run inside the compiler: netstandard2.0, and
+    no dependency other than Roslyn (the JSON files are read by a small reader of its own).
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Mafesoft.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Mafesoft.$(MSBuildProjectName)</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- Roslyn 4.8 (.NET 8 SDK, Visual Studio 17.8): the oldest compiler the package supports -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Release tracking of the diagnostic IDs (RS2008) -->
+  <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Localization.Tests" />
+  </ItemGroup>
+
+</Project>

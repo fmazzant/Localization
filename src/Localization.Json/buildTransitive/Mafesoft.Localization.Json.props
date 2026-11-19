@@ -1,0 +1,19 @@
+<Project>
+
+  <!--
+    Mafesoft.Localization.Json: the MSBuild properties read by the source generator of the keys (issue #31).
+    Give the vocabularies to the compiler to generate the constants:
+      <AdditionalFiles Include="Resources\*.json" />
+    Optional properties:
+      MafesoftLocalizationKeysClass       the class name (default Keys)
+      MafesoftLocalizationKeysNamespace   the namespace (default the RootNamespace of the project)
+      MafesoftLocalizationDefaultCulture  the reference vocabulary, e.g. en (default invariant.json, else the first file)
+  -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <CompilerVisibleProperty Include="MafesoftLocalizationKeysClass" />
+    <CompilerVisibleProperty Include="MafesoftLocalizationKeysNamespace" />
+    <CompilerVisibleProperty Include="MafesoftLocalizationDefaultCulture" />
+  </ItemGroup>
+
+</Project>

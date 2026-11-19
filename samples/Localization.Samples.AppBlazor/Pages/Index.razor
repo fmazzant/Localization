@@ -2,8 +2,9 @@
 @using Mafesoft.Localization.Blazor.Bindings
 
 
-<h1>@Binding.Translate("BlazorHelloWorld")</h1>
+@* Keys: constants generated from the JSON vocabularies (Mafesoft.Localization.Json) *@
+<h1>@Binding.Translate(Keys.BlazorHelloWorld)</h1>
 
-@Binding.Translate("BlazorWelcome")
+@Binding.Translate(Keys.BlazorWelcome)
 
 <SurveyPrompt Title="@Binding.Translate("BlazorHowisitworks")" />
